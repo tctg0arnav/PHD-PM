@@ -1,0 +1,19 @@
+<!-- render wtforms loginform add css class="forminput" to email and password -->
+<!-- extends base -->
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+  <form method="post" action="{{ url_for('login') }}">
+    <div class="forminput">
+      <label for="email">Email</label>
+      <input type="text" name="email" id="email" value="{{ form.email.data }}">
+    </div>
+    <div class="forminput">
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password">
+    </div>
+    <div class="forminput">
+      <input type="submit" value="Login">
+    </div>
+  </form>
+{% endblock %
