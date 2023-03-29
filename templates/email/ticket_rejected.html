@@ -1,0 +1,13 @@
+<h1>
+    {% if Comm == 1 %}
+        Ticket Rejected by Committee Member {{ Ticket['Committee1_Name'] }}, Email: {{ Ticket['Committee1_Email'] }}
+    {% elif Comm == 2 %}
+        Ticket Rejected by Committee Member {{ Ticket['Committee2_Name'] }}, Email: {{ Ticket['Committee2_Email'] }}
+    {% elif Comm == 3 %}
+        Ticket Rejected by Committee Member {{ Ticket['Committee3_Name'] }}, Email: {{ Ticket['Committee3_Email'] }}
+    {% elif Comm == 4 %}
+        Ticket Rejected by Committee Member {{ Ticket['Committee4_Name'] }}, Email: {{ Ticket['Committee4_Email'] }}
+    {% elif Comm == 5 %}
+        Ticket Rejected by Committee Member {{ Ticket['Committee5_Name'] }}, Email: {{ Ticket['Committee5_Email'] }}
+    {% endif %}
+</h1>

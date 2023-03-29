@@ -1,0 +1,11 @@
+{% extends "ticket_created.html" %}
+{% block form %}
+<article>
+    <form action="/super/3/{{ Ticket['Project_ID'] }}" method="post">
+        <label for="Supervisor3_Remarks">Supervisor 3 Remarks</label>
+        <textarea name="Supervisor3_Remarks" id="Supervisor3_Remarks" cols="30" rows="10"></textarea>
+        <button type="submit" name="submit" value="Approve">Approve</button>
+        <button type="submit" name="submit" value="Reject">Reject</button>
+    </form>
+</article>
+{% endblock %}

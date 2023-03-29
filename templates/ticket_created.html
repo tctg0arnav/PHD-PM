@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
+    <title>Ticket Created</title>
+    <style>
+        /* for large screens */
+        article {
+            width: 75vw;
+            /* sets the width to 75% of the viewport width */
+            margin: 10% auto 0;
+            /* centers the article element horizontally and adds 10% margin to the top */
+        }
+
+        /* for medium-sized screens */
+        @media screen and (max-width: 1024px) {
+            article {
+                width: 90vw;
+                /* sets the width to 90% of the viewport width */
+                margin: 10% auto 0;
+                /* centers the article element horizontally and adds 10% margin to the top */
+            }
+        }
+
+        /* for small screens */
+        @media screen and (max-width: 768px) {
+            article {
+                width: 100vw;
+                /* sets the width to 100% of the viewport width */
+                margin: 10% auto 0;
+                /* centers the article element horizontally and adds 10% margin to the top */
+            }
+        }    
+        </style>
+</head>
+<body>
+    <article>
+        <header>
+            <hgroup>
+                <h1>Ticket Created</h1>
+                <h2>You can review the ticket below.</h2>
+            </hgroup>
+        </header>
+        <main class="container">
+            <section class="student-details">
+                <h3>Student Details</h3>
+                <div class="grid">
+                    <div>
+                        <hgroup>
+                            <h5>Student Name</h5>
+                            <h6>{{ Ticket['Student_Name'] }}</h6>
+                        </hgroup>
+                    </div>
+                    <div>
+                        <hgroup>
+                            <h5>Student Email ID</h5>
+                            <h6>{{ Ticket['student_email'] }}</h6>
+                        </hgroup>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div>
+                        <hgroup>
+                            <h5>Roll No.</h5>
+                            <h6>{{ Ticket['Roll_No.'] }}</h6>
+                        </hgroup>
+                    </div>
+                    <div>
+                        <hgroup>
+                            <h5>Academic Unit:</h5>
+                            <h6>{{ Ticket['Au'] }}</h6>
+                        </hgroup>
+                    </div>
+                </div>
+            </section>
+            <section class="project-details">
+                <h3>Project Details</h3>
+                <div class="grid">
+                    <div>
+                        <hgroup>
+                            <h5>Date of Progress Presentation</h5>
+                            <h6>{{ Ticket['Date_Of_Progress_Presentation'] }}</h6>
+                        </hgroup>
+                    </div>
+                    <div>
+                        <hgroup>
+                            <h5>Date of IRB</h5>
+                            <h6>{{ Ticket['Date_Of_IRB'] }}</h6>
+                        </hgroup>
+                    </div>
+                    <div>
+                        <hgroup>
+                            <h5>GATE/NET/TA</h5>
+                            {% if Ticket['Gate/Net/Ta'] == 'Yes' %}
+                            <h6>Yes</h6>
+                            {% else %}
+                            <h6>No</h6>
+                            {% endif %}
+                        </hgroup>
+                    </div>
+                </div>
+            </section>
+            <section class="supervisors">
+                <h3>Supervisors</h3>
+                <div class="grid">
+                    <div>
+                        <hgroup>
+                            <h5>Supervisor 1 Name</h5>
+                            <h6>{{ Ticket['Supervisor1_Name'] }}</h6>
+                        </hgroup>
+                    </div>
+                    <div>
+                        <hgroup>
+                            <h5>Supervisor 1 Email</h5>
+                            <h6>{{ Ticket['Supervisor1_Email'] }}</h6>
+                        </hgroup>
+                    </div>
+                </div>
+                <div class="grid">
+                    {% if Ticket['Supervisor2_Name'] %}
+                    <div>
+                        <hgroup>
+                            <h5>Supervisor 2 Name</h5>
+                            <h6>{{ Ticket['Supervisor2_Name'] }}</h6>
+                        </hgroup>
+                    </div>
+                    <div>
+                        <hgroup>
+                            <h5>Supervisor 2 Email</h5>
+                            <h6>{{ Ticket['Supervisor2_Email'] }}</h6>
+                        </hgroup>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="grid">
+                    {% if Ticket['Supervisor3_Name'] %}
+                    <div>
+                        <hgroup>
+                            <h5>Supervisor 3 Name</h5>
+                            <h6>{{ Ticket['Supervisor3_Name'] }}</h6>
+                        </hgroup>
+                    </div>
+                    <div>
+                        <hgroup>
+                            <h5>Supervisor 3 Email</h5>
+                            <h6>{{ Ticket['Supervisor3_Email'] }}</h6>
+                        </hgroup>
+                    {% endif %}
+                </div>
+            </section>
+            <section class="committee">
+                <h3>Doctoral Committee</h3>
+                <div class="grid">
+                    <div>
+                        <hgroup>
+                            <h5>Committee 1 Name</h5>
+                            <h6>{{ Ticket['Committee1_Name'] }}</h6>
+                        </hgroup>
+                    </div>
+                    <div>
+                        <hgroup>
+                            <h5>Committee 1 Email</h5>
+                            <h6>{{ Ticket['Committee1_Email'] }}</h6>
+                        </hgroup>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div>
+                        <hgroup>
+                            <h5>Committee 2 Name</h5>
+                            <h6>{{ Ticket['Committee2_Name'] }}</h6>
+                        </hgroup>
+                    </div>
+                    <div>
+                        <hgroup>
+                            <h5>Committee 2 Email</h5>
+                            <h6>{{ Ticket['Committee2_Email'] }}</h6>
+                        </hgroup>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div>
+                        <hgroup>
+                            <h5>Committee 3 Name</h5>
+                            <h6>{{ Ticket['Committee3_Name'] }}</h6>
+                        </hgroup>
+                    </div>
+                    <div>
+                        <hgroup>
+                            <h5>Committee 3 Email</h5>
+                            <h6>{{ Ticket['Committee3_Email'] }}</h6>
+                        </hgroup>
+                    </div>
+                </div>
+                <div class="grid">
+                    {% if Ticket['Committee4_Name'] %}
+                    <div>
+                        <hgroup>
+                            <h5>Committee 4 Name</h5>
+                            <h6>{{ Ticket['Committee4_Name'] }}</h6>
+                        </hgroup>
+                    </div>
+                    <div>
+                        <hgroup>
+                            <h5>Committee 4 Email</h5>
+                            <h6>{{ Ticket['Committee4_Email'] }}</h6>
+                        </hgroup>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="grid">
+                    {% if Ticket['Committee5_Name'] %}
+                    <div>
+                        <hgroup>
+                            <h5>Committee 5 Name</h5>
+                            <h6>{{ Ticket['Committee5_Name'] }}</h6>
+                        </hgroup>
+                    </div>
+                    <div>
+                        <hgroup>
+                            <h5>Committee 5 Email</h5>
+                            <h6>{{ Ticket['Committee5_Email'] }}</h6>
+                        </hgroup>
+                    </div>
+                    {% endif %}
+                </div>        
+            </section>
+            <div class="grid">
+                <div>
+                    <hgroup>
+                        <h5>Conferences:</h5>
+                        <h6>{{ Ticket['Conferences'] }}</h6>
+                    </hgroup>
+                </div>
+                <div>
+                    <hgroup>
+                        <h5>Publications:</h5>
+                        <h6>{{ Ticket['Publications'] }}</h6>
+                    </hgroup>
+                </div>
+            </div>
+            <hgroup>
+                <h5>Uploaded PDF</h5>
+                <!-- button to open pdf file from link /file/{{ Ticket.Project_ID }} -->
+                <div class="grid">
+                    <a href="/file/{{ Ticket.Project_ID }}" target="_blank"><button>Open PDF</button></a><div></div><div></div><div></div>
+                </div>
+            </hgroup>
+        </main>
+    </article>
+    {% block form %}
+    {% endblock %}
+</body>
+</html>

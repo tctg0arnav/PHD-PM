@@ -1,0 +1,31 @@
+{% extends "ticket_created.html" %}
+{% block form %}
+<article>
+    <div class="grid">
+        <div>
+            {% if Ticket['Supervisor1_Remarks'] %}
+            <hgroup>
+                <h5>Supervisor 1 Remarks</h5>
+                <h6>{{ Ticket['Supervisor1_Remarks'] }}</h6>
+            </hgroup>
+            {% endif %}
+            {% if Ticket['Supervisor2_Remarks'] %}
+            <hgroup>
+                <h5>Supervisor 2 Remarks</h5>
+                <h6>{{ Ticket['Supervisor2_Remarks'] }}</h6>
+            </hgroup>
+            {% endif %}
+            {% if Ticket['Supervisor3_Remarks'] %}
+            <hgroup>
+                <h5>Supervisor 3 Remarks</h5>
+                <h6>{{ Ticket['Supervisor3_Remarks'] }}</h6>
+            </hgroup>
+            {% endif %}
+        </div>
+    </div>
+    <form action="/comm/5/{{ Ticket['Project_ID'] }}" method="post">
+        <button type="submit" name="submit" value="Approve">Approve</button>
+        <button type="submit" name="submit" value="Reject">Reject</button>
+    </form>
+</article>
+{% endblock %}

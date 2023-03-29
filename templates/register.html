@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
+    <title>Register</title>
     <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
     <style>
     body > main {
@@ -100,10 +100,31 @@
       <article class="grid">
         <div>
           <hgroup>
-            <h1>Log in</h1>
+            <h1>Register</h1>
           </hgroup>
-          <form action="/login" method="post">
+          <form action="/register" method="post">
             <input type="email" name="email" placeholder="Email" aria-label="email" autocomplete="email" required>
+            <!-- add inputs for name and AU(dropdown)[1-17] -->
+            <input type="text" name="name" placeholder="Name" aria-label="name" required>
+            <select name="Au">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+            </select>
             <input type="password" name="password" placeholder="Password" aria-label="Password" autocomplete="password" required>
             <button type="submit" class="contrast">Login</button>
           </form>
@@ -130,6 +151,30 @@
               data-target="modal-example"
               onClick="toggleModal(event)">
               Close
+            </a>
+          </footer>
+        </article>
+      </dialog>
+    {% endif %}
+    {% if success != '' %}
+    <dialog class="container" id="modal-example" open>
+        <article class="modal">
+          <a href="#close"
+            aria-label="Close"
+            class="close"
+            data-target="modal-example"
+            onClick="toggleModal(event)">
+          </a>
+          <h3>Success</h3>
+          <p>
+            {{ success }}
+          </p>
+          <footer>
+            <a href="url_for('login')"
+              role="button"
+              data-target="modal-example"
+              onClick="toggleModal(event)">
+              Proceed to Login
             </a>
           </footer>
         </article>
