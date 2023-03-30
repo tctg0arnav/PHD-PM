@@ -1,12 +1,12 @@
 <!doctype html>
 <html lang="en" data-theme="light">
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Register</title>
-  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
-  <style>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Register</title>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
+    <style>
     [data-theme="light"],
     :root:not([data-theme="dark"]) {
       --primary: #640000;
@@ -25,170 +25,135 @@
       background-color: #4a0101;
     }
 
-    body>main {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      min-height: calc(100vh - 7rem);
-      padding: 1rem 0;
-    }
-
     .article {
       box-shadow: 10px 10px 10px #acacac;
       border: 1.5px solid #640000 !important;
+    }
 
+    body > main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: calc(100vh - 7rem);
+    padding: 1rem 0;
     }
 
     article.grid {
-      padding: 0;
-      overflow: hidden;
-
+    padding: 0;
+    overflow: hidden;
     }
 
     article.grid div {
-      padding: 1rem;
-    }
-
-    .secondary {
-      background-color: white;
-      color: #640000;
-      border-color: #640000;
-      border-radius: 0;
-
-    }
-
-    .secondary:hover {
-      background-color: #f6f6f6;
-    }
-
-    .modal {
-      border: 1.5px solid #640000;
-      border-radius: 0;
-    }
-
-    .header h1 {
-      color: #640000 !important;
+    padding: 1rem;
     }
 
     @media (min-width: 576px) {
-      body>main {
+    body > main {
         padding: 1.25rem 0;
-      }
+    }
 
-      article.grid div {
+    article.grid div {
         padding: 1.25rem;
-      }
+    }
     }
 
     @media (min-width: 768px) {
-      body>main {
+    body > main {
         padding: 1.5rem 0;
-      }
+    }
 
-      article.grid div {
+    article.grid div {
         padding: 1.5rem;
-      }
+    }
     }
 
     @media (min-width: 992px) {
-      body>main {
+    body > main {
         padding: 1.75rem 0;
-      }
+    }
 
-      article.grid div {
+    article.grid div {
         padding: 1.75rem;
-      }
+    }
     }
 
     @media (min-width: 1200px) {
-      body>main {
+    body > main {
         padding: 2rem 0;
-      }
+    }
 
-      article.grid div {
+    article.grid div {
         padding: 2rem;
-      }
+    }
     }
 
     /* Nav */
-    summary[role="link"].secondary:is([aria-current], :hover, :active, :focus) {
-      background-color: transparent;
-      color: var(--secondary-hover);
+    summary[role="link"].secondary:is([aria-current],:hover,:active,:focus) {
+    background-color: transparent;
+    color: var(--secondary-hover);
     }
 
     /* Hero Image */
     article div:nth-of-type(1) {
-      display: none;
-      background-color: #374956;
-      /* {{ url_for('static', filename='images/heroimg.png') }} */
-      background-image: url("{{ url_for('static', filename='images/heroimg.png");
-      background-position: center;
-      background-size: cover;
+    display: none;
+    background-color: #374956;
+    background-image: url("{{ url_for('static', filename='images/heroimg.png') }}");
+    background-position: center;
+    background-size: cover;
     }
 
     @media (min-width: 992px) {
-      .grid>div:nth-of-type(1) {
+    .grid > div:nth-of-type(1) {
         display: block;
-      }
+    }
     }
 
     /* Footer */
-    body>footer {
-      padding: 1rem 0;
+    body > footer {
+    padding: 1rem 0;
     }
-
     article.modal {
-      width: calc(100vw / 3);
-    }
-  </style>
-</head>
+        width: calc(100vw / 3);
+    }   
+    </style>
+  </head>
 
-<body>
-  <main class="container">
-    <article class="grid article">
-      <div class="">
-
-      </div>
-      <div>
-        <header class="header">
-          <h1>Sign-up</h1>
-          <p>This is Sign-up form for Head of Academic Unit.</p>
-        </header>
-
-        <form action="/register" method="post">
-          <input type="email" name="email" placeholder="Email" aria-label="email" autocomplete="email" required>
-          <!-- add inputs for name and AU(dropdown)[1-17] -->
-          <input type="text" name="name" placeholder="Name" aria-label="name" required>
-          <select name="Au">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-            <option value="16">16</option>
-            <option value="17">17</option>
-          </select>
-          <input type="password" name="password" placeholder="Password" aria-label="Password" autocomplete="password"
-            required>
-          <button class="primary" type="submit" class="contrast">Create Account</button>
-          <p>Already have an Account? <a href="#login"> Procceed to login</a></p>
-
-        </form>
-      </div>
-
-    </article>
-  </main>
-  {% if error != '' %}
+  <body>
+    <main class="container">
+      <article class="grid article">
+        <div></div>
+        <div>
+            <h1 style="color: #640000;">Sign Up</h1>
+          <form action="/register" method="post">
+            <input type="email" name="email" placeholder="Email" aria-label="email" autocomplete="email" required>
+            <!-- add inputs for name and AU(dropdown)[1-17] -->
+            <input type="text" name="name" placeholder="Name" aria-label="name" required>
+            <select name="Au">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+            </select>
+            <input type="password" name="password" placeholder="Password" aria-label="Password" autocomplete="password" required>
+            <button type="submit" class="primary">Login</button>
+          </form>
+        </div>
+      </article>
+    </main>
+    {% if error != '' %}
     <dialog class="container" id="modal-example" open>
         <article class="modal">
           <a href="#close"
@@ -197,14 +162,13 @@
             data-target="modal-example"
             onClick="toggleModal(event)">
           </a>
-          <h3 style="color: #640000;">Error</h3>
+          <h3>Error</h3>
           <p>
             {{ error }}
           </p>
           <footer>
             <a href="#confirm"
               role="button"
-              class="secondary"
               data-target="modal-example"
               onClick="toggleModal(event)">
               Close
@@ -213,7 +177,7 @@
         </article>
       </dialog>
     {% endif %}
-  {% if success != '' %}
+    {% if success != '' %}
     <dialog class="container" id="modal-example" open>
         <article class="modal">
           <a href="#close"
@@ -222,12 +186,12 @@
             data-target="modal-example"
             onClick="toggleModal(event)">
           </a>
-          <h3 style="color: #640000;">Success</h3>
-          <p >
+          <h3>Success</h3>
+          <p>
             {{ success }}
           </p>
           <footer>
-            <a class="secondary" href="url_for('login')"
+            <a href="url_for('login')"
               role="button"
               data-target="modal-example"
               onClick="toggleModal(event)">
@@ -237,9 +201,8 @@
         </article>
       </dialog>
     {% endif %}
-</body>
-<script>
-  "use strict"; const isOpenClass = "modal-is-open", openingClass = "modal-is-opening", closingClass = "modal-is-closing", animationDuration = 400; let visibleModal = null; const toggleModal = e => { e.preventDefault(); e = document.getElementById(e.currentTarget.getAttribute("data-target")); (void 0 !== e && null != e && isModalOpen(e) ? closeModal : openModal)(e) }, isModalOpen = e => !(!e.hasAttribute("open") || "false" == e.getAttribute("open")), openModal = e => { isScrollbarVisible() && document.documentElement.style.setProperty("--scrollbar-width", getScrollbarWidth() + "px"), document.documentElement.classList.add(isOpenClass, openingClass), setTimeout(() => { visibleModal = e, document.documentElement.classList.remove(openingClass) }, animationDuration), e.setAttribute("open", !0) }, closeModal = e => { visibleModal = null, document.documentElement.classList.add(closingClass), setTimeout(() => { document.documentElement.classList.remove(closingClass, isOpenClass), document.documentElement.style.removeProperty("--scrollbar-width"), e.removeAttribute("open") }, animationDuration) }, getScrollbarWidth = (document.addEventListener("click", e => { null == visibleModal || visibleModal.querySelector("article").contains(e.target) || closeModal(visibleModal) }), document.addEventListener("keydown", e => { "Escape" === e.key && null != visibleModal && closeModal(visibleModal) }), () => { var e = document.createElement("div"), t = (e.style.visibility = "hidden", e.style.overflow = "scroll", e.style.msOverflowStyle = "scrollbar", document.body.appendChild(e), document.createElement("div")), t = (e.appendChild(t), e.offsetWidth - t.offsetWidth); return e.parentNode.removeChild(e), t }), isScrollbarVisible = () => document.body.scrollHeight > screen.height;
-</script>
-
+  </body>
+  <script>
+    "use strict";const isOpenClass="modal-is-open",openingClass="modal-is-opening",closingClass="modal-is-closing",animationDuration=400;let visibleModal=null;const toggleModal=e=>{e.preventDefault();e=document.getElementById(e.currentTarget.getAttribute("data-target"));(void 0!==e&&null!=e&&isModalOpen(e)?closeModal:openModal)(e)},isModalOpen=e=>!(!e.hasAttribute("open")||"false"==e.getAttribute("open")),openModal=e=>{isScrollbarVisible()&&document.documentElement.style.setProperty("--scrollbar-width",getScrollbarWidth()+"px"),document.documentElement.classList.add(isOpenClass,openingClass),setTimeout(()=>{visibleModal=e,document.documentElement.classList.remove(openingClass)},animationDuration),e.setAttribute("open",!0)},closeModal=e=>{visibleModal=null,document.documentElement.classList.add(closingClass),setTimeout(()=>{document.documentElement.classList.remove(closingClass,isOpenClass),document.documentElement.style.removeProperty("--scrollbar-width"),e.removeAttribute("open")},animationDuration)},getScrollbarWidth=(document.addEventListener("click",e=>{null==visibleModal||visibleModal.querySelector("article").contains(e.target)||closeModal(visibleModal)}),document.addEventListener("keydown",e=>{"Escape"===e.key&&null!=visibleModal&&closeModal(visibleModal)}),()=>{var e=document.createElement("div"),t=(e.style.visibility="hidden",e.style.overflow="scroll",e.style.msOverflowStyle="scrollbar",document.body.appendChild(e),document.createElement("div")),t=(e.appendChild(t),e.offsetWidth-t.offsetWidth);return e.parentNode.removeChild(e),t}),isScrollbarVisible=()=>document.body.scrollHeight>screen.height;
+  </script>
 </html>

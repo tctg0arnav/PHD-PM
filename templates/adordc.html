@@ -42,15 +42,6 @@
             margin-bottom: 2%;
         }
 
-        /* for large screens */
-        article {
-            width: 75vw;
-           
-            /* sets the width to 75% of the viewport width */
-            margin: 10% auto 0;
-            /* centers the article element horizontally and adds 10% margin to the top */
-        }
-
         .article {
             padding-bottom: 0;
             margin-bottom: 5%;
@@ -140,13 +131,13 @@
 <body>
     <div class="nav">
         <div class="logo">
-          <img src="../static/images/tietlogo.png" alt="logo">
+          <img src="{{ url_for('static', filename='images/tietlogo.png') }}" alt="logo">
         </div>
         <div class="brand">
           <strong>PhD Progress monitoring system</strong>
         </div>
         <div class="logout">
-          <a>Log out <img src="../static/images/logout.png" alt="logout"></a>
+          <a href="/logout">Log out <img src="{{ url_for('static', filename='images/logout.png') }}" alt="logout"></a>
         </div>
        </div>
     <article class="container1 article">
