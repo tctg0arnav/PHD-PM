@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
   <head>
     <meta charset="utf-8">
@@ -7,6 +7,28 @@
     <title>Login</title>
     <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
     <style>
+        [data-theme="light"],
+    :root:not([data-theme="dark"]) {
+      --primary: #640000;
+      --primary-hover: #640000;
+      --primary-focus: rgba(143, 143, 143, 0.125);
+      --primary-inverse: #FFF;
+    }
+
+    .primary {
+      background-color: #640000;
+      border-color: #640000;
+      border-radius: 0;
+    }
+
+    .primary:hover {
+      background-color: #4a0101;
+    }
+    .article {
+      box-shadow: 10px 10px 10px #acacac;
+      border: 1.5px solid #640000 !important;
+
+    }
     body > main {
     display: flex;
     flex-direction: column;
@@ -23,6 +45,53 @@
     article.grid div {
     padding: 1rem;
     }
+    .secondary {
+      background-color: white;
+      color: #640000;
+      border-color: #640000;
+      border-radius: 0;
+
+    }
+
+    .secondary:hover {
+      background-color: #f6f6f6;
+    }
+
+    .modal {
+      border: 1.5px solid #640000;
+      border-radius: 0;
+    }
+
+    .header h1 {
+      color: #640000 !important;
+    }
+    .nav-container{
+      display: none;
+      text-align: center;
+    }
+
+        .nav {
+          
+            
+            margin: 0 auto;
+            
+            color: white;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            gap: 5%;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 30px;
+            margin-bottom: 3%;
+
+        }
+
+        .nav img {
+            height: 70px;
+
+        }
 
     @media (min-width: 576px) {
     body > main {
@@ -71,18 +140,37 @@
     }
 
     /* Hero Image */
-    article div:nth-of-type(2) {
+    article div:nth-of-type(1) {
     display: none;
     background-color: #374956;
-    background-image: url("{{ url_for('static', filename='images/hero.jpeg') }}");
-    background-position: center;
+    /* "{{ url_for('static', filename='images/heroimg.png') }}" */
+    background-image: url("{{ url_for('static', filename='images/heroimg.png') }}" );
+    background-position: top;
     background-size: cover;
     }
 
     @media (min-width: 992px) {
-    .grid > div:nth-of-type(2) {
+    .grid > div:nth-of-type(1) {
         display: block;
     }
+   
+    }
+    @media (max-width: 992px) {
+      body{
+      background-image: url("{{ url_for('static', filename='images/heroimg2.png') }}" );
+      height: 100vh;
+      background-position: center;
+      background-size: cover ;
+    }
+    .article {
+      box-shadow: none;
+      border: 1.5px solid #640000 !important;
+
+    }
+    .nav-container {
+      display: block;
+    }
+    
     }
 
     /* Footer */
@@ -97,18 +185,29 @@
 
   <body>
     <main class="container">
-      <article class="grid">
+      <div class="nav-container">
+        <div class="nav">
+            <div class="logo">
+                <img src="../static/images/tietlogo2.png" alt="logo">
+            </div>
+            <div class="brand">
+                <strong>PhD Progress Monitoring System</strong>
+            </div>
+        </div>
+    </div>
+      <article class="grid article">
+        <div></div>
         <div>
-          <hgroup>
-            <h1>Log in</h1>
-          </hgroup>
+          <header class="header"><h1>Log in</h1></header>
+          
           <form action="/login" method="post">
             <input type="email" name="email" placeholder="Email" aria-label="email" autocomplete="email" required>
             <input type="password" name="password" placeholder="Password" aria-label="Password" autocomplete="password" required>
-            <button type="submit" class="contrast">Login</button>
+            <button class="primary" type="submit" class="contrast">Login</button>
+            <p>Don't have an accout? <a href="#signup"> Register here</a></p>
           </form>
         </div>
-        <div></div>
+        
       </article>
     </main>
     {% if error != '' %}
@@ -120,13 +219,14 @@
             data-target="modal-example"
             onClick="toggleModal(event)">
           </a>
-          <h3>Error</h3>
+          <h3 style="color: #640000;">Error</h3>
           <p>
             {{ error }}
           </p>
           <footer>
             <a href="#confirm"
               role="button"
+              class="secondary"
               data-target="modal-example"
               onClick="toggleModal(event)">
               Close

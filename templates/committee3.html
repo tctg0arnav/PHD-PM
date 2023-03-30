@@ -1,6 +1,6 @@
 {% extends "ticket_created.html" %}
 {% block form %}
-<article>
+<article class="article">
     <div class="grid">
         <div>
             {% if Ticket['Supervisor1_Remarks'] %}
@@ -24,8 +24,8 @@
         </div>
     </div>
     <form action="/comm/3/{{ Ticket['Project_ID'] }}" method="post">
-        <button type="submit" name="submit" value="Approve">Approve</button>
-        <button type="submit" name="submit" value="Reject">Reject</button>
+        <button class="primary" type="submit" name="submit" value="Approve">Satisfactory</button>
+        <button class="secondary" type="submit" name="submit" value="Reject">Not Satisfactory</button>
     </form>
 </article>
 {% endblock %}

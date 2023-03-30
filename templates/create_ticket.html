@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
@@ -8,12 +8,104 @@
     <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
     <title>Create Ticket</title>
     <style>
+        [data-theme="light"],
+        :root:not([data-theme="dark"]) {
+            --primary: #640000;
+            --primary-hover: #640000;
+            --primary-focus: rgba(143, 143, 143, 0.125);
+            --primary-inverse: #FFF;
+        }
+
+        .primary {
+            background-color: #640000;
+            border-color: #640000;
+            border-radius: 0;
+        }
+
+        .primary:hover {
+            background-color: #4a0101;
+        }
+
+        .secondary {
+            background-color: white;
+            color: #640000;
+            border-color: #640000;
+            border-radius: 0;
+
+        }
+
+        .secondary:hover {
+            background-color: #f6f6f6;
+        }
+
+        .Uploaded {
+
+            margin-bottom: 2%;
+        }
+
         /* for large screens */
         article {
             width: 75vw;
+           
             /* sets the width to 75% of the viewport width */
             margin: 10% auto 0;
             /* centers the article element horizontally and adds 10% margin to the top */
+        }
+
+        .article {
+            padding-bottom: 0;
+            margin-bottom: 5%;
+            box-shadow: none;
+            border: 1.5px solid #3d3d3d;
+            border-radius: 0;
+        }
+
+        .header {
+            background-color: #D9D9D9;
+            border-radius: 0;
+        }
+
+        .header h1 {
+            color: #640000;
+        }
+
+        .nav-container {
+            background-color: #D9D9D9;
+            box-shadow: 0 2px 8px grey;
+        }
+
+        .nav {
+            width: 75vw;
+            margin: 0 auto;
+            background-color: #D9D9D9;
+            color: #640000;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 5%;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 30px;
+
+        }
+
+        .nav img {
+            height: 70px;
+
+        }
+
+        .modal {
+            border: 1.5px solid #640000;
+            border-radius: 0;
+        }
+
+        .submit {
+            margin-bottom: 0 !important;
+        }
+
+        input::file-selector-button {
+           
+            border-radius: 2px !important;
         }
 
         /* for medium-sized screens */
@@ -24,234 +116,282 @@
                 margin: 10% auto 0;
                 /* centers the article element horizontally and adds 10% margin to the top */
             }
+
+            .nav {
+                width: 90vw;
+            }
         }
 
         /* for small screens */
         @media screen and (max-width: 768px) {
             article {
-                width: 100vw;
+                width: 95vw;
                 /* sets the width to 100% of the viewport width */
                 margin: 10% auto 0;
                 /* centers the article element horizontally and adds 10% margin to the top */
+            }
+
+            .nav {
+                width: 95vw;
+            }
+
+        }
+
+        @media screen and (max-width: 566px) {
+
+            .nav {
+                font-size: 24px;
+            }
+        }
+
+        @media screen and (max-width: 470px) {
+            .nav img {
+                height: 55px;
+
+            }
+
+            .nav {
+                font-size: 20px;
+            }
+        }
+
+        @media screen and (max-width: 494px) {
+            hgroup h1 {
+                font-size: 22px;
+            }
+
+        }
+
+        @media screen and (max-width: 388px) {
+
+            .nav {
+                font-size: 18px;
             }
         }
     </style>
 </head>
 
 <body>
-    <article>
-        <header>
+    <div class="nav-container">
+        <div class="nav">
+            <div class="logo">
+                <img src="../static/images/tietlogo.png" alt="logo">
+            </div>
+            <div class="brand">
+                <strong>PhD Progress Monitoring System</strong>
+            </div>
+        </div>
+    </div>
+    <article class="article">
+        <header class="header">
             <hgroup>
                 <h1>Create a New Ticket</h1>
                 <h2>Submit your project here.</h2>
             </hgroup>
         </header>
         <main class="container">
-            <form action="/create_ticket" method="post" enctype="multipart/form-data"> 
-            <section class="student-details">
-                <h3>Student Details</h3>
-                <div class="grid">
-                    <div>
-                        <label for="student_name">Student Name</label>
-                        <input type="text" name="student_name" id="student_name" required>
-                    </div>
-                </div>
-                <div>
-                    <label for="student_email">Student Email</label>
-                    <input type="email" name="student_email" id="student_email" required>
-                </div>
-                <div class="grid">
-                    <div>
-                        <label for="Roll_No">Roll No.</label>
-                        <input type="text" name="Roll_No" id="Roll_No" required>
+            <form action="/create_ticket" method="post" enctype="multipart/form-data">
+                <section class="student-details">
+                    <h3>Student Details</h3>
+                    <div class="grid">
+                        <div>
+                            <label for="student_name">Student Name</label>
+                            <input type="text" name="student_name" id="student_name" required>
+                        </div>
                     </div>
                     <div>
-                        <label for="Au">Academic Unit:</label>
-                        <select name="Au" id="Au" required>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                            <option value="13">13</option>
-                            <option value="14">14</option>
-                            <option value="15">15</option>
-                            <option value="16">16</option>
-                            <option value="17">17</option>
-                        </select>
+                        <label for="student_email">Student Email</label>
+                        <input type="email" name="student_email" id="student_email" required>
                     </div>
-                </div>
-            </section>
-            <section class="project-details">
-                <h3>Project Details</h3>
-                <label for="Project_Title">Project Title</label>
-                <input type="text" name="Project_Title" id="Project_Title" required>
-                <div class="grid">
-                    <div>
-                        <label for="Date_Of_Progress_Presentation">Date of Progress Presentation</label>
-                        <input type="date" name="Date_Of_Progress_Presentation" id="Date_Of_Progress_Presentation"
-                            required>
+                    <div class="grid">
+                        <div>
+                            <label for="Roll_No">Roll No.</label>
+                            <input type="text" name="Roll_No" id="Roll_No" required>
+                        </div>
+                        <div>
+                            <label for="Au">Academic Unit:</label>
+                            <select name="Au" id="Au" required>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                            </select>
+                        </div>
                     </div>
-                    <div>
-                        <label for="Date_Of_IRB">Date of IRB</label>
-                        <input type="date" name="Date_Of_IRB" id="Date_Of_IRB" required>
+                </section>
+                <section class="project-details">
+                    <h3>Project Details</h3>
+                    <label for="Project_Title">Project Title</label>
+                    <input type="text" name="Project_Title" id="Project_Title" required>
+                    <div class="grid">
+                        <div>
+                            <label for="Date_Of_Progress_Presentation">Date of Progress Presentation</label>
+                            <input type="date" name="Date_Of_Progress_Presentation" id="Date_Of_Progress_Presentation"
+                                required>
+                        </div>
+                        <div>
+                            <label for="Date_Of_IRB">Date of IRB</label>
+                            <input type="date" name="Date_Of_IRB" id="Date_Of_IRB" required>
+                        </div>
+                        <div>
+                            <label for="Gate">GATE/NET/TA</label>
+                            <details id="Gate" role="list">
+                                <summary aria-haspopup="listbox" id="Gate_bool">Select from Dropdown</summary>
+                                <ul role="listbox">
+                                    <li>
+                                        <label for="Yes">
+                                            <input type="radio" name="Gate" value="Yes" onchange="updateSummaryText()">
+                                            Yes
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label for="No">
+                                            <input type="radio" name="Gate" value="No" onchange="updateSummaryText()">
+                                            No
+                                        </label>
+                                    </li>
+                                </ul>
+                            </details>
+                        </div>
                     </div>
-                    <div>
-                        <label for="Gate">GATE/NET/TA</label>
-                        <details id="Gate" role="list">
-                            <summary aria-haspopup="listbox" id="Gate_bool">Select from Dropdown</summary>
-                            <ul role="listbox">
-                                <li>
-                                    <label for="Yes">
-                                    <input type="radio" name="Gate" value="Yes" onchange="updateSummaryText()">
-                                    Yes
-                                    </label>
-                                </li>
-                                <li>
-                                    <label for="No">
-                                    <input type="radio" name="Gate" value="No" onchange="updateSummaryText()">
-                                    No
-                                    </label>
-                                </li>
-                            </ul>
-                          </details>
+                </section>
+                <section class="supervisors">
+                    <h3>Supervisors</h3>
+                    <div class="grid">
+                        <div>
+                            <label for="Supervisor1_Name">Supervisor 1 Name</label>
+                            <input type="text" name="Supervisor1_Name" id="Supervisor1_Name" required>
+                        </div>
+                        <div>
+                            <label for="Supervisor1_Email">Supervisor 1 Email</label>
+                            <input type="email" name="Supervisor1_Email" id="Supervisor1_Email" required>
+                        </div>
                     </div>
-                </div>
-            </section>
-            <section class="supervisors">
-                <h3>Supervisors</h3>
-                <div class="grid">
-                    <div>
-                        <label for="Supervisor1_Name">Supervisor 1 Name</label>
-                        <input type="text" name="Supervisor1_Name" id="Supervisor1_Name" required>
+                    <div class="grid">
+                        <div>
+                            <label for="Supervisor2_Name">Supervisor 2 Name</label>
+                            <input type="text" name="Supervisor2_Name" id="Supervisor2_Name">
+                        </div>
+                        <div>
+                            <label for="Supervisor2_Email">Supervisor 2 Email</label>
+                            <input type="email" name="Supervisor2_Email" id="Supervisor2_Email">
+                        </div>
                     </div>
-                    <div>
-                        <label for="Supervisor1_Email">Supervisor 1 Email</label>
-                        <input type="email" name="Supervisor1_Email" id="Supervisor1_Email" required>
+                    <div class="grid">
+                        <div>
+                            <label for="Supervisor3_Name">Supervisor 3 Name</label>
+                            <input type="text" name="Supervisor3_Name" id="Supervisor3_Name">
+                        </div>
+                        <div>
+                            <label for="Supervisor3_Email">Supervisor 3 Email</label>
+                            <input type="email" name="Supervisor3_Email" id="Supervisor3_Email">
+                        </div>
                     </div>
-                </div>
-                <div class="grid">
-                    <div>
-                        <label for="Supervisor2_Name">Supervisor 2 Name</label>
-                        <input type="text" name="Supervisor2_Name" id="Supervisor2_Name">
+                </section>
+                <section class="committee">
+                    <h3>Doctoral Committee</h3>
+                    <div class="grid">
+                        <div>
+                            <label for="Committee1_Name">Committee 1 Name</label>
+                            <input type="text" name="Committee1_Name" id="Committee1_Name" required>
+                        </div>
+                        <div>
+                            <label for="Committee1_Email">Committee 1 Email</label>
+                            <input type="email" name="Committee1_Email" id="Committee1_Email" required>
+                        </div>
                     </div>
-                    <div>
-                        <label for="Supervisor2_Email">Supervisor 2 Email</label>
-                        <input type="email" name="Supervisor2_Email" id="Supervisor2_Email">
+                    <div class="grid">
+                        <div>
+                            <label for="Committee2_Name">Committee 2 Name</label>
+                            <input type="text" name="Committee2_Name" id="Committee2_Name" required>
+                        </div>
+                        <div>
+                            <label for="Committee2_Email">Committee 2 Email</label>
+                            <input type="email" name="Committee2_Email" id="Committee2_Email" required>
+                        </div>
                     </div>
-                </div>
-                <div class="grid">
-                    <div>
-                        <label for="Supervisor3_Name">Supervisor 3 Name</label>
-                        <input type="text" name="Supervisor3_Name" id="Supervisor3_Name">
+                    <div class="grid">
+                        <div>
+                            <label for="Committee3_Name">Committee 3 Name</label>
+                            <input type="text" name="Committee3_Name" id="Committee3_Name" required>
+                        </div>
+                        <div>
+                            <label for="Committee3_Email">Committee 3 Email</label>
+                            <input type="email" name="Committee3_Email" id="Committee3_Email" required>
+                        </div>
                     </div>
-                    <div>
-                        <label for="Supervisor3_Email">Supervisor 3 Email</label>
-                        <input type="email" name="Supervisor3_Email" id="Supervisor3_Email">
+                    <div class="grid">
+                        <div>
+                            <label for="Committee4_Name">Committee 4 Name</label>
+                            <input type="text" name="Committee4_Name" id="Committee4_Name">
+                        </div>
+                        <div>
+                            <label for="Committee4_Email">Committee 4 Email</label>
+                            <input type="email" name="Committee4_Email" id="Committee4_Email">
+                        </div>
                     </div>
-                </div>
-            </section>
-            <section class="committee">
-                <h3>Doctoral Committee</h3>
-                <div class="grid">
-                    <div>
-                        <label for="Committee1_Name">Committee 1 Name</label>
-                        <input type="text" name="Committee1_Name" id="Committee1_Name" required>
+                    <div class="grid">
+                        <div>
+                            <label for="Committee5_Name">Committee 5 Name</label>
+                            <input type="text" name="Committee5_Name" id="Committee5_Name">
+                        </div>
+                        <div>
+                            <label for="Committee5_Email">Committee 5 Email</label>
+                            <input type="email" name="Committee5_Email" id="Committee5_Email">
+                        </div>
                     </div>
-                    <div>
-                        <label for="Committee1_Email">Committee 1 Email</label>
-                        <input type="email" name="Committee1_Email" id="Committee1_Email" required>
-                    </div>
-                </div>
-                <div class="grid">
-                    <div>
-                        <label for="Committee2_Name">Committee 2 Name</label>
-                        <input type="text" name="Committee2_Name" id="Committee2_Name" required>
-                    </div>
-                    <div>
-                        <label for="Committee2_Email">Committee 2 Email</label>
-                        <input type="email" name="Committee2_Email" id="Committee2_Email" required>
-                    </div>
-                </div>
-                <div class="grid">
-                    <div>
-                        <label for="Committee3_Name">Committee 3 Name</label>
-                        <input type="text" name="Committee3_Name" id="Committee3_Name" required>
-                    </div>
-                    <div>
-                        <label for="Committee3_Email">Committee 3 Email</label>
-                        <input type="email" name="Committee3_Email" id="Committee3_Email" required>
-                    </div>
-                </div>
-                <div class="grid">
-                    <div>
-                        <label for="Committee4_Name">Committee 4 Name</label>
-                        <input type="text" name="Committee4_Name" id="Committee4_Name">
-                    </div>
-                    <div>
-                        <label for="Committee4_Email">Committee 4 Email</label>
-                        <input type="email" name="Committee4_Email" id="Committee4_Email">
-                    </div>
-                </div>
-                <div class="grid">
-                    <div>
-                        <label for="Committee5_Name">Committee 5 Name</label>
-                        <input type="text" name="Committee5_Name" id="Committee5_Name">
-                    </div>
-                    <div>
-                        <label for="Committee5_Email">Committee 5 Email</label>
-                        <input type="email" name="Committee5_Email" id="Committee5_Email">
-                    </div>
-                </div>           
-            </section>
+                </section>
                 <label for="file">Upload your file</label>
-                <input type="file" name="file_path" id="file" >
+                <input class="choose" type="file" name="file_path" id="file">
                 <div class="grid">
                     <div>
                         <label for="Conferences">Conferences:</label>
                         <textarea name="Conferences" id="" cols="20" rows="5" placeholder="Conferences"></textarea>
                     </div>
                     <div>
-                        <label for="SCOPUS">SCI/SCOPUS Publications:</label>
-                        <textarea name="Publications" id="" cols="20" rows="5" placeholder="SCI/SCOPUS Publications"></textarea>
+                        <label for="SCOPUS">SCOPUS/SCI/SSCI Publications:</label>
+                        <textarea name="Publications" id="" cols="20" rows="5"
+                            placeholder="SCOPUS/SCI/SSCI Publications"></textarea>
                     </div>
                 </div>
-            <section class="submit">
-                <input type="submit" value="Submit">
-            </section>
+                <section class="submit primary">
+                    <input class="submit" type="submit" value="Submit">
+                </section>
             </form>
         </main>
     </article>
+
     {% if success != '' %}
     <dialog class="container" id="modal-example" open>
         <article class="modal">
-          <a href="#close"
-            aria-label="Close"
-            class="close"
-            data-target="modal-example"
-            onClick="toggleModal(event)">
-          </a>
-          <h3>Success</h3>
-          <p>
-            {{ success }}
-          </p>
-          <footer>
-            <a href="/ticket_created/{{ Project_ID }}"
-              role="button"
-              data-target="modal-example"
-              onClick="toggleModal(event)">
-              Proceed
+            <a href="#close" aria-label="Close" class="close" data-target="modal-example" onClick="toggleModal(event)">
             </a>
-          </footer>
+            <h3 style="color: #640000;">Success</h3>
+            <p>
+                {{ success }}
+            </p>
+            <footer>
+                <a href="/ticket_created/{{ Project_ID }}" role="button" data-target="modal-example"
+                class="secondary"
+                    onClick="toggleModal(event)">
+                    Proceed
+                </a>
+            </footer>
         </article>
-      </dialog>
+    </dialog>
     {% endif %}
     <script>
         function updateSummaryText() {
@@ -267,4 +407,5 @@
         }
     </script>
 </body>
+
 </html>

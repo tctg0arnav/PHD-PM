@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,6 +7,107 @@
     <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
     <title>Dashboard</title>
     <style>
+          [data-theme="light"],
+        :root:not([data-theme="dark"]) {
+            --primary: #640000;
+            --primary-hover: #640000;
+            --primary-focus: rgba(143, 143, 143, 0.125);
+            --primary-inverse: #FFF;
+        }
+
+        .primary {
+            background-color: #640000;
+            border-color: #640000;
+            border-radius: 0;
+        }
+
+        .primary:hover {
+            background-color: #4a0101;
+        }
+
+        .secondary {
+            background-color: white;
+            color: #640000;
+            border-color: #640000;
+            border-radius: 0;
+
+        }
+
+        .secondary:hover {
+            background-color: #f6f6f6;
+        }
+
+        .Uploaded {
+
+            margin-bottom: 2%;
+        }
+
+        /* for large screens */
+        article {
+            width: 75vw;
+           
+            /* sets the width to 75% of the viewport width */
+            margin: 10% auto 0;
+            /* centers the article element horizontally and adds 10% margin to the top */
+        }
+
+        .article {
+            padding-bottom: 0;
+            margin-bottom: 5%;
+            box-shadow: none;
+            border: none;
+            border-radius: 0;
+        }
+
+        .header {
+            background-color: #D9D9D9;
+            border-radius: 0;
+        }
+
+        .header h1 {
+            color: #640000;
+        }
+
+        .nav{
+        background-color: #D9D9D9;
+        color: #640000;
+        min-height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        margin-bottom: 3%;
+        box-shadow: 0 2px 8px grey;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 30px;
+
+      }
+      .nav img{
+        height: 70px;
+        
+      }
+      .logout a{
+        color: #3D3D3D;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: medium;
+      }
+      .logout img{
+        height: 23px;
+      }
+
+        .modal {
+            border: 1.5px solid #640000;
+            border-radius: 0;
+        }
+
+        .submit {
+            margin-bottom: 0 !important;
+        }
+
+        input::file-selector-button {
+           
+            border-radius: 2px !important;
+        }
         /* for large screens */
         article.container1 {
             width: 75vw;
@@ -31,18 +132,24 @@
             width: 100%;
             background-color: #2c353c;
         }
+        kbd{
+            background-color: #640000;
+        }
     </style>
 </head>
 <body>
-    <nav style="padding-left: 5rem; padding-right: 5rem;">
-        <ul>
-            <li><a href="/xl/"> Generate DataSheet</a></li>
-        </ul>
-        <ul>
-            <li><a href="/logout">Logout</a></li>
-        </ul>
-    </nav>
-    <article class="container1">
+    <div class="nav">
+        <div class="logo">
+          <img src="../static/images/tietlogo.png" alt="logo">
+        </div>
+        <div class="brand">
+          <strong>PhD Progress monitoring system</strong>
+        </div>
+        <div class="logout">
+          <a>Log out <img src="../static/images/logout.png" alt="logout"></a>
+        </div>
+       </div>
+    <article  class="container1 article">
         <header class="grid">
         <div>
             <hgroup>
@@ -65,7 +172,7 @@
         </header>
         <hr>
         {% for Ticket in Tickets %}
-            <article class="card1">
+            <article class=" article">
                 <header>
                     <kbd>{{ Ticket['Project_ID'] }}</kbd> <b>{{ Ticket['Project_Title'] }} </b> 
                 </header>
@@ -96,8 +203,8 @@
                         <div></div>
                         <div></div>
                         <div></div>
-                        <a href="/ticket_created/{{ Ticket['Project_ID'] }}" role="button" target="_blank" class="outline">View Ticket</a>
-                        <a href="/auhead/{{ Ticket['Project_ID'] }}/approve" role="button" class="contrast">Approve</a>
+                        <a class="secondary" href="/ticket_created/{{ Ticket['Project_ID'] }}" role="button" target="_blank" class="outline">View Ticket</a>
+                        <a class="primary" href="/auhead/{{ Ticket['Project_ID'] }}/approve" role="button" class="contrast">Approve</a>
                     </div>
                 </footer>
             </article>
@@ -112,13 +219,14 @@
             data-target="modal-example"
             onClick="toggleModal(event)">
           </a>
-          <h3>Success</h3>
+          <h3 style="color: #640000;">Success</h3>
           <p>
             {{ success }}
           </p>
           <footer>
             <a href="url_for('auhead')"
               role="button"
+              class="secondary"
               data-target="modal-example"
               onClick="toggleModal(event)">
               Close

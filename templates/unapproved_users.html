@@ -1,10 +1,66 @@
-<html>
+<html data-theme="light">
     <head>
         <title>Unnaproved Users</title>
         <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
     </head>
+    <style>
+      .primary{
+        background-color: #640000;
+       border-color: #640000;
+        border-radius: 0;
+      }.primary:hover{
+        background-color: #4a0101;
+      }
+      .secondary{
+        background-color: white;
+        color: #640000;
+        border-color: #640000;
+        border-radius: 0;
+      }
+      .secondary:hover{
+        background-color:#f6f6f6 ;
+      }
+      .nav{
+        background-color: #D9D9D9;
+        color: #640000;
+        min-height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        margin-bottom: 3%;
+        box-shadow: 0 2px 8px grey;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 30px;
+
+      }
+      .nav img{
+        height: 70px;
+        
+      }
+      .logout a{
+        color: #3D3D3D;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: medium;
+      }
+      .logout img{
+        height: 23px;
+      }
+    </style>
     <body>
+     <div class="nav">
+      <div class="logo">
+        <img src="../static/images/tietlogo.png" alt="logo">
+      </div>
+      <div class="brand">
+        <strong>PhD Progress monitoring system</strong>
+      </div>
+      <div class="logout">
+        <a>Log out <img src="../static/images/logout.png" alt="logout"></a>
+      </div>
+     </div>
         <div class="container">
+        
             <div class="row">
                 <div class="col-12">
                     <h1>Unapproved Users</h1>
@@ -28,7 +84,7 @@
                                 <td>{{ user.Au }}</td>
                                 <td>{{ user.role }}</td>
                                 <td>
-                                    <button class="" data-target="modal-approve-{{ user.email }}" onClick="toggleModal(event)"> Approve</button>
+                                    <button class="primary" data-target="modal-approve-{{ user.email }}" onClick="toggleModal(event)"> Approve</button>
                                 </td>
                                 <td>
                                     <button class="secondary" data-target="modal-delete-{{ user.email }}" onClick="toggleModal(event)"> Delete</button>
