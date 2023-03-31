@@ -2,8 +2,12 @@
 {% block form %}
 <article class="article">
     <form action="/super/1/{{ Ticket['Project_ID'] }}" method="post">
+        <label for="prevmarks">Marks till previous</label>
+        <input type="text" name="prevmarks" id="prevmarks">
+        <label for="nowmarks">Marks till present</label>
+        <input type="text" name="nowmarks" id="nowmarks">
         <label for="Supervisor1_Remarks">Your Remarks</label>
-        <textarea placeholder="add your remark here" name="Supervisor1_Remarks" id="Supervisor1_Remarks" cols="30" rows="10"></textarea>
+        <textarea placeholder="add your remark here" name="Supervisor1_Remarks" id="Supervisor1_Remarks" cols="30" rows="9"></textarea>
         <button class="primary" type="submit" name="submit" value="Approve">Satisfactory</button>
         <button class="secondary" type="submit" name="submit" value="Reject">Not Statisfactory</button>
     </form>

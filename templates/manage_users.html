@@ -1,6 +1,6 @@
 <html data-theme="light">
     <head>
-        <title>Unnaproved Users</title>
+        <title>Users</title>
         <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
     </head>
     <style>
@@ -50,21 +50,21 @@
     <body>
      <div class="nav">
       <div class="logo">
-        <img src="{{ url_for('static', filename='images/tietlogo.png') }}" alt="logo">
+        <img src="../static/images/tietlogo.png" alt="logo">
       </div>
       <div class="brand">
         <strong>PhD Progress monitoring system</strong>
       </div>
       <div class="logout">
-        <a>Log out <img src="{{ url_for('static', filename='images/logout.png') }}" alt="logout"></a>
+        <a>Log out <img src="../static/images/logout.png" alt="logout"></a>
       </div>
      </div>
         <div class="container">
         
             <div class="row">
                 <div class="col-12">
-                    <h1>Unapproved Users</h1>
-                    <p>These users have not been approved yet.</p>
+                    <h1>Users</h1>
+                    <p>Here's a list of existing user accounts</p>
                     <table class="table">
                         <thead>
                             <tr>
@@ -72,20 +72,16 @@
                                 <th>Email</th>
                                 <th>Au</th>
                                 <th>Role</th>
-                                <th>Approve</th>
                                 <th>Delete</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for user in unapproved_users %}
+                            {% for user in users %}
                             <tr>
                                 <td>{{ user.name }}</td>
                                 <td>{{ user.email }}</td>
                                 <td>{{ user.Au }}</td>
                                 <td>{{ user.role }}</td>
-                                <td>
-                                    <button class="primary" data-target="modal-approve-{{ user.email }}" onClick="toggleModal(event)"> Approve</button>
-                                </td>
                                 <td>
                                     <button class="secondary" data-target="modal-delete-{{ user.email }}" onClick="toggleModal(event)"> Delete</button>
                                 </td>
@@ -96,32 +92,7 @@
                 </div>
             </div>
         </div>
-        {% for user in unapproved_users %}
-        <dialog id="modal-approve-{{ user.email }}">
-            <article>
-              <a href="#close"
-                aria-label="Close"
-                class="close"
-                data-target="modal-example"
-                onClick="toggleModal(event)">
-              </a>
-              <h3>Confirmation</h3>
-                <p>Are you sure you want to approve this user?</p>
-              <footer>
-                <a href="#cancel"
-                  role="button"
-                  class="secondary"
-                  data-target="modal-example"
-                  onClick="toggleModal(event)">
-                  Cancel
-                </a>
-                <a href="/approve_user/{{ user.email }}"
-                  role="button">
-                  Confirm
-                </a>
-              </footer>
-            </article>
-          </dialog>
+        {% for user in users %}
           <dialog id="modal-delete-{{ user.email }}">
             <article>
               <a href="#close"

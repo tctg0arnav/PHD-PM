@@ -91,10 +91,7 @@ class Unapproved_Users(db.Model):
 
 @app.route('/')
 def home():
-    return """
-    <a href="/register">Register</a>
-    <a href="/create_ticket">Ticket</a>
-    """
+    return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -107,7 +104,10 @@ def login():
                 session['email'] = email
                 session['role'] = user.role
                 session['Au'] = user.Au
-                return redirect(url_for('home'))
+                if user.role == 'AU_Head':
+                    return redirect(url_for('au_head'))
+                elif user.role == 'admin':
+                    return redirect(url_for('admin'))
             else:
                 print('Wrong password')
                 return render_template('login.html', error='Wrong password')
@@ -148,6 +148,20 @@ def unapproved_users():
         #convert to list of dictionaries
         unapproved_users = [dict(email=unapproved_user.email, password=unapproved_user.password, role=unapproved_user.role, name=unapproved_user.name, Au=unapproved_user.Au) for unapproved_user in unapproved_users]
         return render_template('unapproved_users.html', unapproved_users=unapproved_users)
+    return redirect(url_for('login'))
+
+@app.route('/manage_users', methods=['GET', 'POST'])
+def manage_users():
+    if session.get('role') == 'admin':
+        #get all users where role is not admin
+        users = User.query.filter(User.role != 'admin').all()
+        print(users)
+        #convert to list of dictionaries
+        users = [dict(email=user.email, password=user.password, role=user.role, name=user.name, Au=user.Au) for user in users]
+        #delete passwords from dictionary
+        for user in users:
+            del user['password']
+        return render_template('manage_users.html', users=users)
     return redirect(url_for('login'))
 
 @app.route('/approve_user/<email>', methods=['GET', 'POST'])
@@ -231,6 +245,11 @@ def create_ticket():
             Committee4_Email = request.form['Committee4_Email']
             Committee4_Approval = False
             Committee4_Remarks = ''
+        else:
+            Committee4_Name = ''
+            Committee4_Email = ''
+            Committee4_Approval = False
+            Committee4_Remarks = ''
         #committee5 is optional
         if request.form['Committee5_Name'] != '':
             Committee5_Name = request.form['Committee5_Name']
@@ -251,7 +270,30 @@ def create_ticket():
         Conferences = request.form['Conferences']
         Au_Approval = False
         Adordc_Approval = False
-        new_ticket = Ticket(Student_Name=student_name, Student_Email=student_email, Roll_No=Roll_No, Au=Au, Date_Of_Registration=Date_Of_Registration, Gate=Gate, Project_Title=Project_Title, Date_Of_Progress_Presentation=Date_Of_Progress_Presentation, Date_Of_IRB=Date_Of_IRB, Supervisor1_Name=Supervisor1_Name, Supervisor1_Email=Supervisor1_Email, Supervisor1_Approval=Supervisor1_Approval, Supervisor1_Remarks=Supervisor1_Remarks, Supervisor2_Name=Supervisor2_Name, Supervisor2_Email=Supervisor2_Email, Supervisor2_Approval=Supervisor2_Approval, Supervisor2_Remarks=Supervisor2_Remarks, Supervisor3_Name=Supervisor3_Name, Supervisor3_Email=Supervisor3_Email, Supervisor3_Approval=Supervisor3_Approval, Supervisor3_Remarks=Supervisor3_Remarks, Committee1_Name=Committee1_Name, Committee1_Email=Committee1_Email, Committee1_Approval=Committee1_Approval, Committee1_Remarks=Committee1_Remarks, Committee2_Name=Committee2_Name, Committee2_Email=Committee2_Email, Committee2_Approval=Committee2_Approval, Committee2_Remarks=Committee2_Remarks, Committee3_Name=Committee3_Name, Committee3_Email=Committee3_Email, Committee3_Approval=Committee3_Approval, Committee3_Remarks=Committee3_Remarks, Committee4_Name=Committee4_Name, Committee4_Email=Committee4_Email, Committee4_Approval=Committee4_Approval, Committee4_Remarks=Committee4_Remarks, Committee5_Name=Committee5_Name, Committee5_Email=Committee5_Email, Committee5_Approval=Committee5_Approval, Committee5_Remarks=Committee5_Remarks, File_Path=file_path, Publications=Publications, Conferences=Conferences, Au_Approval=Au_Approval, Adordc_Approval=Adordc_Approval)
+
+        #create new ticket without including supervisor2, supervisor3, committee4, committee5
+        new_ticket = Ticket(Student_Name=student_name, Student_Email=student_email, Roll_No=Roll_No, Au=Au, Date_Of_Registration=Date_Of_Registration, Gate=Gate, Project_Title=Project_Title, Date_Of_Progress_Presentation=Date_Of_Progress_Presentation, Date_Of_IRB=Date_Of_IRB, Supervisor1_Name=Supervisor1_Name, Supervisor1_Email=Supervisor1_Email, Supervisor1_Approval=Supervisor1_Approval, Supervisor1_Remarks=Supervisor1_Remarks, Committee1_Name=Committee1_Name, Committee1_Email=Committee1_Email, Committee1_Approval=Committee1_Approval, Committee1_Remarks=Committee1_Remarks, Committee2_Name=Committee2_Name, Committee2_Email=Committee2_Email, Committee2_Approval=Committee2_Approval, Committee2_Remarks=Committee2_Remarks, Committee3_Name=Committee3_Name, Committee3_Email=Committee3_Email, Committee3_Approval=Committee3_Approval, Committee3_Remarks=Committee3_Remarks, Publications=Publications, Conferences=Conferences, Au_Approval=Au_Approval, Adordc_Approval=Adordc_Approval, File_Path=file_path)        
+        #put data into database. check if supervisor2, supervisor3, committee4, committee5 are empty or not, if empty then don't add them to database
+        if Supervisor2_Name != '':
+            new_ticket.Supervisor2_Name = Supervisor2_Name
+            new_ticket.Supervisor2_Email = Supervisor2_Email
+            new_ticket.Supervisor2_Approval = Supervisor2_Approval
+            new_ticket.Supervisor2_Remarks = Supervisor2_Remarks
+        if Supervisor3_Name != '':
+            new_ticket.Supervisor3_Name = Supervisor3_Name
+            new_ticket.Supervisor3_Email = Supervisor3_Email
+            new_ticket.Supervisor3_Approval = Supervisor3_Approval
+            new_ticket.Supervisor3_Remarks = Supervisor3_Remarks
+        if Committee4_Name != '':
+            new_ticket.Committee4_Name = Committee4_Name
+            new_ticket.Committee4_Email = Committee4_Email
+            new_ticket.Committee4_Approval = Committee4_Approval
+            new_ticket.Committee4_Remarks = Committee4_Remarks
+        if Committee5_Name != '':
+            new_ticket.Committee5_Name = Committee5_Name
+            new_ticket.Committee5_Email = Committee5_Email
+            new_ticket.Committee5_Approval = Committee5_Approval
+            new_ticket.Committee5_Remarks = Committee5_Remarks
         db.session.add(new_ticket)
         db.session.commit()
         #get Project_ID
@@ -284,12 +326,14 @@ def super1(Project_ID):
     if request.method == 'POST':
         if request.form['submit'] == 'Approve':
             ticket.Supervisor1_Approval = True
+        ticket.Supervisor1_Previous_Marks = request.form['prevmarks']
+        ticket.Supervisor1_Present_Marks = request.form['nowmarks']
         ticket.Supervisor1_Remarks = request.form['Supervisor1_Remarks']
         db.session.commit()
         ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
         ticket = ticket.__dict__
         if request.form['submit'] == 'Approve':
-            if ticket['Supervisor2_Approval'] == True and ticket['Supervisor3_Approval'] == True:
+            if ticket['Supervisor1_Approval'] == True and ticket['Supervisor2_Approval'] == True and ticket['Supervisor3_Approval'] == True:
                 send_email(ticket['Committee1_Email'], f'Ticket {Project_ID} Approved By Supervisors', 'email/ticket_approved', Ticket=ticket, Comm=1)
                 send_email(ticket['Committee2_Email'], f'Ticket {Project_ID} Approved By Supervisors', 'email/ticket_approved', Ticket=ticket, Comm=2)
                 send_email(ticket['Committee3_Email'], f'Ticket {Project_ID} Approved By Supervisors', 'email/ticket_approved', Ticket=ticket, Comm=3)
@@ -308,12 +352,14 @@ def super2(Project_ID):
     if request.method == 'POST':
         if request.form['submit'] == 'Approve':
             ticket.Supervisor2_Approval = True
-        ticket.Supervisor2_Remarks = request.form['Supervisor2_Remarks']
+        ticket.Supervisor2_Previous_Marks = request.form['prevmarks']
+        ticket.Supervisor2_Present_Marks = request.form['nowmarks']
+        ticket.Supervisor2_Remarks = request.form['Supervisor1_Remarks']
         db.session.commit()
-        print(ticket.Supervisor1_Approval)
+        ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
         ticket = ticket.__dict__
         if request.form['submit'] == 'Approve':
-            if ticket['Supervisor1_Approval'] == True and ticket['Supervisor3_Approval'] == True:
+            if ticket['Supervisor1_Approval'] == True and ticket['Supervisor2_Approval'] == True and ticket['Supervisor3_Approval'] == True:
                 send_email(ticket['Committee1_Email'], f'Ticket {Project_ID} Approved By Supervisors', 'email/ticket_approved', Ticket=ticket, Comm=1)
                 send_email(ticket['Committee2_Email'], f'Ticket {Project_ID} Approved By Supervisors', 'email/ticket_approved', Ticket=ticket, Comm=2)
                 send_email(ticket['Committee3_Email'], f'Ticket {Project_ID} Approved By Supervisors', 'email/ticket_approved', Ticket=ticket, Comm=3)
@@ -321,23 +367,25 @@ def super2(Project_ID):
                     send_email(ticket['Committee4_Email'], f'Ticket {Project_ID} Approved By Supervisors', 'email/ticket_approved', Ticket=ticket, Comm=4)
                 if ticket['Committee5_Email'] != '':
                     send_email(ticket['Committee5_Email'], f'Ticket {Project_ID} Approved By Supervisors', 'email/ticket_approved', Ticket=ticket, Comm=5)
-            return render_template('supervisor2.html', super=2, Ticket=ticket, success='Project Approved. Remarks added successfully')
+            return render_template('supervisor.html', super=2, Ticket=ticket, success='Project Approved. Remarks added successfully')
         else:
-            return render_template('supervisor2.html', super=2, Ticket=ticket, success='Project Rejected. Remarks added.')
-    return render_template('supervisor2.html', super=2, Ticket=ticket, success='')
+            return render_template('supervisor.html', super=2, Ticket=ticket, success='Project Rejected. Remarks added.')
+    return render_template('supervisor.html', super=2, Ticket=ticket, success='')
 
 @app.route('/super/3/<Project_ID>', methods=['GET', 'POST'])
 def super3(Project_ID):
     ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
     if request.method == 'POST':
         if request.form['submit'] == 'Approve':
-            ticket.Supervisor3_Approval = True
-        ticket.Supervisor3_Remarks = request.form['Supervisor3_Remarks']
+            ticket.Supervisor1_Approval = True
+        ticket.Supervisor1_Previous_Marks = request.form['prevmarks']
+        ticket.Supervisor1_Present_Marks = request.form['nowmarks']
+        ticket.Supervisor1_Remarks = request.form['Supervisor1_Remarks']
         db.session.commit()
         ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
         ticket = ticket.__dict__
         if request.form['submit'] == 'Approve':
-            if ticket['Supervisor1_Approval'] == True and ticket['Supervisor2_Approval'] == True:
+            if ticket['Supervisor1_Approval'] == True and ticket['Supervisor2_Approval'] == True and ticket['Supervisor3_Approval'] == True:
                 send_email(ticket['Committee1_Email'], f'Ticket {Project_ID} Approved By Supervisors', 'email/ticket_approved', Ticket=ticket, Comm=1)
                 send_email(ticket['Committee2_Email'], f'Ticket {Project_ID} Approved By Supervisors', 'email/ticket_approved', Ticket=ticket, Comm=2)
                 send_email(ticket['Committee3_Email'], f'Ticket {Project_ID} Approved By Supervisors', 'email/ticket_approved', Ticket=ticket, Comm=3)
@@ -345,10 +393,10 @@ def super3(Project_ID):
                     send_email(ticket['Committee4_Email'], f'Ticket {Project_ID} Approved By Supervisors', 'email/ticket_approved', Ticket=ticket, Comm=4)
                 if ticket['Committee5_Email'] != '':
                     send_email(ticket['Committee5_Email'], f'Ticket {Project_ID} Approved By Supervisors', 'email/ticket_approved', Ticket=ticket, Comm=5)
-            return render_template('supervisor3.html', super=3, Ticket=ticket, success='Project Approved. Remarks added successfully')
+            return render_template('supervisor.html', super=3, Ticket=ticket, success='Project Approved. Remarks added successfully')
         else:
-            return render_template('supervisor3.html', super=3, Ticket=ticket, success='Project Rejected. Remarks added.')
-    return render_template('supervisor3.html', super=3, Ticket=ticket, success='')
+            return render_template('supervisor.html', super=3, Ticket=ticket, success='Project Rejected. Remarks added.')
+    return render_template('supervisor.html', super=3, Ticket=ticket, success='')
 
 @app.route('/comm/1/<Project_ID>', methods=['GET', 'POST'])
 def comm1(Project_ID):
