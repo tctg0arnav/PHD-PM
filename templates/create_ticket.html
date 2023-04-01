@@ -373,26 +373,6 @@
             </form>
         </main>
     </article>
-
-    {% if success != '' %}
-    <dialog class="container" id="modal-example" open>
-        <article class="modal">
-            <a href="#close" aria-label="Close" class="close" data-target="modal-example" onClick="toggleModal(event)">
-            </a>
-            <h3 style="color: #640000;">Success</h3>
-            <p>
-                {{ success }}
-            </p>
-            <footer>
-                <a href="/ticket_created/{{ Project_ID }}" role="button" data-target="modal-example"
-                class="secondary"
-                    onClick="toggleModal(event)">
-                    Proceed
-                </a>
-            </footer>
-        </article>
-    </dialog>
-    {% endif %}
     <script>
         function updateSummaryText() {
             var gate = document.getElementById("Gate");

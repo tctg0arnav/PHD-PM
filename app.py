@@ -165,7 +165,7 @@ def login():
                 session['role'] = user.role
                 session['Au'] = user.Au
                 if user.role == 'AU_Head':
-                    return redirect(url_for('au_head'))
+                    return redirect(url_for('auhead'))
                 elif user.role == 'admin':
                     return redirect(url_for('adordc'))
             else:
@@ -598,77 +598,49 @@ def auhead():
     #check if user is AU_Head
     if session['role'] != 'AU_Head':
         return redirect(url_for('login'))
+    Au = session['Au']
     if request.method == 'GET':
         filter_approval = request.args.get('filter_approval')
-    if filter_approval == 'All':
-        tickets = Ticket.query.filter_by(Au=session['Au']).all()
-    elif filter_approval == 'Approved':
-        tickets = Ticket.query.filter_by(Au=session['Au']).filter(Ticket.Supervisor1_Approval == True, Ticket.Committee1_Approval == True, Ticket.Committee2_Approval == True, Ticket.Committee3_Approval == True).all()
-        for ticket in tickets:
-            if ticket.Supervisor2_Email != '':
-                if ticket.Supervisor2_Approval == False:
+        if filter_approval == 'All':
+            tickets = Ticket.query.filter_by(Au=Au).all()
+            add_approvals(tickets)
+            print(tickets)
+            return render_template('auhead.html', tickets=tickets, filter_approval=filter_approval, success='')
+        elif filter_approval == 'Approved':
+            tickets = Ticket.query.filter_by(Au=Au).all()
+            add_approvals(tickets)
+            tickets = [ticket.__dict__ for ticket in tickets]
+            for ticket in tickets:
+                if ticket['Supervisor_Approval'] == False:
                     tickets.remove(ticket)
-            if ticket.Supervisor3_Email != '':
-                if ticket.Supervisor3_Approval == False:
+                elif ticket['Committee_Approval'] == False:
                     tickets.remove(ticket)
-            if ticket.Committee4_Email != '':
-                if ticket.Committee4_Approval == False:
-                    tickets.remove(ticket)
-            if ticket.Committee5_Email != '':
-                if ticket.Committee5_Approval == False:
-                    tickets.remove(ticket)
-    elif filter_approval == 'Pending':
-        #check if ticket is rejected by any of the supervisors (Supervisor1, Supervisor2[if exists], Supervisor3[if exists]) or any of the committee members (Committee1, Committee2, Committee3, Committee4[if exists], Committee5[if exists])
-        tickets = Ticket.query.filter_by(Au=session['Au']).filter(Ticket.Supervisor1_Approval == False, Ticket.Committee1_Approval == False, Ticket.Committee2_Approval == False, Ticket.Committee3_Approval == False).all()
-        for ticket in tickets:
-            if ticket.Supervisor2_Email != '':
-                if ticket.Supervisor2_Approval == True:
-                    tickets.remove(ticket)
-            if ticket.Supervisor3_Email != '':
-                if ticket.Supervisor3_Approval == True:
-                    tickets.remove(ticket)
-            if ticket.Committee4_Email != '':
-                if ticket.Committee4_Approval == True:
-                    tickets.remove(ticket)
-            if ticket.Committee5_Email != '':
-                if ticket.Committee5_Approval == True:
-                    tickets.remove(ticket)
-    tickets = Ticket.query.filter_by(Au=session['Au']).all()
-    print(tickets)
-    for ticket in tickets:
-            if ticket.Supervisor2_Email != '':
-                if ticket.Supervisor2_Approval == False:
-                    ticket.Supervisor_Approval = False
                 else:
-                    ticket.Supervisor_Approval = True
-            if ticket.Supervisor3_Email != '':
-                if ticket.Supervisor3_Approval == False:
-                    ticket.Supervisor_Approval = False
+                    pass
+            print(tickets)
+            return render_template('auhead.html', tickets=tickets, filter_approval=filter_approval, success='')
+        elif filter_approval == 'Pending':
+            tickets = Ticket.query.filter_by(Au=Au, Au_Approval=False).all()
+            add_approvals(tickets)
+            for ticket in tickets:
+                if ticket['Supervisor_Approval'] == False:
+                    tickets.remove(ticket)
+                elif ticket['Committee_Approval'] == False:
+                    tickets.remove(ticket)
                 else:
-                    ticket.Supervisor_Approval = True
-        #check if ticket is approved by all committee members
-            if ticket.Committee1_Approval == False:
-                ticket.Committee_Approval = False
-            elif ticket.Committee2_Approval == False:
-                ticket.Committee_Approval = False
-            elif ticket.Committee3_Approval == False:
-                ticket.Committee_Approval = False
-            if ticket.Committee4_Email != '':
-                if ticket.Committee4_Approval == False:
-                    ticket.Committee_Approval = False
-                else:
-                    ticket.Committee_Approval = True
-            if ticket.Committee5_Email != '':
-                if ticket.Committee5_Approval == False:
-                    ticket.Committee_Approval = False
-                else:
-                    ticket.Committee_Approval = True
-    #if ticket has been approved by AU_Head, then remove it from the list
-    for ticket in tickets:
-        if ticket.Au_Approval == True:
-            tickets.remove(ticket)
+                    pass
+            print(tickets)
+            return render_template('auhead.html', tickets=tickets, filter_approval=filter_approval, success='')
+        elif filter_approval == 'AU_Approved':
+            tickets = Ticket.query.filter_by(Au=Au, Au_Approval=True).all()
+            add_approvals(tickets)
+            print(tickets)
+            return render_template('auhead.html', tickets=tickets, filter_approval=filter_approval, success='')
+    tickets = Ticket.query.filter_by(Au=Au).all()
+    add_approvals(tickets)
     tickets = [ticket.__dict__ for ticket in tickets]
-    return render_template('auhead.html', Tickets=tickets, success='', last_date=last_date)
+    print(tickets)
+    return render_template('auhead.html', tickets=tickets, success='')
 
 #route for AU_Head approve
 @app.route('/auhead/<int:Project_ID>/approve', methods=['GET', 'POST'])
@@ -685,7 +657,7 @@ def auhead_approve(Project_ID):
         db.session.commit()
         ticket = ticket.__dict__
         return render_template('auhead.html', success='Project Approved.', last_date=last_date)
-    return render_template('auhead.html', Ticket=ticket, success='')
+    return render_template('auhead.html', Ticket=ticket, success='Project Successfully Approved')
 
 #route for AU_Head approve all where supervisor approval is true and committee approval is true
 @app.route('/auhead/approve_all', methods=['GET', 'POST'])
@@ -698,10 +670,25 @@ def auhead_approve_all():
         return redirect(url_for('login'))
     tickets = Ticket.query.filter_by(Au=session['Au']).all()
     for ticket in tickets:
-        if ticket.Supervisor_Approval == True and ticket.Committee_Approval == True:
+        flag = False
+        if ticket.Supervisor1_Approval == True and ticket.Committee1_Approval == True and ticket.Committee2_Approval == True and ticket.Committee3_Approval == True:
+            if ticket.Supervisor2_Email != '':
+                if ticket.Supervisor2_Approval == True:
+                    flag = True
+            if ticket.Supervisor3_Email != '':
+                if ticket.Supervisor3_Approval == True:
+                    flag = True
+            if ticket.Committee4_Email != '':
+                if ticket.Committee4_Approval == True:
+                    flag = True
+            if ticket.Committee5_Email != '':
+                if ticket.Committee5_Approval == True:
+                    flag = True
+            flag = True
+        if flag == True:
             ticket.Au_Approval = True
             db.session.commit()
-    return render_template('auhead.html', success='All projects approved.', last_date=last_date)
+    return render_template('auhead.html', success='All Supervisor and Committee projects approved.', last_date=last_date)
 
 
 #route for Adordc
@@ -715,17 +702,23 @@ def adordc():
         return redirect(url_for('login'))
     #select all tickets where Au_Approval is True
     tickets = Ticket.query.filter_by(Au_Approval=True).all()
-    #if get request, then filter tickets based on filter_au 
-    print(tickets)
-    if request.method == 'GET':
-        filter_au = request.args.get('filter_au')
-        if filter_au != '':
-            tickets = Ticket.query.filter_by(Au=filter_au).filter_by(Au_Approval=True).all()
-            tickets = [ticket.__dict__ for ticket in tickets]
-            render_template('adordc.html', Tickets=tickets, success='')
-        #convert tickets to dictionary
-        tickets = [ticket.__dict__ for ticket in tickets]
-        render_template('adordc.html', tickets=tickets, success='', last_date=last_date)
+    tickets = [ticket.__dict__ for ticket in tickets]
+    Au = session['Au']
+    return render_template('adordc.html', Tickets=tickets, success='', last_date=last_date)
+
+#filter for Adordc
+@app.route('/adordc/<int:au>')
+def adordc_filter(au):
+    #check if user is logged in
+    if 'email' not in session:
+        return redirect(url_for('login'))
+    #check if user is Adordc
+    if session['role'] != 'admin':
+        return redirect(url_for('login'))
+    #select all tickets where Au_Approval is True
+    tickets = Ticket.query.filter_by(Au_Approval=True, Au=au).all()
+    tickets = [ticket.__dict__ for ticket in tickets]
+    Au = session['Au']
     return render_template('adordc.html', Tickets=tickets, success='', last_date=last_date)
 
 #route for Adordc approve
@@ -780,6 +773,7 @@ def last_date():
         last_date = LastDate.query.first().LastDate
         return render_template('last_date.html', success='Last Date set: {}'.format(last_date))
     return render_template('last_date.html', success='')
+
 @app.route('/xl')
 def xl():
     for Au in range(1, 18):
@@ -878,3 +872,20 @@ def send_email(to, subject, template, **kwargs):
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def add_approvals(tickets):
+    for ticket in tickets:
+        ticket = ticket.__dict__
+        ticket['Supervisor_Approval'] = ticket['Supervisor1_Approval']
+        if ticket['Supervisor2_Email'] != '':
+            #logical and of Supervisor_Approval and Supervisor2_Approval
+            ticket['Supervisor_Approval'] = ticket['Supervisor_Approval'] and ticket['Supervisor2_Approval']
+        if ticket['Supervisor3_Email'] != '':
+            #logical and of Supervisor_Approval and Supervisor3_Approval
+            ticket['Supervisor_Approval'] = ticket['Supervisor_Approval'] and ticket['Supervisor3_Approval']
+        ticket['Committee_Approval'] = ticket['Committee1_Approval'] and ticket['Committee2_Approval'] and ticket['Committee3_Approval']
+        if ticket['Committee4_Email'] != '':
+            ticket['Committee_Approval'] = ticket['Committee_Approval'] and ticket['Committee4_Approval']
+        if ticket['Committee5_Email'] != '':
+            ticket['Committee_Approval'] = ticket['Committee_Approval'] and ticket['Committee5_Approval']
+    return tickets
