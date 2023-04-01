@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,8 +7,113 @@
     <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
     <title>Last Date</title>
 </head>
+<style>
+    [data-theme="light"],
+        :root:not([data-theme="dark"]) {
+            --primary: #640000;
+            --primary-hover: #640000;
+            --primary-focus: rgba(143, 143, 143, 0.125);
+            --primary-inverse: #FFF;
+        }
+  .primary {
+    background-color: #640000;
+    border-color: #640000;
+    border-radius: 0;
+  }
+
+  .primary:hover {
+    background-color: #4a0101;
+  }
+
+  .secondary {
+    background-color: white;
+    color: #640000;
+    border-color: #640000;
+    border-radius: 0;
+  }
+
+  .secondary:hover {
+    background-color: #f6f6f6;
+  }
+
+  .nav {
+    background-color: #D9D9D9;
+    color: #640000;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-bottom: 3%;
+    box-shadow: 0 2px 8px grey;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 30px;
+
+  }
+
+  .nav img {
+    height: 70px;
+
+  }
+  .article {
+      box-shadow: 10px 10px 10px #acacac;
+      border: 1.5px solid #640000 !important;
+      width: 60%;
+      margin: 0 auto;
+    }
+
+  .logout a {
+    color: #3D3D3D;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: medium;
+  }
+
+  .logout img {
+    height: 23px;
+  }
+
+  @media screen and (max-width: 768px) {
+    .nav img {
+      height: 50px;
+
+    }
+
+    .logout img {
+      height: 16px;
+    }
+
+    .brand {
+      font-size: 22px;
+    }
+
+
+  }
+
+  @media screen and (max-width: 530px) {
+
+    .brand {
+      display: none;
+    }
+
+    .nav {
+      justify-content: space-between;
+      padding: 15px;
+    }
+  }
+</style>
 <body>
-    <article>
+  <nav class="nav">
+    <div class="logo">
+      <img src="{{ url_for('static', filename='images/tietlogo.png') }}" alt="logo">
+    </div>
+    <div class="brand">
+      <strong>PhD Progress monitoring system</strong>
+    </div>
+    <div class="logout">
+      <a href="/logout">Log out <img src="{{ url_for('static', filename='images/logout.png') }}" alt="logout"></a>
+    </div>
+  </nav>
+    <article class="article">
         <form action="/last_date" method="POST">
             <div class="grid">
                 <div>
@@ -22,7 +127,7 @@
 
     {% if success != '' %}
     <dialog class="container" id="modal-example" open>
-        <article class="modal">
+        <article class="modal article">
           <a href="#close"
             aria-label="Close"
             class="close"
