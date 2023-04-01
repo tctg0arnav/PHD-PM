@@ -6,7 +6,7 @@ from flask_mail import Mail, Message
 import os
 from datetime import datetime
 import dateutil.parser as dparser
-import zipfile
+from zipfile import ZipFile as zipfile
 import csv
 
 app = Flask(__name__)
@@ -797,63 +797,47 @@ def last_date():
 @app.route('/xl')
 def xl():
     for Au in range(1, 18):
-        headers = ['RollNo', 'Name', 'Email', 'DateOfRegistration', 'Title', 'DateofIRB', 'DateofProgressPresentation', 'Name of Supervisors(list)', 'Approval of Supervisors (List)', 'Total Marks (List)']
+        headers = ['RollNo', 'Name', 'Email', 'DateOfRegistration', 'Title', 'DateofIRB', 'DateofProgressPresentation', 'Supervisor1', 'Supervisor1_Approval', 'Supervisor1_Marks', 'Supervisor2', 'Supervisor2_Approval', 'Supervisor2_Marks', 'Supervisor3', 'Supervisor3_Approval', 'Supervisor3_Marks']
         tickets = Ticket.query.filter_by(Au=Au).all()
         tickets = [ticket.__dict__ for ticket in tickets]
         with open(f'au{Au}.csv', 'w') as f:
             writer = csv.DictWriter(f, fieldnames=headers)
             writer.writeheader()
             for ticket in tickets:
-                data = [ticket['RollNo'], ticket['Student_Name'], ticket['Student_Email'], ticket['Date_Of_Registration'], ticket['Project_Title'], ticket['Date_Of_IRB'], ticket['Date_of_ProgressPresentation']]
-                Supervisors_Names = [ticket['Supervisor_1_Name'], ticket['Supervisor_2_Name'], ticket['Supervisor_3_Name']]
-                Supervisors_Approval = [ticket['Supervisor_1_Approval'], ticket['Supervisor_2_Approval'], ticket['Supervisor_3_Approval']]
-                Supervisors_Marks = [ticket['Supervisor_1_Marks'], ticket['Supervisor_2_Marks'], ticket['Supervisor_3_Marks']]
-                data.append(Supervisors_Names)
-                data.append(Supervisors_Approval)
-                data.append(Supervisors_Marks)
+                data = [ticket['Roll_No'], ticket['Student_Name'], ticket['Student_Email'], ticket['Date_Of_Registration'], ticket['Project_Title'], ticket['Date_Of_IRB'], ticket['Date_Of_Progress_Presentation'],ticket['Supervisor1_Name'], ticket['Supervisor1_Approval'], ticket['Supervisor1_Marks'],ticket['Supervisor2_Name'], ticket['Supervisor2_Approval'], ticket['Supervisor2_Marks'],ticket['Supervisor3_Name'], ticket['Supervisor3_Approval'], ticket['Supervisor3_Marks']]
+                data = dict(zip(headers, data))
                 writer.writerow(data)
     with zipfile('all_au.zip', 'w') as zipObj:
         for Au in range(1, 18):
             zipObj.write(f'au{Au}.csv')
     return send_file('all_au.zip', as_attachment=True)
 
-@app.route('/xl/<int:Au>')
-def xl_au(Au):
-    headers = ['RollNo', 'Name', 'Email', 'DateOfRegistration', 'Title', 'DateofIRB', 'DateofProgressPresentation', 'Name of Supervisors(list)', 'Approval of Supervisors (List)', 'Total Marks (List)']
+@app.route('/xl/au')
+def xl_au():
+    Au = session['Au']
+    headers = ['RollNo', 'Name', 'Email', 'DateOfRegistration', 'Title', 'DateofIRB', 'DateofProgressPresentation', 'Supervisor1', 'Supervisor1_Approval', 'Supervisor1_Marks', 'Supervisor2', 'Supervisor2_Approval', 'Supervisor2_Marks', 'Supervisor3', 'Supervisor3_Approval', 'Supervisor3_Marks']
     tickets = Ticket.query.filter_by(Au=Au).all()
     tickets = [ticket.__dict__ for ticket in tickets]
     with open(f'au{Au}.csv', 'w') as f:
         writer = csv.DictWriter(f, fieldnames=headers)
         writer.writeheader()
         for ticket in tickets:
-            data = [ticket['RollNo'], ticket['Student_Name'], ticket['Student_Email'], ticket['Date_Of_Registration'], ticket['Project_Title'], ticket['Date_Of_IRB'], ticket['Date_of_ProgressPresentation']]
-            Supervisors_Names = [ticket['Supervisor_1_Name'], ticket['Supervisor_2_Name'], ticket['Supervisor_3_Name']]
-            Supervisors_Approval = [ticket['Supervisor_1_Approval'], ticket['Supervisor_2_Approval'], ticket['Supervisor_3_Approval']]
-            Supervisors_Marks = [ticket['Supervisor_1_Marks'], ticket['Supervisor_2_Marks'], ticket['Supervisor_3_Marks']]
-            data.append(Supervisors_Names)
-            data.append(Supervisors_Approval)
-            data.append(Supervisors_Marks)
+            data = [ticket['Roll_No'], ticket['Student_Name'], ticket['Student_Email'], ticket['Date_Of_Registration'], ticket['Project_Title'], ticket['Date_Of_IRB'], ticket['Date_Of_Progress_Presentation'],ticket['Supervisor1_Name'], ticket['Supervisor1_Approval'], ticket['Supervisor1_Marks'],ticket['Supervisor2_Name'], ticket['Supervisor2_Approval'], ticket['Supervisor2_Marks'],ticket['Supervisor3_Name'], ticket['Supervisor3_Approval'], ticket['Supervisor3_Marks']]
+            data = dict(zip(headers, data))
             writer.writerow(data)
     return send_file(f'au{Au}.csv', as_attachment=True)
 
 @app.route('/xl/archived')
 def xl_archived():
     for Au in range(1, 18):
-        headers = ['RollNo', 'Name', 'Email', 'DateOfRegistration', 'Title', 'DateofIRB', 'DateofProgressPresentation', 'Name of Supervisors(list)', 'Approval of Supervisors (List)', 'Total Marks (List)', 'Last Date']
+        headers = ['RollNo', 'Name', 'Email', 'DateOfRegistration', 'Title', 'DateofIRB', 'DateofProgressPresentation', 'Supervisor1', 'Supervisor1_Approval', 'Supervisor1_Marks', 'Supervisor2', 'Supervisor2_Approval', 'Supervisor2_Marks', 'Supervisor3', 'Supervisor3_Approval', 'Supervisor3_Marks']
         tickets = Archive_Ticket.query.filter_by(Au=Au).all()
         tickets = [ticket.__dict__ for ticket in tickets]
         with open(f'au{Au}.csv', 'w') as f:
             writer = csv.DictWriter(f, fieldnames=headers)
             writer.writeheader()
             for ticket in tickets:
-                data = [ticket['RollNo'], ticket['Student_Name'], ticket['Student_Email'], ticket['Date_Of_Registration'], ticket['Project_Title'], ticket['Date_Of_IRB'], ticket['Date_of_ProgressPresentation']]
-                Supervisors_Names = [ticket['Supervisor_1_Name'], ticket['Supervisor_2_Name'], ticket['Supervisor_3_Name']]
-                Supervisors_Approval = [ticket['Supervisor_1_Approval'], ticket['Supervisor_2_Approval'], ticket['Supervisor_3_Approval']]
-                Supervisors_Marks = [ticket['Supervisor_1_Marks'], ticket['Supervisor_2_Marks'], ticket['Supervisor_3_Marks']]
-                data.append(Supervisors_Names)
-                data.append(Supervisors_Approval)
-                data.append(Supervisors_Marks)
-                data.append(ticket['LastDate'])
+                data = [ticket['Roll_No'], ticket['Student_Name'], ticket['Student_Email'], ticket['Date_Of_Registration'], ticket['Project_Title'], ticket['Date_Of_IRB'], ticket['Date_Of_Progress_Presentation'],ticket['Supervisor1_Name'], ticket['Supervisor1_Approval'], ticket['Supervisor1_Marks'],ticket['Supervisor2_Name'], ticket['Supervisor2_Approval'], ticket['Supervisor2_Marks'],ticket['Supervisor3_Name'], ticket['Supervisor3_Approval'], ticket['Supervisor3_Marks']]
                 writer.writerow(data)
     with zipfile('all_au.zip', 'w') as zipObj:
         for Au in range(1, 18):
