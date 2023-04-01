@@ -225,25 +225,24 @@
                 <details id="filter" role="list">
                     <summary aria-haspopup="listbox">Academic Units</summary>
                     <ul role="listbox">
-                        <li><a href="/adordc">All</a></li>
-                        <li><a href="/adordc/1">1</a></li>
-                        <li><a href="/adordc/2">2</a></li>
-                        <li><a href="/adordc/3">3</a></li>
-                        <li><a href="/adordc/4">4</a></li>
-                        <li><a href="/adordc/5">5</a></li>
-                        <li><a href="/adordc/6">6</a></li>
-                        <li><a href="/adordc/7">7</a></li>
-                        <li><a href="/adordc/8">8</a></li>
-                        <li><a href="/adordc/9">9</a></li>
-                        <li><a href="/adordc/10">10</a></li>
-                        <li><a href="/adordc/11">11</a></li>
-                        <li><a href="/adordc/12">12</a></li>
-                        <li><a href="/adordc/13">13</a></li>
-                        <li><a href="/adordc/14">14</a></li>
-                        <li><a href="/adordc/15">15</a></li>
-                        <li><a href="/adordc/16">16</a></li>
-                        <li><a href="/adordc/17">17</a></li>
-                    </ul>
+                        <li><a href="/adordc">ALL</a></li>
+                        <li><a href="/adordc/1">L. M. Thapar School of Management</a></li>
+                        <li><a href="/adordc/2">School of Chemistry & Biochemistry (DST-FIST Sponsored)</a></li>
+                        <li><a href="/adordc/3">School of Energy and Environment (DST-FIST Sponsered)</a></li>
+                        <li><a href="/adordc/4">School of Humanities & Social Sciences</a></li>
+                        <li><a href="/adordc/5">School of Mathematics</a></li>
+                        <li><a href="/adordc/6">School of Physics & Materials Science</a></li>
+                        <li><a href="/adordc/7">Thapar School of Liberal Arts & Sciences (TSLAS)</a></li>
+                        <li><a href="/adordc/8">Basic & Engineering Sciences (Dera Bassi Campus)</a></li>
+                        <li><a href="/adordc/9">Chemical Engineering</a></li>
+                        <li><a href="/adordc/10">Civil Engineering</a></li>
+                        <li><a href="/adordc/11">Computer Science & Engineering</a></li>
+                        <li><a href="/adordc/12">Department of Biotechnology</a></li>
+                        <li><a href="/adordc/13">Distance Education (DDE)</a></li>
+                        <li><a href="/adordc/14">Electrical & Instrumentation Engineering</a></li>
+                        <li><a href="/adordc/15">Electronics & Communication Engineering</a></li>
+                        <li><a href="/adordc/16">Mechanical Engineering Department</a></li>
+                      </ul>                      
                 </details>
             </div>
             </div>
@@ -274,7 +273,7 @@
                     <a class="secondary" href="/ticket_created/{{ Ticket['Project_ID'] }}" role="button" target="_blank"
                         class="outline">View Ticket</a>
                     <!-- if Au_Approval is true  -->
-                    {% if Ticket['Au_Approval'] == 1 %}
+                    {% if Ticket['Adordc_Approval'] != 1 %}
                     <a class="primary" href="/adordc/{{ Ticket['Project_ID'] }}/approve" role="button"
                         class="contrast">Approve</a>
                     {% endif %}
