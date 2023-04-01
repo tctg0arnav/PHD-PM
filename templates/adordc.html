@@ -137,8 +137,6 @@
           <strong>PhD Progress monitoring system</strong>
         </div>
         <div class="logout">
-            <a href="/manage_users">Manage Users</a>
-            <a href="/unapproved_users">Approve Users</a>
             <a href="/logout">Log out <img src="{{ url_for('static', filename='images/logout.png') }}" alt="logout"></a>
         </div>
        </div>
@@ -149,6 +147,7 @@
             <h1>Dashboard</h1>
             <h3>You can View, Approve and Reject Projects here.</h3>
             </hgroup>
+            <a href="/adordc/approve_all" class="primary" role="button">Approve All</a>
         </div>
         <div>
         <label for="filter">Filter</label>
@@ -176,7 +175,17 @@
                     </ul>
             </details>
         </div>
+        </div>
         </header>
+        <label for="users">Manage AU Heads</label>
+        <details id="users" role="list">
+            <summary aria-haspopup="listbox">Manage AU Heads</summary>
+            <ul role="listbox">
+                <li><a href="/manage_users">Manage Existing Users</a></li>
+                <li><a href="/unapproved_users">Approve New Users</a></li>
+                </ul>
+        </details>
+        <a href="/last_date" role="button" class="primary">Generate Last Date</a>
         <hr>
         {% for Ticket in Tickets %}
             <article class=" article">
@@ -201,7 +210,10 @@
                         <div></div>
                         <div></div>
                         <a class="secondary" href="/ticket_created/{{ Ticket['Project_ID'] }}" role="button" target="_blank" class="outline">View Ticket</a>
-                        <a class="primary" href="/adordc/{{ Ticket['Project_ID'] }}/approve" role="button" class="contrast">Approve</a>
+                        <!-- if Au_Approval is true  -->
+                        {% if Ticket['Au_Approval'] == 1 %}
+                            <a class="primary" href="/adordc/{{ Ticket['Project_ID'] }}/approve" role="button" class="contrast">Approve</a>
+                        {% endif %}
                     </div>
                 </footer>
             </article>

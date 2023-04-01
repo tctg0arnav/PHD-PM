@@ -6,6 +6,8 @@ from flask_mail import Mail, Message
 import os
 from datetime import datetime
 import dateutil.parser as dparser
+import zipfile
+import csv
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
@@ -22,8 +24,6 @@ app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_DEFAULT_SENDER'] = 'tempmail.xlcsgo@gmail.com'
 app.config['MAIL_SUBJECT_PREFIX'] = 'PHDmon:'
 mail = Mail(app)
-
-
 db = SQLAlchemy(app)
 
 class Ticket(db.Model):
@@ -44,14 +44,17 @@ class Ticket(db.Model):
     Supervisor1_Email = db.Column(db.String(50))
     Supervisor1_Approval = db.Column(db.Boolean)
     Supervisor1_Remarks = db.Column(db.String(100))
+    Supervisor1_Marks = db.Column(db.Integer)
     Supervisor2_Name = db.Column(db.String(50))
     Supervisor2_Email = db.Column(db.String(50))
     Supervisor2_Approval = db.Column(db.Boolean)
     Supervisor2_Remarks = db.Column(db.String(100))
+    Supervisor2_Marks = db.Column(db.Integer)
     Supervisor3_Name = db.Column(db.String(50))
     Supervisor3_Email = db.Column(db.String(50))
     Supervisor3_Approval = db.Column(db.Boolean)
     Supervisor3_Remarks = db.Column(db.String(100))
+    Supervisor3_Marks = db.Column(db.Integer)
     Committee1_Name = db.Column(db.String(50))
     Committee1_Email = db.Column(db.String(50))
     Committee1_Approval = db.Column(db.Boolean)
@@ -74,6 +77,60 @@ class Ticket(db.Model):
     Committee5_Remarks = db.Column(db.String(100))
     Au_Approval = db.Column(db.Boolean)
     Adordc_Approval = db.Column(db.Boolean)
+    LastDate = db.Column(db.DateTime, nullable=False)
+
+class Archive_Ticket(db.Model):
+    Project_ID = db.Column(db.Integer, primary_key=True)
+    Roll_No = db.Column(db.String(50), unique=True, nullable=False)
+    Student_Name = db.Column(db.String(50), unique=True, nullable=False)
+    Student_Email = db.Column(db.String(50), unique=True, nullable=False)
+    Au = db.Column(db.String(50), nullable=False)
+    Date_Of_Registration = db.Column(db.DateTime, nullable=False)
+    Gate = db.Column(db.Boolean, nullable=False)
+    Project_Title = db.Column(db.String(50), nullable=False)
+    Date_Of_IRB = db.Column(db.DateTime, nullable=False)
+    Date_Of_Progress_Presentation = db.Column(db.DateTime, nullable=False)
+    File_Path = db.Column(db.String(50), unique=True, nullable=False)
+    Publications = db.Column(db.String(50))
+    Conferences = db.Column(db.String(50))
+    Supervisor1_Name = db.Column(db.String(50))
+    Supervisor1_Email = db.Column(db.String(50))
+    Supervisor1_Approval = db.Column(db.Boolean)
+    Supervisor1_Remarks = db.Column(db.String(100))
+    Supervisor1_Marks = db.Column(db.Integer)
+    Supervisor2_Name = db.Column(db.String(50))
+    Supervisor2_Email = db.Column(db.String(50))
+    Supervisor2_Approval = db.Column(db.Boolean)
+    Supervisor2_Remarks = db.Column(db.String(100))
+    Supervisor2_Marks = db.Column(db.Integer)
+    Supervisor3_Name = db.Column(db.String(50))
+    Supervisor3_Email = db.Column(db.String(50))
+    Supervisor3_Approval = db.Column(db.Boolean)
+    Supervisor3_Remarks = db.Column(db.String(100))
+    Supervisor3_Marks = db.Column(db.Integer)
+    Committee1_Name = db.Column(db.String(50))
+    Committee1_Email = db.Column(db.String(50))
+    Committee1_Approval = db.Column(db.Boolean)
+    Committee1_Remarks = db.Column(db.String(100))
+    Committee2_Name = db.Column(db.String(50))
+    Committee2_Email = db.Column(db.String(50))
+    Committee2_Approval = db.Column(db.Boolean)
+    Committee2_Remarks = db.Column(db.String(100))
+    Committee3_Name = db.Column(db.String(50))
+    Committee3_Email = db.Column(db.String(50))
+    Committee3_Approval = db.Column(db.Boolean)
+    Committee3_Remarks = db.Column(db.String(100))
+    Committee4_Name = db.Column(db.String(50))
+    Committee4_Email = db.Column(db.String(50))
+    Committee4_Approval = db.Column(db.Boolean)
+    Committee4_Remarks = db.Column(db.String(100))
+    Committee5_Name = db.Column(db.String(50))
+    Committee5_Email = db.Column(db.String(50))
+    Committee5_Approval = db.Column(db.Boolean)
+    Committee5_Remarks = db.Column(db.String(100))
+    Au_Approval = db.Column(db.Boolean)
+    Adordc_Approval = db.Column(db.Boolean)
+    LastDate = db.Column(db.DateTime, nullable=False)
 
 class User(db.Model):
     email = db.Column(db.String(50), unique=True, nullable=False, primary_key=True)
@@ -89,9 +146,12 @@ class Unapproved_Users(db.Model):
     name = db.Column(db.String(50), nullable=False)
     Au = db.Column(db.String(50), nullable=False)
 
+class LastDate(db.Model):
+    LastDate = db.Column(db.DateTime, nullable=False, primary_key=True)
+
 @app.route('/')
 def home():
-    return redirect(url_for('login'))
+    return redirect(url_for('first_time'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -107,7 +167,7 @@ def login():
                 if user.role == 'AU_Head':
                     return redirect(url_for('au_head'))
                 elif user.role == 'admin':
-                    return redirect(url_for('admin'))
+                    return redirect(url_for('adordc'))
             else:
                 print('Wrong password')
                 return render_template('login.html', error='Wrong password')
@@ -207,26 +267,31 @@ def create_ticket():
         Supervisor1_Email = request.form['Supervisor1_Email']
         Supervisor1_Approval = False
         Supervisor1_Remarks = ''
+        Supervisor1_Marks = 0
         if request.form['Supervisor2_Name'] != '':
             Supervisor2_Name = request.form['Supervisor2_Name']
             Supervisor2_Email = request.form['Supervisor2_Email']
             Supervisor2_Approval = False
             Supervisor2_Remarks = ''
+            Supervisor2_Marks = 0
         else:
             Supervisor2_Name = ''
             Supervisor2_Email = ''
             Supervisor2_Approval = False
             Supervisor2_Remarks = ''
+            Supervisor2_Marks = 0
         if request.form['Supervisor3_Name'] != '':
             Supervisor3_Name = request.form['Supervisor3_Name']
             Supervisor3_Email = request.form['Supervisor3_Email']
             Supervisor3_Approval = False
             Supervisor3_Remarks = ''
+            Supervisor3_Marks = 0
         else:
             Supervisor3_Name = ''
             Supervisor3_Email = ''
             Supervisor3_Approval = False
             Supervisor3_Remarks = ''
+            Supervisor3_Marks = 0
         Committee1_Name = request.form['Committee1_Name']
         Committee1_Email = request.form['Committee1_Email']
         Committee1_Approval = False
@@ -268,22 +333,29 @@ def create_ticket():
         file.save(file_path)
         Publications = request.form['Publications']
         Conferences = request.form['Conferences']
+        #set last date to last_date
+        lastdate = LastDate.query.first().LastDate
+        #convert lastdate to string
+        lastdate = lastdate.strftime('%Y-%m-%d')
+        #convert lastdate to datetime
+        lastdate = dparser.parse(lastdate, fuzzy=True)
         Au_Approval = False
         Adordc_Approval = False
-
         #create new ticket without including supervisor2, supervisor3, committee4, committee5
-        new_ticket = Ticket(Student_Name=student_name, Student_Email=student_email, Roll_No=Roll_No, Au=Au, Date_Of_Registration=Date_Of_Registration, Gate=Gate, Project_Title=Project_Title, Date_Of_Progress_Presentation=Date_Of_Progress_Presentation, Date_Of_IRB=Date_Of_IRB, Supervisor1_Name=Supervisor1_Name, Supervisor1_Email=Supervisor1_Email, Supervisor1_Approval=Supervisor1_Approval, Supervisor1_Remarks=Supervisor1_Remarks, Committee1_Name=Committee1_Name, Committee1_Email=Committee1_Email, Committee1_Approval=Committee1_Approval, Committee1_Remarks=Committee1_Remarks, Committee2_Name=Committee2_Name, Committee2_Email=Committee2_Email, Committee2_Approval=Committee2_Approval, Committee2_Remarks=Committee2_Remarks, Committee3_Name=Committee3_Name, Committee3_Email=Committee3_Email, Committee3_Approval=Committee3_Approval, Committee3_Remarks=Committee3_Remarks, Publications=Publications, Conferences=Conferences, Au_Approval=Au_Approval, Adordc_Approval=Adordc_Approval, File_Path=file_path)        
+        new_ticket = Ticket(Student_Name=student_name, Student_Email=student_email, Roll_No=Roll_No, Au=Au, Date_Of_Registration=Date_Of_Registration, Gate=Gate, Project_Title=Project_Title, Date_Of_Progress_Presentation=Date_Of_Progress_Presentation, Date_Of_IRB=Date_Of_IRB, Supervisor1_Name=Supervisor1_Name, Supervisor1_Email=Supervisor1_Email, Supervisor1_Approval=Supervisor1_Approval, Supervisor1_Remarks=Supervisor1_Remarks, Committee1_Name=Committee1_Name, Committee1_Email=Committee1_Email, Committee1_Approval=Committee1_Approval, Committee1_Remarks=Committee1_Remarks, Committee2_Name=Committee2_Name, Committee2_Email=Committee2_Email, Committee2_Approval=Committee2_Approval, Committee2_Remarks=Committee2_Remarks, Committee3_Name=Committee3_Name, Committee3_Email=Committee3_Email, Committee3_Approval=Committee3_Approval, Committee3_Remarks=Committee3_Remarks, Publications=Publications, Conferences=Conferences, Au_Approval=Au_Approval, Adordc_Approval=Adordc_Approval, File_Path=file_path, Supervisor1_Marks=Supervisor1_Marks, LastDate=lastdate)        
         #put data into database. check if supervisor2, supervisor3, committee4, committee5 are empty or not, if empty then don't add them to database
         if Supervisor2_Name != '':
             new_ticket.Supervisor2_Name = Supervisor2_Name
             new_ticket.Supervisor2_Email = Supervisor2_Email
             new_ticket.Supervisor2_Approval = Supervisor2_Approval
             new_ticket.Supervisor2_Remarks = Supervisor2_Remarks
+            new_ticket.Supervisor2_Marks = Supervisor2_Marks
         if Supervisor3_Name != '':
             new_ticket.Supervisor3_Name = Supervisor3_Name
             new_ticket.Supervisor3_Email = Supervisor3_Email
             new_ticket.Supervisor3_Approval = Supervisor3_Approval
             new_ticket.Supervisor3_Remarks = Supervisor3_Remarks
+            new_ticket.Supervisor3_Marks = Supervisor3_Marks
         if Committee4_Name != '':
             new_ticket.Committee4_Name = Committee4_Name
             new_ticket.Committee4_Email = Committee4_Email
@@ -326,8 +398,9 @@ def super1(Project_ID):
     if request.method == 'POST':
         if request.form['submit'] == 'Approve':
             ticket.Supervisor1_Approval = True
-        ticket.Supervisor1_Previous_Marks = request.form['prevmarks']
-        ticket.Supervisor1_Present_Marks = request.form['nowmarks']
+        prev_marks = request.form['prevmarks']
+        now_marks = request.form['nowmarks']
+        ticket.Supervisor1_Marks = int(prev_marks) + int(now_marks)
         ticket.Supervisor1_Remarks = request.form['Supervisor1_Remarks']
         db.session.commit()
         ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
@@ -352,8 +425,9 @@ def super2(Project_ID):
     if request.method == 'POST':
         if request.form['submit'] == 'Approve':
             ticket.Supervisor2_Approval = True
-        ticket.Supervisor2_Previous_Marks = request.form['prevmarks']
-        ticket.Supervisor2_Present_Marks = request.form['nowmarks']
+        prev_marks = request.form['prevmarks']
+        now_marks = request.form['nowmarks']
+        ticket.Supervisor2_Marks = int(prev_marks) + int(now_marks)
         ticket.Supervisor2_Remarks = request.form['Supervisor1_Remarks']
         db.session.commit()
         ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
@@ -378,9 +452,10 @@ def super3(Project_ID):
     if request.method == 'POST':
         if request.form['submit'] == 'Approve':
             ticket.Supervisor1_Approval = True
-        ticket.Supervisor1_Previous_Marks = request.form['prevmarks']
-        ticket.Supervisor1_Present_Marks = request.form['nowmarks']
-        ticket.Supervisor1_Remarks = request.form['Supervisor1_Remarks']
+        prev_marks = request.form['prevmarks']
+        now_marks = request.form['nowmarks']
+        ticket.Supervisor3_Marks = int(prev_marks) + int(now_marks)
+        ticket.Supervisor3_Remarks = request.form['Supervisor3_Remarks']
         db.session.commit()
         ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
         ticket = ticket.__dict__
@@ -593,7 +668,7 @@ def auhead():
         if ticket.Au_Approval == True:
             tickets.remove(ticket)
     tickets = [ticket.__dict__ for ticket in tickets]
-    return render_template('auhead.html', Tickets=tickets, success='')
+    return render_template('auhead.html', Tickets=tickets, success='', last_date=last_date)
 
 #route for AU_Head approve
 @app.route('/auhead/<int:Project_ID>/approve', methods=['GET', 'POST'])
@@ -609,8 +684,25 @@ def auhead_approve(Project_ID):
         ticket.Au_Approval = True
         db.session.commit()
         ticket = ticket.__dict__
-        return render_template('auhead.html', success='Project Approved.')
+        return render_template('auhead.html', success='Project Approved.', last_date=last_date)
     return render_template('auhead.html', Ticket=ticket, success='')
+
+#route for AU_Head approve all where supervisor approval is true and committee approval is true
+@app.route('/auhead/approve_all', methods=['GET', 'POST'])
+def auhead_approve_all():
+    #check if user is logged in
+    if 'email' not in session:
+        return redirect(url_for('login'))
+    #check if user is AU_Head
+    if session['role'] != 'AU_Head':
+        return redirect(url_for('login'))
+    tickets = Ticket.query.filter_by(Au=session['Au']).all()
+    for ticket in tickets:
+        if ticket.Supervisor_Approval == True and ticket.Committee_Approval == True:
+            ticket.Au_Approval = True
+            db.session.commit()
+    return render_template('auhead.html', success='All projects approved.', last_date=last_date)
+
 
 #route for Adordc
 @app.route('/adordc', methods=['GET', 'POST'])
@@ -633,8 +725,8 @@ def adordc():
             render_template('adordc.html', Tickets=tickets, success='')
         #convert tickets to dictionary
         tickets = [ticket.__dict__ for ticket in tickets]
-        render_template('adordc.html', tickets=tickets, success='')
-    return render_template('adordc.html', Tickets=tickets, success='')
+        render_template('adordc.html', tickets=tickets, success='', last_date=last_date)
+    return render_template('adordc.html', Tickets=tickets, success='', last_date=last_date)
 
 #route for Adordc approve
 @app.route('/adordc/<int:Project_ID>/approve', methods=['GET', 'POST'])
@@ -650,8 +742,131 @@ def adordc_approve(Project_ID):
         ticket.Adordc_Approval = True
         db.session.commit()
         ticket = ticket.__dict__
-        return render_template('adordc.html', success='Project Approved.')
-    return render_template('adordc.html', Ticket=ticket, success='')
+        return render_template('adordc.html', success='Project Approved.', last_date=last_date)
+    return render_template('adordc.html', Ticket=ticket, success='', last_date=last_date)
+
+#route for Adordc approve all where au approval is true
+@app.route('/adordc/approve_all', methods=['GET', 'POST'])
+def adordc_approve_all():
+    #check if user is logged in
+    if 'email' not in session:
+        return redirect(url_for('login'))
+    #check if user is Adordc
+    if session['role'] != 'Adordc':
+        return redirect(url_for('login'))
+    tickets = Ticket.query.filter_by(Au_Approval=True).all()
+    for ticket in tickets:
+        ticket.Adordc_Approval = True
+        db.session.commit()
+    return render_template('adordc.html', success='All projects approved.', last_date=last_date)
+
+#manage last date page
+@app.route('/last_date', methods=['GET', 'POST'])
+def last_date():
+    if session['role'] != 'admin':
+        return redirect(url_for('login'))
+    #if last date in database is set then get it from database
+    if LastDate.query.first() != None:
+        last_date = LastDate.query.first().LastDate
+        return render_template('last_date.html', success='Last Date already set: {}'.format(last_date))
+    #if last date in database is not set then set it
+    if request.method == 'POST':
+        last_date = request.form['last_date']
+        #convert last date to datetime object
+        last_date = datetime.strptime(last_date, '%Y-%m-%d')
+        last_date = LastDate(LastDate=last_date)
+        db.session.add(last_date)
+        db.session.commit()
+        last_date = LastDate.query.first().LastDate
+        return render_template('last_date.html', success='Last Date set: {}'.format(last_date))
+    return render_template('last_date.html', success='')
+@app.route('/xl')
+def xl():
+    for Au in range(1, 18):
+        headers = ['RollNo', 'Name', 'Email', 'DateOfRegistration', 'Title', 'DateofIRB', 'DateofProgressPresentation', 'Name of Supervisors(list)', 'Approval of Supervisors (List)', 'Total Marks (List)']
+        tickets = Ticket.query.filter_by(Au=Au).all()
+        tickets = [ticket.__dict__ for ticket in tickets]
+        with open(f'au{Au}.csv', 'w') as f:
+            writer = csv.DictWriter(f, fieldnames=headers)
+            writer.writeheader()
+            for ticket in tickets:
+                data = [ticket['RollNo'], ticket['Student_Name'], ticket['Student_Email'], ticket['Date_Of_Registration'], ticket['Project_Title'], ticket['Date_Of_IRB'], ticket['Date_of_ProgressPresentation']]
+                Supervisors_Names = [ticket['Supervisor_1_Name'], ticket['Supervisor_2_Name'], ticket['Supervisor_3_Name']]
+                Supervisors_Approval = [ticket['Supervisor_1_Approval'], ticket['Supervisor_2_Approval'], ticket['Supervisor_3_Approval']]
+                Supervisors_Marks = [ticket['Supervisor_1_Marks'], ticket['Supervisor_2_Marks'], ticket['Supervisor_3_Marks']]
+                data.append(Supervisors_Names)
+                data.append(Supervisors_Approval)
+                data.append(Supervisors_Marks)
+                writer.writerow(data)
+    with zipfile('all_au.zip', 'w') as zipObj:
+        for Au in range(1, 18):
+            zipObj.write(f'au{Au}.csv')
+    return send_file('all_au.zip', as_attachment=True)
+
+@app.route('/xl/<int:Au>')
+def xl_au(Au):
+    headers = ['RollNo', 'Name', 'Email', 'DateOfRegistration', 'Title', 'DateofIRB', 'DateofProgressPresentation', 'Name of Supervisors(list)', 'Approval of Supervisors (List)', 'Total Marks (List)']
+    tickets = Ticket.query.filter_by(Au=Au).all()
+    tickets = [ticket.__dict__ for ticket in tickets]
+    with open(f'au{Au}.csv', 'w') as f:
+        writer = csv.DictWriter(f, fieldnames=headers)
+        writer.writeheader()
+        for ticket in tickets:
+            data = [ticket['RollNo'], ticket['Student_Name'], ticket['Student_Email'], ticket['Date_Of_Registration'], ticket['Project_Title'], ticket['Date_Of_IRB'], ticket['Date_of_ProgressPresentation']]
+            Supervisors_Names = [ticket['Supervisor_1_Name'], ticket['Supervisor_2_Name'], ticket['Supervisor_3_Name']]
+            Supervisors_Approval = [ticket['Supervisor_1_Approval'], ticket['Supervisor_2_Approval'], ticket['Supervisor_3_Approval']]
+            Supervisors_Marks = [ticket['Supervisor_1_Marks'], ticket['Supervisor_2_Marks'], ticket['Supervisor_3_Marks']]
+            data.append(Supervisors_Names)
+            data.append(Supervisors_Approval)
+            data.append(Supervisors_Marks)
+            writer.writerow(data)
+    return send_file(f'au{Au}.csv', as_attachment=True)
+
+@app.route('/xl/archived')
+def xl_archived():
+    for Au in range(1, 18):
+        headers = ['RollNo', 'Name', 'Email', 'DateOfRegistration', 'Title', 'DateofIRB', 'DateofProgressPresentation', 'Name of Supervisors(list)', 'Approval of Supervisors (List)', 'Total Marks (List)', 'Last Date']
+        tickets = Archive_Ticket.query.filter_by(Au=Au).all()
+        tickets = [ticket.__dict__ for ticket in tickets]
+        with open(f'au{Au}.csv', 'w') as f:
+            writer = csv.DictWriter(f, fieldnames=headers)
+            writer.writeheader()
+            for ticket in tickets:
+                data = [ticket['RollNo'], ticket['Student_Name'], ticket['Student_Email'], ticket['Date_Of_Registration'], ticket['Project_Title'], ticket['Date_Of_IRB'], ticket['Date_of_ProgressPresentation']]
+                Supervisors_Names = [ticket['Supervisor_1_Name'], ticket['Supervisor_2_Name'], ticket['Supervisor_3_Name']]
+                Supervisors_Approval = [ticket['Supervisor_1_Approval'], ticket['Supervisor_2_Approval'], ticket['Supervisor_3_Approval']]
+                Supervisors_Marks = [ticket['Supervisor_1_Marks'], ticket['Supervisor_2_Marks'], ticket['Supervisor_3_Marks']]
+                data.append(Supervisors_Names)
+                data.append(Supervisors_Approval)
+                data.append(Supervisors_Marks)
+                data.append(ticket['LastDate'])
+                writer.writerow(data)
+    with zipfile('all_au.zip', 'w') as zipObj:
+        for Au in range(1, 18):
+            zipObj.write(f'au{Au}.csv')
+    return send_file('all_au.zip', as_attachment=True)
+
+@app.route('/first_time')
+def first_time():
+    #if no admin is present, allow to create one
+    if User.query.filter_by(role='admin').first() is None:
+        return render_template('first_time.html', success='', error='')
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/first_time', methods=['POST'])
+def first_time_post():
+    if User.query.filter_by(role='admin').first() is None:
+        email = request.form.get('email')
+        password = request.form.get('password')
+        name = request.form.get('name')
+        Au = 0
+        user = User(email=email, password=generate_password_hash(password, method='sha256'), name=name, role='admin', Au=Au)
+        db.session.add(user)
+        db.session.commit()
+        return render_template('first_time.html', success='Account Created Successfully', error='')
+    else:
+        return redirect(url_for('login'))
 
 #send email using flask-mail sending /ticket_created html in body of email
 def send_email(to, subject, template, **kwargs):

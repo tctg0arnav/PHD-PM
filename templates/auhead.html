@@ -137,7 +137,8 @@
           <strong>PhD Progress monitoring system</strong>
         </div>
         <div class="logout">
-          <a href="/logout">Log out <img src="{{ url_for('static', filename='images/logout.png') }}" alt="logout"></a>
+            <a>Last Date: {{ last_date }}</a>
+            <a href="/logout">Log out <img src="{{ url_for('static', filename='images/logout.png') }}" alt="logout"></a>
         </div>
        </div>
     <article  class="container1 article">
@@ -147,6 +148,7 @@
             <h1>Dashboard</h1>
             <h3>You can View, Approve and Reject Projects here.</h3>
             </hgroup>
+            <a href="/auhead/approve_all" class="primary" role="button">Approve All</a>
         </div>
         <div>
         <label for="filter">Filter</label>
@@ -195,7 +197,10 @@
                         <div></div>
                         <div></div>
                         <a class="secondary" href="/ticket_created/{{ Ticket['Project_ID'] }}" role="button" target="_blank" class="outline">View Ticket</a>
-                        <a class="primary" href="/auhead/{{ Ticket['Project_ID'] }}/approve" role="button" class="contrast">Approve</a>
+                        {% if Ticket['Supervisor_Approval'] == True %}
+                            {% if Ticket['Committee_Approval'] == True %}
+                                <a class="primary" href="/auhead/{{ Ticket['Project_ID'] }}/approve" role="button" class="contrast">Approve</a>                            {% endif %}
+                        {% endif %
                     </div>
                 </footer>
             </article>

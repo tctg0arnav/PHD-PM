@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
+    <title>Last Date</title>
+</head>
+<body>
+    <article>
+        <form action="/last_date" method="POST">
+            <div class="grid">
+                <div>
+                    <label for="last_date">Last Date</label>
+                    <input type="date" name="last_date" id="last_date" required>
+                </div>
+            </div>
+            <button type="submit" class="primary">Submit</button>
+        </form>
+    </article>
+
+    {% if success != '' %}
+    <dialog class="container" id="modal-example" open>
+        <article class="modal">
+          <a href="#close"
+            aria-label="Close"
+            class="close"
+            data-target="modal-example"
+            onClick="toggleModal(event)">
+          </a>
+          <h3 style="color: #640000;">Success</h3>
+          <p>
+            {{ success }}.
+          </p>
+          <p>Please share this link with your students:<br><a href="{{url_for('create_ticket', _external=True)}}">{{url_for('create_ticket', _external=True)}}</a></p>
+          <footer>
+            <a href="/adordc"
+              role="button"
+              class="secondary"
+              data-target="modal-example"
+              onClick="toggleModal(event)">
+              Close
+            </a>
+          </footer>
+        </article>
+      </dialog>
+    {% endif %}
+
+</body>
+</html>
