@@ -119,6 +119,34 @@
                 margin: 5% auto 0;
             }
         }
+
+
+        @media screen and (max-width: 768px) {
+            .nav img {
+                height: 50px;
+
+            }
+
+            .logout img {
+                height: 16px;
+            }
+            .brand{
+               font-size: 22px;
+            }
+
+
+        }
+        @media screen and (max-width: 530px) {
+
+            .brand{
+               display: none;
+            }
+            .nav{
+                justify-content: space-between;
+                padding: 15px;
+            }
+        }
+
         article.card1 {
             width: 100%;
             background-color: #2c353c;
@@ -129,17 +157,17 @@
     </style>
 </head>
 <body>
-    <div class="nav">
+    <nav class="nav">
         <div class="logo">
-          <img src="{{ url_for('static', filename='images/tietlogo.png') }}" alt="logo">
+            <img src="{{ url_for('static', filename='images/tietlogo.png') }}" alt="logo">
         </div>
         <div class="brand">
-          <strong>PhD Progress monitoring system</strong>
+            <strong>PhD Progress monitoring system</strong>
         </div>
         <div class="logout">
             <a href="/logout">Log out <img src="{{ url_for('static', filename='images/logout.png') }}" alt="logout"></a>
         </div>
-       </div>
+    </nav>
     <article class="container1 article">
         <header class="grid">
         <div>

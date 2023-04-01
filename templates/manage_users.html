@@ -33,6 +33,10 @@
         font-size: 30px;
 
       }
+      .article {
+      box-shadow: 10px 10px 10px #acacac;
+      border: 1.5px solid #640000 !important;
+    }
       .nav img{
         height: 70px;
         
@@ -46,19 +50,46 @@
       .logout img{
         height: 23px;
       }
+      
+      @media screen and (max-width: 768px) {
+            .nav img {
+                height: 50px;
+
+            }
+
+            .logout img {
+                height: 16px;
+            }
+            .brand{
+               font-size: 22px;
+            }
+
+
+        }
+        @media screen and (max-width: 530px) {
+
+            .brand{
+               display: none;
+            }
+            .nav{
+                justify-content: space-between;
+                padding: 15px;
+            }
+        }
+
     </style>
     <body>
-     <div class="nav">
-      <div class="logo">
-        <img src="../static/images/tietlogo.png" alt="logo">
-      </div>
-      <div class="brand">
-        <strong>PhD Progress monitoring system</strong>
-      </div>
-      <div class="logout">
-        <a>Log out <img src="../static/images/logout.png" alt="logout"></a>
-      </div>
-     </div>
+      <nav class="nav">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/tietlogo.png') }}" alt="logo">
+        </div>
+        <div class="brand">
+            <strong>PhD Progress monitoring system</strong>
+        </div>
+        <div class="logout">
+            <a href="/logout">Log out <img src="{{ url_for('static', filename='images/logout.png') }}" alt="logout"></a>
+        </div>
+    </nav>
         <div class="container">
         
             <div class="row">
@@ -93,24 +124,29 @@
             </div>
         </div>
         {% for user in users %}
-          <dialog id="modal-delete-{{ user.email }}">
-            <article>
-              <a href="#close"
+          <dialog id="modal-delete-{{ user.email }}" class="dialogH">
+            <article class="article">
+              <a href=""
+              onclick="myFunction()"
+          
                 aria-label="Close"
                 class="close">
               </a>
-              <h3>Confirmation</h3>
+              <h3 style="color: #640000;">Confirmation</h3>
                 <p>Are you sure you want to delete this user?</p>   
               <footer>
-                <a href="#cancel"
+                <a href=""
                   role="button"
+                
                   class="secondary"
                   data-target="modal-example"
+                  onclick="myFunction()"
                   onClick="toggleModal(event)">
                   Cancel
                 </a>
                 <a href="/delete_user/{{ user.email }}"
-                  role="button">
+                  role="button"
+                  class="primary">
                   Confirm
                 </a>
               </footer>
@@ -120,5 +156,10 @@
     </body>
     <script>
       "use strict";const isOpenClass="modal-is-open",openingClass="modal-is-opening",closingClass="modal-is-closing",animationDuration=400;let visibleModal=null;const toggleModal=e=>{e.preventDefault();e=document.getElementById(e.currentTarget.getAttribute("data-target"));(void 0!==e&&null!=e&&isModalOpen(e)?closeModal:openModal)(e)},isModalOpen=e=>!(!e.hasAttribute("open")||"false"==e.getAttribute("open")),openModal=e=>{isScrollbarVisible()&&document.documentElement.style.setProperty("--scrollbar-width",getScrollbarWidth()+"px"),document.documentElement.classList.add(isOpenClass,openingClass),setTimeout(()=>{visibleModal=e,document.documentElement.classList.remove(openingClass)},animationDuration),e.setAttribute("open",!0)},closeModal=e=>{visibleModal=null,document.documentElement.classList.add(closingClass),setTimeout(()=>{document.documentElement.classList.remove(closingClass,isOpenClass),document.documentElement.style.removeProperty("--scrollbar-width"),e.removeAttribute("open")},animationDuration)},getScrollbarWidth=(document.addEventListener("click",e=>{null==visibleModal||visibleModal.querySelector("article").contains(e.target)||closeModal(visibleModal)}),document.addEventListener("keydown",e=>{"Escape"===e.key&&null!=visibleModal&&closeModal(visibleModal)}),()=>{var e=document.createElement("div"),t=(e.style.visibility="hidden",e.style.overflow="scroll",e.style.msOverflowStyle="scrollbar",document.body.appendChild(e),document.createElement("div")),t=(e.appendChild(t),e.offsetWidth-t.offsetWidth);return e.parentNode.removeChild(e),t}),isScrollbarVisible=()=>document.body.scrollHeight>screen.height;
-    </script>
+   const x = document.getElementsByClassName("dialogH");
+    function myFunction() {
+      x.closeModal();
+
+}
+   </script>
 </html>

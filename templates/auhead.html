@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,7 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
     <title>Dashboard</title>
     <style>
-          [data-theme="light"],
+        [data-theme="light"],
         :root:not([data-theme="dark"]) {
             --primary: #640000;
             --primary-hover: #640000;
@@ -59,32 +60,35 @@
             color: #640000;
         }
 
-        .nav{
-        background-color: #D9D9D9;
-        color: #640000;
-        min-height: 100px;
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-        margin-bottom: 3%;
-        box-shadow: 0 2px 8px grey;
-        font-family: 'Times New Roman', Times, serif;
-        font-size: 30px;
+        .nav {
+            background-color: #D9D9D9;
+            color: #640000;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin-bottom: 3%;
+            box-shadow: 0 2px 8px grey;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 30px;
 
-      }
-      .nav img{
-        height: 70px;
-        
-      }
-      .logout a{
-        color: #3D3D3D;
-        cursor: pointer;
-        text-decoration: none;
-        font-size: medium;
-      }
-      .logout img{
-        height: 23px;
-      }
+        }
+
+        .nav img {
+            height: 70px;
+
+        }
+
+        .logout a {
+            color: #3D3D3D;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: medium;
+        }
+
+        .logout img {
+            height: 23px;
+        }
 
         .modal {
             border: 1.5px solid #640000;
@@ -96,9 +100,10 @@
         }
 
         input::file-selector-button {
-           
+
             border-radius: 2px !important;
         }
+
         /* for large screens */
         article.container1 {
             width: 75vw;
@@ -119,94 +124,125 @@
                 margin: 5% auto 0;
             }
         }
+
+        @media screen and (max-width: 768px) {
+            .nav img {
+                height: 50px;
+
+            }
+
+            .logout img {
+                height: 16px;
+            }
+            .brand{
+               font-size: 22px;
+            }
+
+
+        }
+        @media screen and (max-width: 530px) {
+
+            .brand{
+               display: none;
+            }
+            .nav{
+                justify-content: space-between;
+                padding: 15px;
+            }
+        }
+
         article.card1 {
             width: 100%;
             background-color: #2c353c;
         }
-        kbd{
+
+        kbd {
             background-color: #640000;
         }
     </style>
 </head>
+
 <body>
-    <div class="nav">
+   
+    <nav class="nav">
         <div class="logo">
-          <img src="{{ url_for('static', filename='images/tietlogo.png') }}" alt="logo">
+            <img src="{{ url_for('static', filename='images/tietlogo.png') }}" alt="logo">
         </div>
         <div class="brand">
-          <strong>PhD Progress monitoring system</strong>
+            <strong>PhD Progress monitoring system</strong>
         </div>
         <div class="logout">
-            <a>Last Date: {{ last_date }}</a>
             <a href="/logout">Log out <img src="{{ url_for('static', filename='images/logout.png') }}" alt="logout"></a>
         </div>
-       </div>
-    <article  class="container1 article">
+    </nav>
+    <article class="container1 article">
         <header class="grid">
-        <div>
-            <hgroup>
-            <h1>Dashboard</h1>
-            <h3>You can View, Approve and Reject Projects here.</h3>
-            </hgroup>
-            <a href="/auhead/approve_all" class="primary" role="button">Approve All</a>
-        </div>
-        <div>
-        <label for="filter">Filter</label>
-            <details id="filter" role="list">
-                <summary aria-haspopup="listbox">Approval Status</summary>
-                <ul role="listbox">
-                <li><a href="/auhead?filter_approval=All">All</a></li>
-                <li><a href="/auhead?filter_approval=Approved">Approved</a></li>
-                <li><a href="/auhead?filter_approval=Pending">Pending</a></li>
-                </ul>
-            </details>
-        </div>
-        <!-- inline form for filtering based on approval status: All, Approved, Pending -->
+            <div>
+                <hgroup>
+                    <h1>Dashboard</h1>
+                    <h3>You can View, Approve and Reject Projects here.</h3>
+                </hgroup>
+                <a href="/auhead/approve_all" class="primary" role="button">Approve All</a>
+            </div>
+            <div>
+                <label for="filter">Filter</label>
+                <details id="filter" role="list">
+                    <summary aria-haspopup="listbox">Approval Status</summary>
+                    <ul role="listbox">
+                        <li><a href="/auhead?filter_approval=All">All</a></li>
+                        <li><a href="/auhead?filter_approval=Approved">Approved</a></li>
+                        <li><a href="/auhead?filter_approval=Pending">Pending</a></li>
+                    </ul>
+                </details>
+            </div>
+            <!-- inline form for filtering based on approval status: All, Approved, Pending -->
         </header>
         <hr>
         {% for Ticket in Tickets %}
-            <article class=" article">
-                <header>
-                    <kbd>{{ Ticket['Project_ID'] }}</kbd> <b>{{ Ticket['Project_Title'] }} </b> 
-                </header>
-                <!-- student_name, Roll_No, Date_Of_IRB, Date_Of_Progress_Presentation, File Link Button -->
-                <div class="grid">
-                    <div>
-                        <p><b>Student Name:</b> {{ Ticket['Student_Name'] }}</p>
-                        <p><b>Date Of Progress Presentation</b> {{ Ticket['Date_Of_Progress_Presentation'] }}</p>
-                        <p><b>Presentation: </b><a href="/file/{{ Ticket['Project_ID'] }}">View Presentation</a></p>
-                    </div>
-                    <div>
-                        <p><b>Roll No:</b> {{ Ticket['Roll_No'] }}</p>
-                        <p><b>Date Of IRB</b> {{ Ticket['Date_Of_IRB'] }}</p>
-                        {% if Ticket['Supervisor_Approval'] == True %}
-                            {% if Ticket['Committee_Approval'] == True %}
-                                <p><b>Approval:</b> Approved</p>
-                            {% else %}
-                                <p><b>Approval:</b> Pending by Committee</p>
-                            {% endif %}
-                        {% else %}
-                            <p><b>Approval:</b> Pending by Supervisor</p>
-                        {% endif %}
-                    </div>
+        <article class=" article">
+            <header>
+                <kbd>{{ Ticket['Project_ID'] }}</kbd> <b>{{ Ticket['Project_Title'] }} </b>
+            </header>
+            <!-- student_name, Roll_No, Date_Of_IRB, Date_Of_Progress_Presentation, File Link Button -->
+            <div class="grid">
+                <div>
+                    <p><b>Student Name:</b> {{ Ticket['Student_Name'] }}</p>
+                    <p><b>Date Of Progress Presentation</b> {{ Ticket['Date_Of_Progress_Presentation'] }}</p>
+                    <p><b>Presentation: </b><a href="/file/{{ Ticket['Project_ID'] }}">View Presentation</a></p>
                 </div>
+                <div>
+                    <p><b>Roll No:</b> {{ Ticket['Roll_No'] }}</p>
+                    <p><b>Date Of IRB</b> {{ Ticket['Date_Of_IRB'] }}</p>
+                    {% if Ticket['Supervisor_Approval'] == True %}
+                    {% if Ticket['Committee_Approval'] == True %}
+                    <p><b>Approval:</b> Approved</p>
+                    {% else %}
+                    <p><b>Approval:</b> Pending by Committee</p>
+                    {% endif %}
+                    {% else %}
+                    <p><b>Approval:</b> Pending by Supervisor</p>
+                    {% endif %}
+                </div>
+            </div>
 
-                <footer>
-                    <div class="grid">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <a class="secondary" href="/ticket_created/{{ Ticket['Project_ID'] }}" role="button" target="_blank" class="outline">View Ticket</a>
-                        {% if Ticket['Supervisor_Approval'] == True %}
-                            {% if Ticket['Committee_Approval'] == True %}
-                                <a class="primary" href="/auhead/{{ Ticket['Project_ID'] }}/approve" role="button" class="contrast">Approve</a>                            {% endif %}
-                        {% endif %}
-                    </div>
-                </footer>
-            </article>
+            <footer>
+                <div class="grid">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <a class="secondary" href="/ticket_created/{{ Ticket['Project_ID'] }}" role="button" target="_blank"
+                        class="outline">View Ticket</a>
+                    {% if Ticket['Supervisor_Approval'] == True %}
+                    {% if Ticket['Committee_Approval'] == True %}
+                    <a class="primary" href="/auhead/{{ Ticket['Project_ID'] }}/approve" role="button"
+                        class="contrast">Approve</a> {% endif %}
+                    {% endif %}
+                </div>
+            </footer>
+        </article>
         {% endfor %}
     </article>
-    {% if success != '' %}
+    <!-- {% if success != '' %}
     <dialog class="container" id="modal-example" open>
         <article class="modal" style="width: 50%;">
           <a href="#close"
@@ -230,6 +266,7 @@
           </footer>
         </article>
       </dialog>
-    {% endif %}
+    {% endif %} -->
 </body>
+
 </html>
