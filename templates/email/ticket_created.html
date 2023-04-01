@@ -228,6 +228,7 @@
             <hgroup style="box-sizing: border-box;background-repeat: no-repeat;margin-bottom: var(--typography-spacing-vertical);">
                 <h5 class="Uploaded" style="box-sizing: border-box;background-repeat: no-repeat;--font-weight: 700;margin-top: var(--typography-spacing-vertical);margin-bottom: 2%;color: var(--color);font-weight: var(--font-weight);font-size: var(--font-size);font-family: var(--font-family);--font-size: 1.125rem;--typography-spacing-vertical: 1.6875rem;--color: var(--h5-color);">Uploaded PDF</h5>
                 <!-- button to open pdf file from link /file/{{ Ticket.Project_ID }} -->
+                <a href="{{url_for('file', Project_ID = Ticket.Project_ID , _external=True)}}" target="_blank" style="box-sizing: border-box;background-repeat: no-repeat;color: var(--color);font-weight: var(--font-weight);font-size: var(--font-size);font-family: var(--font-family);--font-weight: 700;--font-size: 1rem;--color: var(--primary-color);">Open PDF</a>
             </hgroup>
         </main>
     </article>
