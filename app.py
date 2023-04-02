@@ -892,3 +892,6 @@ def add_approvals(tickets):
         if ticket['Committee5_Email'] != '':
             ticket['Committee_Approval'] = ticket['Committee_Approval'] and ticket['Committee5_Approval']
     return tickets
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')
