@@ -182,7 +182,9 @@
             gap: 40px;
             
         }
-        
+        #filter summary {
+            white-space: nowrap;
+        }
     </style>
 </head>
 
@@ -284,32 +286,18 @@
         </article>
         {% endfor %}
     </article>
-   
-    <!-- {% if success != '' %}
-    <dialog class="container" id="modal-example" open>
-        <article class="modal" style="width: 50%;">
-          <a href="#close"
-            aria-label="Close"
-            class="close"
-            data-target="modal-example"
-            onClick="toggleModal(event)">
-          </a>
-          <h3 style="color: #640000;">Success</h3>
-          <p>
-            {{ success }}
-          </p>
-          <footer>
-            <a href="url_for('adordc')"
-              role="button"
-              class="secondary"
-              data-target="modal-example"
-              onClick="toggleModal(event)">
-              Close
-            </a>
-          </footer>
-        </article>
-      </dialog>
-    {% endif %} -->
+    <script>
+        const filterLinks = document.querySelectorAll("#filter ul li a");
+        const currentUrl = window.location.href;
+      
+        for (let i = 0; i < filterLinks.length; i++) {
+          if (filterLinks[i].href === currentUrl) {
+            const summary = document.querySelector("#filter summary");
+            summary.textContent = filterLinks[i].textContent;
+            break;
+          }
+        }
+      </script>      
 </body>
 
 </html>
