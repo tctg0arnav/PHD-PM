@@ -25,6 +25,7 @@ app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_DEFAULT_SENDER'] = 'tempmail.xlcsgo@gmail.com'
 app.config['MAIL_SUBJECT_PREFIX'] = 'PHDmon:'
+Port = os.environ.get('PORT')
 mail = Mail(app)
 db = SQLAlchemy(app)
 
@@ -916,4 +917,4 @@ def add_approvals(tickets):
     return tickets
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port= Port)
