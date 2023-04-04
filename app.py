@@ -920,5 +920,6 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port= Port)
     try:
         db.create_all()
+        print('Database Created')
     except:
         pass
