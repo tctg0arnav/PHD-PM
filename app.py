@@ -850,7 +850,7 @@ def xl_archived():
 
 @app.route('/first_time')
 def first_time():
-    
+    print(db_maker())
     if User.query.filter_by(role='admin').first() is None:
         return render_template('first_time.html', success='', error='')
     else:
@@ -922,8 +922,3 @@ def add_approvals(tickets):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port= Port)
-    try:
-        db.create_all()
-        print('Database Created')
-    except:
-        pass
