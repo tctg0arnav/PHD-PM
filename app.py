@@ -794,6 +794,17 @@ def last_date():
         return render_template('last_date.html', success='Last Date set: {}'.format(last_date))
     return render_template('last_date.html', success='')
 
+@app.route('/last_date/delete', methods=['GET', 'POST'])
+def last_date_delete():
+    if session['role'] != 'admin':
+        return redirect(url_for('login'))
+    if LastDate.query.first() != None:
+        last_date = LastDate.query.first()
+        db.session.delete(last_date)
+        db.session.commit()
+        return render_template('last_date.html', success='Last Date deleted')
+    return render_template('last_date.html', success='Last Date not set')
+
 @app.route('/xl')
 def xl():
     for Au in Au_list:

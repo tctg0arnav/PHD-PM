@@ -140,6 +140,13 @@
           </p>
           <p>Please share this link with your students:<br><a href="{{url_for('create_ticket', _external=True)}}">{{url_for('create_ticket', _external=True)}}</a></p>
           <footer>
+            <a href="/last_date/delete"
+              role="button"
+              class="primary"
+              data-target="modal-example"
+              onClick="toggleModal(event)">
+              Delete Last Date
+            </a>
             <a href="/adordc"
               role="button"
               class="secondary"
