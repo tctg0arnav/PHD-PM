@@ -138,8 +138,19 @@
           <p>
             {{ success }}.
           </p>
-          <p>Please share this link with your students:<br><a href="{{url_for('create_ticket', _external=True)}}">{{url_for('create_ticket', _external=True)}}</a></p>
+          {% if success!= 'Last Date deleted' %}
+            <p>Please share this link with your students:<br><a href="{{url_for('create_ticket', _external=True)}}">{{url_for('create_ticket', _external=True)}}</a></p>
+          {% endif %}
           <footer>
+            {% if success=='Last Date deleted' %}
+            <a href="/last_date"
+              role="button"
+              class="primary"
+              data-target="modal-example"
+              onClick="toggleModal(event)">
+              Generate Last Date
+            </a>
+            {% else %}
             <a href="/last_date/delete"
               role="button"
               class="primary"
@@ -147,6 +158,7 @@
               onClick="toggleModal(event)">
               Delete Last Date
             </a>
+            {% endif %}
             <a href="/adordc"
               role="button"
               class="secondary"

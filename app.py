@@ -802,6 +802,16 @@ def last_date_delete():
         last_date = LastDate.query.first()
         db.session.delete(last_date)
         db.session.commit()
+        #move all projects to archive
+        tickets = Ticket.query.all()
+        for ticket in tickets:
+            archive_ticket = Archive_Ticket()
+            for column in Ticket.__table__.columns:
+                setattr(archive_ticket, column.name, getattr(ticket, column.name))
+            db.session.add(archive_ticket)
+            db.session.delete(ticket)
+        db.session.commit()
+        print('archive done')
         return render_template('last_date.html', success='Last Date deleted')
     return render_template('last_date.html', success='Last Date not set')
 
@@ -843,16 +853,17 @@ def xl_au():
 @app.route('/xl/archived')
 def xl_archived():
     for Au in Au_list:
-        headers = ['RollNo', 'Name', 'Email', 'DateOfRegistration', 'Title', 'DateofIRB', 'DateofProgressPresentation', 'Supervisor1', 'Supervisor1_Approval', 'Supervisor1_Marks', 'Supervisor2', 'Supervisor2_Approval', 'Supervisor2_Marks', 'Supervisor3', 'Supervisor3_Approval', 'Supervisor3_Marks']
+        headers = ['RollNo', 'Name', 'Email', 'DateOfRegistration', 'Title', 'DateofIRB', 'DateofProgressPresentation', 'Supervisor1', 'Supervisor1_Approval', 'Supervisor1_Marks', 'Supervisor2', 'Supervisor2_Approval', 'Supervisor2_Marks', 'Supervisor3', 'Supervisor3_Approval', 'Supervisor3_Marks', 'Last Date']
         Au_index = Au_list.index(Au)
         Au_index = Au_index + 1
-        tickets = Ticket.query.filter_by(Au=Au_index).all()
+        tickets = Archive_Ticket.query.filter_by(Au=Au_index).all()
         tickets = [ticket.__dict__ for ticket in tickets]
         with open(f'Project Submissions for {Au}.csv', 'w') as f:
             writer = csv.DictWriter(f, fieldnames=headers)
             writer.writeheader()
             for ticket in tickets:
-                data = [ticket['Roll_No'], ticket['Student_Name'], ticket['Student_Email'], ticket['Date_Of_Registration'], ticket['Project_Title'], ticket['Date_Of_IRB'], ticket['Date_Of_Progress_Presentation'],ticket['Supervisor1_Name'], ticket['Supervisor1_Approval'], ticket['Supervisor1_Marks'],ticket['Supervisor2_Name'], ticket['Supervisor2_Approval'], ticket['Supervisor2_Marks'],ticket['Supervisor3_Name'], ticket['Supervisor3_Approval'], ticket['Supervisor3_Marks']]
+                data = [ticket['Roll_No'], ticket['Student_Name'], ticket['Student_Email'], ticket['Date_Of_Registration'], ticket['Project_Title'], ticket['Date_Of_IRB'], ticket['Date_Of_Progress_Presentation'],ticket['Supervisor1_Name'], ticket['Supervisor1_Approval'], ticket['Supervisor1_Marks'],ticket['Supervisor2_Name'], ticket['Supervisor2_Approval'], ticket['Supervisor2_Marks'],ticket['Supervisor3_Name'], ticket['Supervisor3_Approval'], ticket['Supervisor3_Marks'], ticket['LastDate']]
+                data = dict(zip(headers, data))
                 writer.writerow(data)
     with zipfile('all_au.zip', 'w') as zipObj:
         for Au in Au_list:
