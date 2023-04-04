@@ -219,7 +219,7 @@
                     <p><b>Approval: </b> Approved</p>
                     {% elif Ticket['Supervisor_Approval'] == True and Ticket['Committee_Approval'] == False: %}
                     <p><b>Approval: </b> Pending by Committee</p>
-                    {% else %}
+                    {% elif Ticket['Supervisor_Approval'] == False %}
                     <p><b>Approval: </b> Pending by Supervisor</p>
                     {% endif %}
                 </div>
@@ -242,31 +242,21 @@
         </article>
         {% endfor %}
     </article>
-    <!-- {% if success != '' %}
+    {% if success != '' %}
     <dialog class="container" id="modal-example" open>
-        <article class="modal" style="width: 50%;">
-          <a href="#close"
-            aria-label="Close"
-            class="close"
-            data-target="modal-example"
-            onClick="toggleModal(event)">
-          </a>
-          <h3 style="color: #640000;">Success</h3>
-          <p>
-            {{ success }}
-          </p>
-          <footer>
-            <a href="/auhead"
-              role="button"
-              class="secondary"
-              data-target="modal-example"
-              onClick="toggleModal(event)">
-              Close
+        <article class="modal">
+            <a href="" aria-label="Close" class="close" data-target="modal-example" onclick="self.close()">
             </a>
-          </footer>
+            <h3 style="color: #640000;">Success</h3>
+            <p>
+                {{ success }}
+            </p>
+            <footer>
+                <a href="/auhead" role="button" class="primary" data-target="modal-example" onclick="self.close()">Close</a>
+            </footer>
         </article>
-      </dialog>
-    {% endif %} -->
+    </dialog>
+    {% endif %}
 </body>
 
 </html>

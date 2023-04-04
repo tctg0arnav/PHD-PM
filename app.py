@@ -85,16 +85,16 @@ class Ticket(db.Model):
 
 class Archive_Ticket(db.Model):
     Project_ID = db.Column(db.Integer, primary_key=True)
-    Roll_No = db.Column(db.String(50), unique=True, nullable=False)
-    Student_Name = db.Column(db.String(50), unique=True, nullable=False)
-    Student_Email = db.Column(db.String(50), unique=True, nullable=False)
+    Roll_No = db.Column(db.String(50), nullable=False)
+    Student_Name = db.Column(db.String(50), nullable=False)
+    Student_Email = db.Column(db.String(50), nullable=False)
     Au = db.Column(db.String(50), nullable=False)
     Date_Of_Registration = db.Column(db.DateTime, nullable=False)
     Gate = db.Column(db.Boolean, nullable=False)
     Project_Title = db.Column(db.String(50), nullable=False)
     Date_Of_IRB = db.Column(db.DateTime, nullable=False)
     Date_Of_Progress_Presentation = db.Column(db.DateTime, nullable=False)
-    File_Path = db.Column(db.String(50), unique=True, nullable=False)
+    File_Path = db.Column(db.String(50), nullable=False)
     Publications = db.Column(db.String(50))
     Conferences = db.Column(db.String(50))
     Supervisor1_Name = db.Column(db.String(50))
@@ -388,7 +388,7 @@ def create_ticket():
 def ticket_created(Project_ID):
     ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
     ticket = ticket.__dict__
-    return render_template('ticket_created.html', Ticket=ticket)
+    return render_template('ticket_created.html', Ticket=ticket, success='')
 
 @app.route('/file/<Project_ID>')
 def file(Project_ID):
@@ -712,7 +712,7 @@ def auhead_approve_all():
             ticket.Au_Approval = True
             db.session.commit()
     tickets = [ticket.__dict__ for ticket in tickets]
-    return render_template('auhead.html', success='All Supervisor and Committee projects approved.', last_date=last_date, Tickets=tickets)
+    return render_template('auhead.html', success='All projects approved.', last_date=last_date, Tickets=tickets)
 
 
 
@@ -910,6 +910,7 @@ def allowed_file(filename):
 def add_approvals(tickets):
     for ticket in tickets:
         ticket = ticket.__dict__
+        print(ticket['Supervisor1_Approval'])
         if ticket['Supervisor1_Approval'] == True:
             ticket['Supervisor_Approval'] = True
         else:
@@ -940,6 +941,7 @@ def add_approvals(tickets):
         if ticket['Committee5_Email'] != '':
             if ticket['Committee5_Approval'] == True:
                 ticket['Committee_Approval'] = ticket['Committee_Approval'] and True
+        print(ticket['Supervisor_Approval'], ticket['Committee_Approval'])
     return tickets
 
 if __name__ == '__main__':
