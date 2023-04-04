@@ -138,7 +138,7 @@ class Archive_Ticket(db.Model):
 
 class User(db.Model):
     email = db.Column(db.String(50), unique=True, nullable=False, primary_key=True)
-    password = db.Column(db.String(50), nullable=False) 
+    password = db.Column(db.String(300), nullable=False) 
     role = db.Column(db.String(50), nullable=False)
     name = db.Column(db.String(50), nullable=False)
     Au = db.Column(db.String(50), nullable=False)
