@@ -870,6 +870,10 @@ def first_time_post():
     else:
         return redirect(url_for('login'))
 
+@app.route('/db')
+def db():
+    db.create_all()
+    return 'Database Created'
 
 def send_email(to, subject, template, **kwargs):
     msg = Message(app.config['MAIL_SUBJECT_PREFIX'] + ' ' + subject, recipients=[to])
