@@ -13,7 +13,8 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 ALLOWED_EXTENSIONS = {'pdf'}
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SCALINGO_POSTGRESQL_ALCHEMY_URL')
 app.secret_key = 'secret key'
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
@@ -25,6 +26,7 @@ app.config['MAIL_DEFAULT_SENDER'] = 'tempmail.xlcsgo@gmail.com'
 app.config['MAIL_SUBJECT_PREFIX'] = 'PHDmon:'
 mail = Mail(app)
 db = SQLAlchemy(app)
+
 Au_list = ['L. M. Thapar School of Management','School of Chemistry & Biochemistry (DST-FIST Sponsored)','School of Energy and Environment (DST-FIST Sponsered)','School of Humanities & Social Sciences','School of Mathematics','School of Physics & Materials Science','Thapar School of Liberal Arts & Sciences (TSLAS)','Basic & Engineering Sciences (Dera Bassi Campus)','Chemical Engineering','Civil Engineering','Computer Science & Engineering','Department of Biotechnology','Distance Education (DDE)','Electrical & Instrumentation Engineering','Electronics & Communication Engineering','Mechanical Engineering Department']
 class Ticket(db.Model):
     Project_ID = db.Column(db.Integer, primary_key=True)
@@ -599,7 +601,6 @@ def auhead():
     tickets = Ticket.query.filter_by(Au=Au).all()
     add_approvals(tickets)
     tickets = [ticket.__dict__ for ticket in tickets]
-    print(tickets)
     return render_template('auhead.html', Au=Au, success='', Tickets=tickets)
 
 @app.route('/auhead/approved', methods=['GET', 'POST'])
@@ -881,16 +882,36 @@ def allowed_file(filename):
 def add_approvals(tickets):
     for ticket in tickets:
         ticket = ticket.__dict__
-        ticket['Supervisor_Approval'] = ticket['Supervisor1_Approval']
+        if ticket['Supervisor1_Approval'] == True:
+            ticket['Supervisor_Approval'] = True
+        else:
+            ticket['Supervisor_Approval'] = False
         if ticket['Supervisor2_Email'] != '':
-            ticket['Supervisor_Approval'] = ticket['Supervisor_Approval'] and ticket['Supervisor2_Approval']
+            if ticket['Supervisor2_Approval'] == True:
+                ticket['Supervisor_Approval'] = ticket['Supervisor_Approval'] and True
+            else:
+                ticket['Supervisor_Approval'] = False
         if ticket['Supervisor3_Email'] != '':
-            ticket['Supervisor_Approval'] = ticket['Supervisor_Approval'] and ticket['Supervisor3_Approval']
-        ticket['Committee_Approval'] = ticket['Committee1_Approval'] and ticket['Committee2_Approval'] and ticket['Committee3_Approval']
+            if ticket['Supervisor3_Approval'] == True:
+                ticket['Supervisor_Approval'] = ticket['Supervisor_Approval'] and True
+            else:
+                ticket['Supervisor_Approval'] = False
+        if ticket['Committee1_Approval'] == True:
+            if ticket['Committee2_Approval'] == True:
+                if ticket['Committee3_Approval'] == True:
+                    ticket['Committee_Approval'] = True
+                else:
+                    ticket['Committee_Approval'] = False
+            else:
+                ticket['Committee_Approval'] = False
+        else:
+            ticket['Committee_Approval'] = False
         if ticket['Committee4_Email'] != '':
-            ticket['Committee_Approval'] = ticket['Committee_Approval'] and ticket['Committee4_Approval']
+            if ticket['Committee4_Approval'] == True:
+                ticket['Committee_Approval'] = ticket['Committee_Approval'] and True
         if ticket['Committee5_Email'] != '':
-            ticket['Committee_Approval'] = ticket['Committee_Approval'] and ticket['Committee5_Approval']
+            if ticket['Committee5_Approval'] == True:
+                ticket['Committee_Approval'] = ticket['Committee_Approval'] and True
     return tickets
 
 if __name__ == '__main__':
