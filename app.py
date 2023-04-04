@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
 import os
+import psycopg2
 from datetime import datetime
 import dateutil.parser as dparser
 from zipfile import ZipFile as zipfile
