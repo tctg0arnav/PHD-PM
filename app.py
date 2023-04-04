@@ -871,7 +871,7 @@ def first_time_post():
         return redirect(url_for('login'))
 
 @app.route('/db')
-def db():
+def db_maker():
     db.create_all()
     return 'Database Created'
 
