@@ -19,7 +19,7 @@ app.secret_key = 'secret key'
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'tempmail.xlcsgo@gmail.com'
-app.config['MAIL_PASSWORD'] = 'jjjthrbdtohkiomc'
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_DEFAULT_SENDER'] = 'tempmail.xlcsgo@gmail.com'
@@ -211,14 +211,6 @@ def create_ticket():
         Date_Of_Progress_Presentation = dparser.parse(Date_Of_Progress_Presentation, fuzzy=True)
         Date_Of_IRB = request.form['Date_Of_IRB']
         Date_Of_IRB = dparser.parse(Date_Of_IRB, fuzzy=True)
-        Supervisor_Name = request.form['supervisor_name']
-        Supervisor_Email = request.form['supervisor_email']
-        Supervisor_Name = Supervisor_Name.split(';')
-        Supervisor_Email = Supervisor_Email.split(';')
-        Committee_Name = request.form['committee_name']
-        Committee_Email = request.form['committee_email']
-        Committee_Name = Committee_Name.split(';')
-        Committee_Email = Committee_Email.split(';')
         file = request.files.get('file_path', None)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], Roll_No + '.pdf')
         file.save(file_path)
@@ -230,20 +222,57 @@ def create_ticket():
         Au_Approval = False
         Adordc_Approval = False
         new_ticket = Ticket(Student_Name=student_name, Student_Email=student_email, Roll_No=Roll_No, Au=Au, Date_Of_Registration=Date_Of_Registration, Gate=Gate, Project_Title=Project_Title, Date_Of_Progress_Presentation=Date_Of_Progress_Presentation, Date_Of_IRB=Date_Of_IRB, Publications=Publications, Conferences=Conferences, Au_Approval=Au_Approval, Adordc_Approval=Adordc_Approval, File_Path=file_path, LastDate=lastdate)        
-        new_ticket.Supervisor_Name = ''.join(Supervisor_Name, ';')
-        new_ticket.Supervisor_Email = ''.join(Supervisor_Email, ';')
-        new_ticket.Committee_Name = ''.join(Committee_Name, ';')
-        new_ticket.Committee_Email = ''.join(Committee_Email, ';')
-        supA = []
-        for i in range(len(Supervisor_Name)):
-            supA.append(0)
-        new_ticket.Supervisor_Approval = ''.join(supA, ';')
+        form_data = request.form
+        supN = ""
+        supE = ""
+        comN = ""
+        comE = ""
+        for key in form_data:
+            #if key starts with supervisor_name
+            if key.startswith('supervisor_name'):
+                #get the index of the supervisor
+                index = key.split('_')[-1]
+                #get the name of the supervisor
+                name = form_data[key]
+                supN += name + ";"
+            if key.startswith('supervisor_email'):
+                #get the index of the supervisor
+                index = key.split('_')[-1]
+                #get the name of the supervisor
+                email = form_data[key]
+                supE += email + ";"
+            if key.startswith('committee_name'):
+                #get the index of the supervisor
+                index = key.split('_')[-1]
+                #get the name of the supervisor
+                name = form_data[key]
+                comN += name + ";"
+            if key.startswith('committee_email'):
+                #get the index of the supervisor
+                index = key.split('_')[-1]
+                #get the name of the supervisor
+                email = form_data[key]
+                comE += email + ";"
+        new_ticket.Supervisor_Name = supN
+        new_ticket.Supervisor_Email = supE
+        new_ticket.Committee_Name = comN
+        new_ticket.Committee_Email = comE
+        print(supN, supE, comN, comE)
+        supA = ""
+        for i in range(len(supN)):
+            supA += "0;"
+        new_ticket.Supervisor_Approval = supA
+        comA = ""
+        for i in range(len(comN)):
+            comA += "0;"
+        new_ticket.Committee_Approval = comA
         db.session.add(new_ticket)
         db.session.commit()
         ticket = Ticket.query.filter_by(Student_Email=student_email).first()
         Project_ID = ticket.Project_ID
         send_email(student_email, 'Thesis Submitted', 'email/ticket_created', Ticket=ticket)
-        for i in Supervisor_Email:
+        print(request.form)
+        for i in supE.split(';'):
             send_email(i, 'Thesis Submitted', 'email/ticket_created', Ticket=ticket)
         return render_template('create_ticket.html', success='Ticket created successfully', Project_ID=Project_ID)
     return render_template('create_ticket.html', success='')
@@ -635,10 +664,11 @@ def db_maker():
     return 'Database Created'
 
 def send_email(to, subject, template, **kwargs):
-    msg = Message(app.config['MAIL_SUBJECT_PREFIX'] + ' ' + subject, recipients=[to])
-    msg.html = render_template(template + '.html', **kwargs)
+    # msg = Message(app.config['MAIL_SUBJECT_PREFIX'] + ' ' + subject, recipients=[to])
+    # msg.html = render_template(template + '.html', **kwargs)
     
-    mail.send(msg)
+    # mail.send(msg)
+    return print('Email Sent, but not really', to, subject, template, kwargs)
 
 def allowed_file(filename):
     return '.' in filename and \

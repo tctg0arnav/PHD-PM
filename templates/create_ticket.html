@@ -351,18 +351,16 @@
                     <h3>Supervisors</h3>
                     <div id="supervisors-container">
                         <div class="supervisor">
-                            <input type="text" hidden value="" name="supervisor-name">
-                            <input type="text" hidden value="" name="supervisor-email">
                             <div class="grid">
                                 <div>
                                     <label for="supervisor_name_1">Supervisor 1 Name<sup
                                             style=" color: #ff0000;">*</sup></label>
-                                    <input type="text" name="supervisor_name[]" id="supervisor_name_1" required>
+                                    <input type="text" name="supervisor_name_1" id="supervisor_name_1" required>
                                 </div>
                                 <div>
                                     <label for="supervisor_email_1">Supervisor 1 Email<sup
                                             style=" color: #ff0000;">*</sup></label>
-                                    <input type="email" name="supervisor_email[]" id="supervisor_email_1" required>
+                                    <input type="email" name="supervisor_email_1" id="supervisor_email_1" required>
                                 </div>
                             </div>
                         </div>
@@ -382,16 +380,14 @@
                         const newSupervisor = document.createElement("div");
                         newSupervisor.classList.add("supervisor");
                         newSupervisor.innerHTML = `
-                        <input type="text" hidden value="" name="supervisor-name">
-                        <input type="text" hidden value="" name="supervisor-email">
                         <div class="grid">
                           <div>
                             <label for="supervisor_name_${supervisorCount}">Supervisor ${supervisorCount} Name <sup style=" color: #ff0000;">*</sup></label>
-                            <input type="text" name="supervisor_name[]" id="supervisor_name_${supervisorCount}" required>
+                            <input type="text" name="supervisor_name_${supervisorCount}" id="supervisor_name_${supervisorCount}" required>
                           </div>
                           <div>
                             <label for="supervisor_email_${supervisorCount}">Supervisor ${supervisorCount} Email <sup style=" color: #ff0000;">*</sup></label>
-                            <input type="email" name="supervisor_email[]" id="supervisor_email_${supervisorCount}" required>
+                            <input type="email" name="supervisor_email_${supervisorCount}" id="supervisor_email_${supervisorCount}" required>
                           </div>
                         </div>`;
                         const deleteButton = document.createElement("div");
@@ -419,20 +415,20 @@
                         supervisorCount = supervisors.length;
                     }
 
-                    function combineSupervisors() {
-                        let supervisorNames = "";
-                        let supervisorEmails = "";
-                        const nameInputs = document.getElementsByName("supervisor_name[]");
-                        const emailInputs = document.getElementsByName("supervisor_email[]");
-                        for (let i = 0; i < nameInputs.length; i++) {
-                            supervisorNames += nameInputs[i].value + ";";
-                            supervisorEmails += emailInputs[i].value + ";";
-                        }
-                        document.getElementById("supervisor_name").value = supervisorNames.slice(0, -1);
-                        document.getElementById("supervisor_email").value = supervisorEmails.slice(0, -1);
-                    }
+                    // function combineSupervisors() {
+                    //     let supervisorNames = "";
+                    //     let supervisorEmails = "";
+                    //     const nameInputs = document.getElementsByName("supervisor_name[]");
+                    //     const emailInputs = document.getElementsByName("supervisor_email[]");
+                    //     for (let i = 0; i < nameInputs.length; i++) {
+                    //         supervisorNames += nameInputs[i].value + ";";
+                    //         supervisorEmails += emailInputs[i].value + ";";
+                    //     }
+                    //     document.getElementById("supervisor_name").value = supervisorNames.slice(0, -1);
+                    //     document.getElementById("supervisor_email").value = supervisorEmails.slice(0, -1);
+                    // }
 
-                    document.addEventListener("submit", combineSupervisors);
+                    // document.addEventListener("submit", combineSupervisors);
                 </script>
 
 
@@ -446,13 +442,13 @@
                                 <div>
                                     <label for="committee_member_name_1">Member 1 Name<sup
                                             style="color: #ff0000;">*</sup></label>
-                                    <input type="text" name="committee_member_name[]" id="committee_member_name_1"
+                                    <input type="text" name="committee_member_name_1" id="committee_member_name_1"
                                         required>
                                 </div>
                                 <div>
                                     <label for="committee_member_email_1">Member 1 Email<sup
                                             style="color: #ff0000;">*</sup></label>
-                                    <input type="email" name="committee_member_email[]" id="committee_member_email_1"
+                                    <input type="email" name="committee_member_email_1" id="committee_member_email_1"
                                         required>
                                 </div>
                             </div>
@@ -462,13 +458,13 @@
                                 <div>
                                     <label for="committee_member_name_2">Member 2 Name<sup
                                             style="color: #ff0000;">*</sup></label>
-                                    <input type="text" name="committee_member_name[]" id="committee_member_name_2"
+                                    <input type="text" name="committee_member_name_2" id="committee_member_name_2"
                                         required>
                                 </div>
                                 <div>
                                     <label for="committee_member_email_2">Member 2 Email<sup
                                             style="color: #ff0000;">*</sup></label>
-                                    <input type="email" name="committee_member_email[]" id="committee_member_email_2"
+                                    <input type="email" name="committee_member_email_2" id="committee_member_email_2"
                                         required>
                                 </div>
                             </div>
@@ -478,13 +474,13 @@
                                 <div>
                                     <label for="committee_member_name_3">Member 3 Name<sup
                                             style="color: #ff0000;">*</sup></label>
-                                    <input type="text" name="committee_member_name[]" id="committee_member_name_3"
+                                    <input type="text" name="committee_member_name_3" id="committee_member_name_3"
                                         required>
                                 </div>
                                 <div>
                                     <label for="committee_member_email_3">Member 3 Email<sup
                                             style="color: #ff0000;">*</sup></label>
-                                    <input type="email" name="committee_member_email[]" id="committee_member_email_3"
+                                    <input type="email" name="committee_member_email_3" id="committee_member_email_3"
                                         required>
                                 </div>
                             </div>
@@ -508,11 +504,11 @@
         <div class="grid">
             <div>
                 <label for="committee_member_name_${committeeMemberCount}">Member ${committeeMemberCount} Name<sup style="color: #ff0000;">*</sup></label>
-                <input type="text" name="committee_member_name[]" id="committee_member_name_${committeeMemberCount}" required>
+                <input type="text" name="committee_member_name_${committeeMemberCount}" id="committee_member_name_${committeeMemberCount}" required>
             </div>
             <div>
                 <label for="committee_member_email_${committeeMemberCount}">Member ${committeeMemberCount} Email<sup style="color: #ff0000;">*</sup></label>
-                <input type="email" name="committee_member_email[]" id="committee_member_email_${committeeMemberCount}" required>
+                <input type="email" name="committee_member_email_${committeeMemberCount}" id="committee_member_email_${committeeMemberCount}" required>
             </div>
         </div>`;
                         const deleteButton = document.createElement("div");
@@ -539,20 +535,20 @@
                         });
                         committeeMemberCount = committeeMembers.length;
                     }
-                    function combineCommittee() {
-                        let committeeNames = "";
-                        let committeeEmails = "";
-                        const nameInputs = document.getElementsByName("committee_name[]");
-                        const emailInputs = document.getElementsByName("committee_email[]");
-                        for (let i = 0; i < nameInputs.length; i++) {
-                            committeeNames += nameInputs[i].value + ";";
-                            committeeEmails += emailInputs[i].value + ";";
-                        }
-                        document.getElementById("committee_name").value = committeeNames.slice(0, -1);
-                        document.getElementById("committee_email").value = committeeEmails.slice(0, -1);
-                    }
+                    // function combineCommittee() {
+                    //     let committeeNames = "";
+                    //     let committeeEmails = "";
+                    //     const nameInputs = document.getElementsByName("committee_name[]");
+                    //     const emailInputs = document.getElementsByName("committee_email[]");
+                    //     for (let i = 0; i < nameInputs.length; i++) {
+                    //         committeeNames += nameInputs[i].value + ";";
+                    //         committeeEmails += emailInputs[i].value + ";";
+                    //     }
+                    //     document.getElementById("committee_name").value = committeeNames.slice(0, -1);
+                    //     document.getElementById("committee_email").value = committeeEmails.slice(0, -1);
+                    // }
 
-                    document.addEventListener("submit", combineCommittee);
+                    // document.addEventListener("submit", combineCommittee);
                 </script>
 
                 <!-- <script>
@@ -616,7 +612,7 @@
                     </div>
                 </div>
                 <section class="submit primary">
-                    <input class="submit" type="submit" value="Submit">
+                    <input class="submit" type="submit" value="Submit" onclick="console.log(document.getElementByID('supervisor_name').value)">
                 </section>
             </form>
         </main>
