@@ -236,128 +236,43 @@
             </section>
             <section class="supervisors">
                 <h3>Supervisors</h3>
+                {% for i in range(supN|length) %}    
+                {% if supN[i] != '' %}
                 <div class="grid">
                     <div>
                         <hgroup>
-                            <h5>Supervisor 1 Name</h5>
-                            <h6>{{ Ticket['Supervisor1_Name'] }}</h6>
+                            <h5>Supervisor {{ i+1 }} Name</h5>
+                            <h6>{{ supN[i] }}</h6>
                         </hgroup>
                     </div>
                     <div>
                         <hgroup>
-                            <h5>Supervisor 1 Email</h5>
-                            <h6>{{ Ticket['Supervisor1_Email'] }}</h6>
+                            <h5>Supervisor {{ i+1 }} Email</h5>
+                            <h6>{{ supE[i] }}</h6>
                         </hgroup>
                     </div>
                 </div>
-                <div class="grid">
-                    {% if Ticket['Supervisor2_Name'] %}
-                    <div>
-                        <hgroup>
-                            <h5>Supervisor 2 Name</h5>
-                            <h6>{{ Ticket['Supervisor2_Name'] }}</h6>
-                        </hgroup>
-                    </div>
-                    <div>
-                        <hgroup>
-                            <h5>Supervisor 2 Email</h5>
-                            <h6>{{ Ticket['Supervisor2_Email'] }}</h6>
-                        </hgroup>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="grid">
-                    {% if Ticket['Supervisor3_Name'] %}
-                    <div>
-                        <hgroup>
-                            <h5>Supervisor 3 Name</h5>
-                            <h6>{{ Ticket['Supervisor3_Name'] }}</h6>
-                        </hgroup>
-                    </div>
-                    <div>
-                        <hgroup>
-                            <h5>Supervisor 3 Email</h5>
-                            <h6>{{ Ticket['Supervisor3_Email'] }}</h6>
-                        </hgroup>
-                        {% endif %}
-                    </div>
+                {% endif %}
+                {% endfor %}
             </section>
             <section class="committee">
                 <h3>Doctoral Committee</h3>
+                {% for i in range(comN|length) %}    
                 <div class="grid">
                     <div>
                         <hgroup>
-                            <h5>Committee 1 Name</h5>
-                            <h6>{{ Ticket['Committee1_Name'] }}</h6>
+                            <h5>Committee Member {{ i+1 }} Name</h5>
+                            <h6>{{ comN[i] }}</h6>
                         </hgroup>
                     </div>
                     <div>
                         <hgroup>
-                            <h5>Committee 1 Email</h5>
-                            <h6>{{ Ticket['Committee1_Email'] }}</h6>
+                            <h5>Committee Member {{ i+1 }} Email</h5>
+                            <h6>{{ comE[i] }}</h6>
                         </hgroup>
                     </div>
                 </div>
-                <div class="grid">
-                    <div>
-                        <hgroup>
-                            <h5>Committee 2 Name</h5>
-                            <h6>{{ Ticket['Committee2_Name'] }}</h6>
-                        </hgroup>
-                    </div>
-                    <div>
-                        <hgroup>
-                            <h5>Committee 2 Email</h5>
-                            <h6>{{ Ticket['Committee2_Email'] }}</h6>
-                        </hgroup>
-                    </div>
-                </div>
-                <div class="grid">
-                    <div>
-                        <hgroup>
-                            <h5>Committee 3 Name</h5>
-                            <h6>{{ Ticket['Committee3_Name'] }}</h6>
-                        </hgroup>
-                    </div>
-                    <div>
-                        <hgroup>
-                            <h5>Committee 3 Email</h5>
-                            <h6>{{ Ticket['Committee3_Email'] }}</h6>
-                        </hgroup>
-                    </div>
-                </div>
-                <div class="grid">
-                    {% if Ticket['Committee4_Name'] %}
-                    <div>
-                        <hgroup>
-                            <h5>Committee 4 Name</h5>
-                            <h6>{{ Ticket['Committee4_Name'] }}</h6>
-                        </hgroup>
-                    </div>
-                    <div>
-                        <hgroup>
-                            <h5>Committee 4 Email</h5>
-                            <h6>{{ Ticket['Committee4_Email'] }}</h6>
-                        </hgroup>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="grid">
-                    {% if Ticket['Committee5_Name'] %}
-                    <div>
-                        <hgroup>
-                            <h5>Committee 5 Name</h5>
-                            <h6>{{ Ticket['Committee5_Name'] }}</h6>
-                        </hgroup>
-                    </div>
-                    <div>
-                        <hgroup>
-                            <h5>Committee 5 Email</h5>
-                            <h6>{{ Ticket['Committee5_Email'] }}</h6>
-                        </hgroup>
-                    </div>
-                    {% endif %}
-                </div>
+                {% endfor %}
             </section>
             <div class="grid">
                 <div>

@@ -1,6 +1,15 @@
     {% extends 'ticket_created.html' %}
 
     {% block form %}
+    <article>
+        <div class="grid">
+            {% for i in range(supR|length) %}
+            <div>
+                <h3>Supervisor {{i}} Remarks</h3>
+                <h6>{{supR[i]}}</h6>
+            </div>
+            {% endfor %}
+        </div>
     <form action="/committee/Project_ID" method="post">
         <label for="committee-email"> Email:</label>
         <input type="email" id="committee-email" name="committee-email"><br>
@@ -8,4 +17,5 @@
         <input type="submit" name="satisfaction" value="Satisfactory">
         <input type="submit" name="satisfaction" value="Unsatisfactory">
     </form>
+    </article>
     {% endblock %}

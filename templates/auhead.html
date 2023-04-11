@@ -215,13 +215,7 @@
                 <div>
                     <p><b>Roll No:</b> {{ Ticket['Roll_No'] }}</p>
                     <p><b>Date Of IRB</b> {{ Ticket['Date_Of_IRB'] }}</p>
-                    {% if Ticket['Committee_Approval']: %}
-                    <p><b>Approval: </b> Approved</p>
-                    {% elif Ticket['Supervisor_Approval'] == True and Ticket['Committee_Approval'] == False: %}
-                    <p><b>Approval: </b> Pending by Committee</p>
-                    {% elif Ticket['Supervisor_Approval'] == False %}
-                    <p><b>Approval: </b> Pending by Supervisor</p>
-                    {% endif %}
+                    <p><b>Status:</b> {{ Status }}</p>
                 </div>
             </div>
 

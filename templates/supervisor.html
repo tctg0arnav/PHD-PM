@@ -1,6 +1,7 @@
 {% extends 'ticket_created.html' %}
 
 {% block form %}
+<article>
   <form action="/supervisor/Project_ID" method="post">
     <label for="supervisor-email">Supervisor Email:</label>
     <input type="email" id="supervisor-email" name="supervisor-email"><br>
@@ -10,12 +11,12 @@
 
     <label for="percentage-present">%age till Present:</label>
     <input type="number" id="percentage-present" name="percentage-present"><br>
-
+    <label for="total-percentage">Total %age:</label>
+    <input type="number" id="total-percentage" name="total-percentage" readonly><br>
     <label for="supervisor-remarks">Supervisor Remarks:</label>
     <textarea name="supervisor_remarks" id="supervisor_remarks" cols="30" rows="10"></textarea>
 
-    <label for="total-percentage">Total %age:</label>
-    <input type="number" id="total-percentage" name="total-percentage" readonly><br>
+
 
     <script>
       const percentagePreviousInput = document.getElementById('percentage-previous');
@@ -36,4 +37,5 @@
     <input type="submit" name="satisfaction" value="Satisfactory">
     <input type="submit" name="satisfaction" value="Unsatisfactory">
   </form>
+</article>
 {% endblock %}
