@@ -1,26 +1,39 @@
-{% extends "ticket_created.html" %}
+{% extends 'ticket_created.html' %}
+
 {% block form %}
-<article class="article">
-    <form action="/super/1/{{ Ticket['Project_ID'] }}" method="post">
-        <label for="prevmarks">Marks till previous</label>
-        <input  id="number1" oninput="submit1()" type="text" name="prevmarks" id="prevmarks">
-        <label for="nowmarks">Marks till present</label>
-        <input  id="number2" oninput="submit1()" type="text" name="nowmarks" id="nowmarks">
-        <label for="Supervisor1_Remarks">Your Remarks</label>
-        <label  for="">
-            <p id="screen1">00 </p>
-        </label>
-        <textarea placeholder="add your remark here" name="Supervisor1_Remarks" id="Supervisor1_Remarks" cols="30" rows="9"></textarea>
-        <button class="primary" type="submit" name="submit" value="Approve">Satisfactory</button>
-        <button class="secondary" type="submit" name="submit" value="Reject">Not Statisfactory</button>
-    </form>
-</article>
-<script>
-     function submit1(){
-        var a =  document.getElementById("number1").value;
-        var b =  document.getElementById("number2").value;
-        var c = parseInt(a) + parseInt(b); 
-        document.getElementById("screen1").innerHTML=c;
+  <form action="/supervisor/Project_ID" method="post">
+    <label for="supervisor-email">Supervisor Email:</label>
+    <input type="email" id="supervisor-email" name="supervisor-email"><br>
+
+    <label for="percentage-previous">%age till Previous:</label>
+    <input type="number" id="percentage-previous" name="percentage-previous"><br>
+
+    <label for="percentage-present">%age till Present:</label>
+    <input type="number" id="percentage-present" name="percentage-present"><br>
+
+    <label for="supervisor-remarks">Supervisor Remarks:</label>
+    <textarea name="supervisor_remarks" id="supervisor_remarks" cols="30" rows="10"></textarea>
+
+    <label for="total-percentage">Total %age:</label>
+    <input type="number" id="total-percentage" name="total-percentage" readonly><br>
+
+    <script>
+      const percentagePreviousInput = document.getElementById('percentage-previous');
+      const percentagePresentInput = document.getElementById('percentage-present');
+      const totalPercentageInput = document.getElementById('total-percentage');
+
+      function updateTotalPercentage() {
+        const percentagePrevious = Number(percentagePreviousInput.value);
+        const percentagePresent = Number(percentagePresentInput.value);
+        const totalPercentage = percentagePrevious + percentagePresent;
+        totalPercentageInput.value = totalPercentage;
       }
-</script>
+
+      percentagePreviousInput.addEventListener('input', updateTotalPercentage);
+      percentagePresentInput.addEventListener('input', updateTotalPercentage);
+    </script>
+
+    <input type="submit" name="satisfaction" value="Satisfactory">
+    <input type="submit" name="satisfaction" value="Unsatisfactory">
+  </form>
 {% endblock %}

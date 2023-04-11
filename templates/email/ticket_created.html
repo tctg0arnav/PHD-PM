@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" style="box-sizing: border-box;background-repeat: no-repeat;">
     
     
-    <title style="box-sizing: border-box;background-repeat: no-repeat;">Ticket Created</title>
+    <title style="box-sizing: border-box;background-repeat: no-repeat;">New Submission</title>
     
 </head>
 <body style="box-sizing: border-box;background-repeat: no-repeat;width: 100%;margin: 0;">
@@ -23,8 +23,8 @@
     <article class="article" style="box-sizing: border-box;background-repeat: no-repeat;margin: 10% auto 5%;padding: var(--block-spacing-vertical) var(--block-spacing-horizontal);border-radius: 0;background: var(--card-background-color);box-shadow: none;width: 75vw;padding-bottom: 0;border: 1.5px solid #3d3d3d;">
         <header class="header" style="box-sizing: border-box;background-repeat: no-repeat;margin-right: calc(var(--block-spacing-horizontal) * -1);margin-left: calc(var(--block-spacing-horizontal) * -1);padding: calc(var(--block-spacing-vertical) * .66) var(--block-spacing-horizontal);background-color: #D9D9D9;margin-top: calc(var(--block-spacing-vertical) * -1);margin-bottom: var(--block-spacing-vertical);border-bottom: var(--border-width) solid var(--card-border-color);border-top-right-radius: var(--border-radius);border-top-left-radius: var(--border-radius);border-radius: 0;">
             <hgroup style="box-sizing: border-box;background-repeat: no-repeat;margin-bottom: var(--typography-spacing-vertical);">
-                <h1 style="box-sizing: border-box;background-repeat: no-repeat;--font-weight: 700;margin-top: 0;margin-bottom: 0;color: #640000;font-weight: var(--font-weight);font-size: var(--font-size);font-family: var(--font-family);--font-size: 2rem;--typography-spacing-vertical: 3rem;--color: var(--h1-color);">Successfully ticket generated</h1>
-                <h2 style="box-sizing: border-box;background-repeat: no-repeat;--font-weight: unset;margin-top: var(--typography-spacing-vertical);margin-bottom: 0;color: var(--color);font-weight: var(--font-weight);font-size: 1rem;font-family: unset;--font-size: 1.75rem;--typography-spacing-vertical: 2.625rem;--color: var(--muted-color);">You can review the ticket below.</h2>
+                <h1 style="box-sizing: border-box;background-repeat: no-repeat;--font-weight: 700;margin-top: 0;margin-bottom: 0;color: #640000;font-weight: var(--font-weight);font-size: var(--font-size);font-family: var(--font-family);--font-size: 2rem;--typography-spacing-vertical: 3rem;--color: var(--h1-color);"> PhD Thesis Submitted Successfully</h1>
+                <h2 style="box-sizing: border-box;background-repeat: no-repeat;--font-weight: unset;margin-top: var(--typography-spacing-vertical);margin-bottom: 0;color: var(--color);font-weight: var(--font-weight);font-size: 1rem;font-family: unset;--font-size: 1.75rem;--typography-spacing-vertical: 2.625rem;--color: var(--muted-color);">YYou can review the submission below</h2>
             </hgroup>
         </header>
         <main class="container" style="box-sizing: border-box;background-repeat: no-repeat;display: block;width: 100%;margin-right: auto;margin-left: auto;padding-right: var(--spacing);padding-left: var(--spacing);">
@@ -60,7 +60,7 @@
                 </div>
             </section>
             <section class="project-details" style="box-sizing: border-box;background-repeat: no-repeat;margin-bottom: var(--block-spacing-vertical);">
-                <h3 style="box-sizing: border-box;background-repeat: no-repeat;--font-weight: 700;margin-top: var(--typography-spacing-vertical);margin-bottom: var(--typography-spacing-vertical);color: var(--color);font-weight: var(--font-weight);font-size: var(--font-size);font-family: var(--font-family);--font-size: 1.5rem;--typography-spacing-vertical: 2.25rem;--color: var(--h3-color);">Project Details</h3>
+                <h3 style="box-sizing: border-box;background-repeat: no-repeat;--font-weight: 700;margin-top: var(--typography-spacing-vertical);margin-bottom: var(--typography-spacing-vertical);color: var(--color);font-weight: var(--font-weight);font-size: var(--font-size);font-family: var(--font-family);--font-size: 1.5rem;--typography-spacing-vertical: 2.25rem;--color: var(--h3-color);">Thesis Details</h3>
                 <div class="grid" style="box-sizing: border-box;background-repeat: no-repeat;grid-column-gap: var(--grid-spacing-horizontal);grid-row-gap: var(--grid-spacing-vertical);display: grid;grid-template-columns: 1fr;margin: 0;">
                     <div style="box-sizing: border-box;background-repeat: no-repeat;min-width: 0;">
                         <hgroup style="box-sizing: border-box;background-repeat: no-repeat;margin-bottom: var(--typography-spacing-vertical);">
@@ -76,8 +76,8 @@
                     </div>
                     <div style="box-sizing: border-box;background-repeat: no-repeat;min-width: 0;">
                         <hgroup style="box-sizing: border-box;background-repeat: no-repeat;margin-bottom: var(--typography-spacing-vertical);">
-                            <h5 style="box-sizing: border-box;background-repeat: no-repeat;--font-weight: 700;margin-top: var(--typography-spacing-vertical);margin-bottom: 0;color: var(--color);font-weight: var(--font-weight);font-size: var(--font-size);font-family: var(--font-family);--font-size: 1.125rem;--typography-spacing-vertical: 1.6875rem;--color: var(--h5-color);">GATE/NET/TA</h5>
-                            {% if Ticket['Gate/Net/Ta'] == 'Yes' %}
+                            <h5 style="box-sizing: border-box;background-repeat: no-repeat;--font-weight: 700;margin-top: var(--typography-spacing-vertical);margin-bottom: 0;color: var(--color);font-weight: var(--font-weight);font-size: var(--font-size);font-family: var(--font-family);--font-size: 1.125rem;--typography-spacing-vertical: 1.6875rem;--color: var(--h5-color);">GRF/TA</h5>
+                            {% if Ticket['Gate'] == 'Yes' %}
                             <h6 style="box-sizing: border-box;background-repeat: no-repeat;--font-weight: 700;margin-top: 0;margin-bottom: 0;color: var(--color);font-weight: var(--font-weight);font-size: var(--font-size);font-family: var(--font-family);--color: var(--h6-color);">Yes</h6>
                             {% else %}
                             <h6 style="box-sizing: border-box;background-repeat: no-repeat;--font-weight: unset;margin-top: 0;margin-bottom: 0;color: var(--color);font-weight: var(--font-weight);font-size: 1rem;font-family: unset;--color: var(--muted-color);">No</h6>

@@ -185,8 +185,8 @@
     <article class="article">
         <header class="header">
             <hgroup>
-                <h1>Create a New Ticket</h1>
-                <h2>Submit your project here.</h2>
+                <h1>Thesis Submission </h1>
+                <h2>Submit your PhD Thesis here.</h2>
             </hgroup>
         </header>
         <main class="container">
@@ -232,8 +232,8 @@
                     </div>
                 </section>
                 <section class="project-details">
-                    <h3>Project Details</h3>
-                    <label for="Project_Title">Project Title<sup style=" color: #ff0000;">*</sup></label>
+                    <h3>Thesis Details</h3>
+                    <label for="Project_Title">Thesis Title<sup style=" color: #ff0000;">*</sup></label>
                     <input type="text" name="Project_Title" id="Project_Title" required>
                     <div class="grid">
                         <div>
@@ -246,7 +246,7 @@
                             <input type="date" name="Date_Of_IRB" id="Date_Of_IRB" required>
                         </div>
                         <div>
-                            <label for="Gate">GATE/NET/TA<sup style=" color: #ff0000;">*</sup></label>
+                            <label for="Gate">GRF/TA<sup style=" color: #ff0000;">*</sup></label>
                             <details id="Gate" role="list">
                                 <summary aria-haspopup="listbox" id="Gate_bool">Select from Dropdown</summary>
                                 <ul role="listbox">
@@ -267,92 +267,142 @@
                         </div>
                     </div>
                 </section>
-                <section class="supervisors">
+                <section class="Supervisors">
                     <h3>Supervisors</h3>
-                    <div class="grid">
-                        <div>
-                            <label for="Supervisor1_Name">Supervisor 1 Name<sup style=" color: #ff0000;">*</sup></label>
-                            <input type="text" name="Supervisor1_Name" id="Supervisor1_Name" required>
-                        </div>
-                        <div>
-                            <label for="Supervisor1_Email">Supervisor 1 Email<sup style=" color: #ff0000;">*</sup></label>
-                            <input type="email" name="Supervisor1_Email" id="Supervisor1_Email" required>
-                        </div>
-                    </div>
-                    <div class="grid">
-                        <div>
-                            <label for="Supervisor2_Name">Supervisor 2 Name</label>
-                            <input type="text" name="Supervisor2_Name" id="Supervisor2_Name">
-                        </div>
-                        <div>
-                            <label for="Supervisor2_Email">Supervisor 2 Email</label>
-                            <input type="email" name="Supervisor2_Email" id="Supervisor2_Email">
+                    <div id="supervisors-container">
+                        <div class="supervisor">
+                            <input type="text" hidden value="" name="supervisor-name">
+                            <input type="text" hidden value="" name="supervisor-email">
+                            <div>
+                                <label for="supervisor_name_1">Supervisor Name<sup style=" color: #ff0000;">*</sup></label>
+                                <input type="text" name="supervisor_name[]" id="supervisor_name_1" required>
+                            </div>
+                            <div>
+                                <label for="supervisor_email_1">Supervisor Email<sup style=" color: #ff0000;">*</sup></label>
+                                <input type="email" name="supervisor_email[]" id="supervisor_email_1" required>
+                            </div>
+                            <div class="delete-supervisor">
+                                <a href="#" onclick="deleteSupervisor(this.parentNode.parentNode); return false;">Delete</a>
+                            </div>
                         </div>
                     </div>
-                    <div class="grid">
-                        <div>
-                            <label for="Supervisor3_Name">Supervisor 3 Name</label>
-                            <input type="text" name="Supervisor3_Name" id="Supervisor3_Name">
-                        </div>
-                        <div>
-                            <label for="Supervisor3_Email">Supervisor 3 Email</label>
-                            <input type="email" name="Supervisor3_Email" id="Supervisor3_Email">
-                        </div>
+                    <div class="add-supervisor">
+                        <a href="#" onclick="addSupervisor(); return false;">Add Supervisor</a>
                     </div>
                 </section>
-                <section class="committee">
-                    <h3>Doctoral Committee</h3>
-                    <div class="grid">
+                
+                <script>
+                    let supervisorCount = 1;
+                
+                    function addSupervisor() {
+                        supervisorCount++;
+                        const container = document.getElementById('supervisors-container');
+                        const div = document.createElement('div');
+                        div.className = 'supervisor';
+                        div.innerHTML = `
+                            <div>
+                                <label for="supervisor_name_${supervisorCount}">Supervisor Name<sup style=" color: #ff0000;">*</sup></label>
+                                <input type="text" name="supervisor_name[]" id="supervisor_name_${supervisorCount}" required>
+                            </div>
+                            <div>
+                                <label for="supervisor_email_${supervisorCount}">Supervisor Email<sup style=" color: #ff0000;">*</sup></label>
+                                <input type="email" name="supervisor_email[]" id="supervisor_email_${supervisorCount}" required>
+                            </div>
+                            <div class="delete-supervisor">
+                                <a href="#" onclick="deleteSupervisor(this.parentNode.parentNode); return false;">Delete</a>
+                            </div>
+                        `;
+                        container.appendChild(div);
+                    }
+                
+                    function deleteSupervisor(supervisorDiv) {
+                        supervisorDiv.remove();
+                    }
+                    function combineSupervisors() {
+                    let supervisorNames = "";
+                    let supervisorEmails = "";
+                    const nameInputs = document.getElementsByName("supervisor_name[]");
+                    const emailInputs = document.getElementsByName("supervisor_email[]");
+                    for (let i = 0; i < nameInputs.length; i++) {
+                        supervisorNames += nameInputs[i].value + ";";
+                        supervisorEmails += emailInputs[i].value + ";";
+                    }
+                    document.getElementById("supervisor_name").value = supervisorNames.slice(0, -1);
+                    document.getElementById("supervisor_email").value = supervisorEmails.slice(0, -1);
+                    }
+
+                    document.addEventListener("submit", combineSupervisors);
+                </script>
+                
+                <section class="CommitteeMembers">
+                    <input type="text" hidden value="" name="supervisor-name">
+                    <input type="text" hidden value="" name="supervisor-email">
+                    <h3>Committee Members</h3>
+                    <div id="committee-members-container">
+                      <div class="committee-member">
                         <div>
-                            <label for="Committee1_Name">Committee 1 Name<sup style=" color: #ff0000;">*</sup></label>
-                            <input type="text" name="Committee1_Name" id="Committee1_Name" required>
+                          <label for="committee_member_name_1">Committee Member Name<sup style="color: #ff0000;">*</sup></label>
+                          <input type="text" name="committee_member_name[]" id="committee_member_name_1" required>
                         </div>
                         <div>
-                            <label for="Committee1_Email">Committee 1 Email<sup style=" color: #ff0000;">*</sup></label>
-                            <input type="email" name="Committee1_Email" id="Committee1_Email" required>
+                          <label for="committee_member_email_1">Committee Member Email<sup style="color: #ff0000;">*</sup></label>
+                          <input type="email" name="committee_member_email[]" id="committee_member_email_1" required>
                         </div>
+                        <div class="delete-committee-member">
+                          <a href="#" onclick="deleteCommitteeMember(event, this.parentNode.parentNode)">Delete</a>
+                        </div>
+                      </div>
                     </div>
-                    <div class="grid">
-                        <div>
-                            <label for="Committee2_Name">Committee 2 Name<sup style=" color: #ff0000;">*</sup></label>
-                            <input type="text" name="Committee2_Name" id="Committee2_Name" required>
-                        </div>
-                        <div>
-                            <label for="Committee2_Email">Committee 2 Email<sup style=" color: #ff0000;">*</sup></label>
-                            <input type="email" name="Committee2_Email" id="Committee2_Email" required>
-                        </div>
+                    <div class="add-committee-member">
+                      <a href="#" onclick="addCommitteeMember(event)">Add Committee Member</a>
                     </div>
-                    <div class="grid">
+                  </section>
+                  
+                  <script>
+                    let committeeMemberCount = 1;
+                  
+                    function addCommitteeMember(event) {
+                      event.preventDefault();
+                      committeeMemberCount++;
+                      const container = document.getElementById('committee-members-container');
+                      const div = document.createElement('div');
+                      div.className = 'committee-member';
+                      div.innerHTML = `
                         <div>
-                            <label for="Committee3_Name">Committee 3 Name<sup style=" color: #ff0000;">*</sup></label>
-                            <input type="text" name="Committee3_Name" id="Committee3_Name" required>
+                          <label for="committee_member_name_${committeeMemberCount}">Committee Member Name<sup style="color: #ff0000;">*</sup></label>
+                          <input type="text" name="committee_member_name[]" id="committee_member_name_${committeeMemberCount}" required>
                         </div>
                         <div>
-                            <label for="Committee3_Email">Committee 3 Email<sup style=" color: #ff0000;">*</sup></label>
-                            <input type="email" name="Committee3_Email" id="Committee3_Email" required>
+                          <label for="committee_member_email_${committeeMemberCount}">Committee Member Email<sup style="color: #ff0000;">*</sup></label>
+                          <input type="email" name="committee_member_email[]" id="committee_member_email_${committeeMemberCount}" required>
                         </div>
-                    </div>
-                    <div class="grid">
-                        <div>
-                            <label for="Committee4_Name">Committee 4 Name</label>
-                            <input type="text" name="Committee4_Name" id="Committee4_Name">
+                        <div class="delete-committee-member">
+                          <a href="#" onclick="deleteCommitteeMember(event, this.parentNode.parentNode)">Delete</a>
                         </div>
-                        <div>
-                            <label for="Committee4_Email">Committee 4 Email</label>
-                            <input type="email" name="Committee4_Email" id="Committee4_Email">
-                        </div>
-                    </div>
-                    <div class="grid">
-                        <div>
-                            <label for="Committee5_Name">Committee 5 Name</label>
-                            <input type="text" name="Committee5_Name" id="Committee5_Name">
-                        </div>
-                        <div>
-                            <label for="Committee5_Email">Committee 5 Email</label>
-                            <input type="email" name="Committee5_Email" id="Committee5_Email">
-                        </div>
-                    </div>
-                </section>
+                      `;
+                      container.appendChild(div);
+                    }
+                  
+                    function deleteCommitteeMember(event, committeeMemberDiv) {
+                      event.preventDefault();
+                      committeeMemberDiv.remove();
+                    }
+                    function combineCommittee() {
+                    let committeeNames = "";
+                    let committeeEmails = "";
+                    const nameInputs = document.getElementsByName("committee_name[]");
+                    const emailInputs = document.getElementsByName("committee_email[]");
+                    for (let i = 0; i < nameInputs.length; i++) {
+                        committeeNames += nameInputs[i].value + ";";
+                        committeeEmails += emailInputs[i].value + ";";
+                    }
+                    document.getElementById("committee_name").value = committeeNames.slice(0, -1);
+                    document.getElementById("committee_email").value = committeeEmails.slice(0, -1);
+                    }
+
+                    document.addEventListener("submit", combineCommittee);
+                  </script>
+                  
                 <label for="file">Upload your file<sup style=" color: #ff0000;">*</sup></label>
                 <input class="choose" type="file" name="file_path" id="file">
                 <div class="grid">
