@@ -109,6 +109,9 @@
             width: 75vw;
             margin: 5% auto 0;
         }
+        .table{
+            margin-top: 5%;
+        }
 
         @media screen and (max-width: 1024px) {
             article.container1 {
@@ -221,70 +224,35 @@
                     <h1>Dashboard</h1>
                     <h3>You can track the status of all the Academic Units here.</h3>
                 </hgroup>
-                <a href="/adordc/approve_all" class="primary" role="button">Approve All</a>
+                <a href="#" data-tooltip=" CSV file will be sent to DR_A AU-wise via email " class="primary" role="button">Send CSV file</a>
                <a data-tooltip="CSV file will be downloaded of all AU separately "  href="/xl" style="margin-left:25px ;" class="secondary" role="button">Generate CSV file</a>
-            </div>
-            <div>
-                <label for="filter">Filter</label>
-                <details id="filter" role="list">
-                    <summary aria-haspopup="listbox">Academic Units</summary>
-                    <ul role="listbox">
-                        <li><a href="/adordc">ALL</a></li>
-                        <li><a href="/adordc/1">L. M. Thapar School of Management</a></li>
-                        <li><a href="/adordc/2">School of Chemistry & Biochemistry (DST-FIST Sponsored)</a></li>
-                        <li><a href="/adordc/3">School of Energy and Environment (DST-FIST Sponsered)</a></li>
-                        <li><a href="/adordc/4">School of Humanities & Social Sciences</a></li>
-                        <li><a href="/adordc/5">School of Mathematics</a></li>
-                        <li><a href="/adordc/6">School of Physics & Materials Science</a></li>
-                        <li><a href="/adordc/7">Thapar School of Liberal Arts & Sciences (TSLAS)</a></li>
-                        <li><a href="/adordc/8">Basic & Engineering Sciences (Dera Bassi Campus)</a></li>
-                        <li><a href="/adordc/9">Chemical Engineering</a></li>
-                        <li><a href="/adordc/10">Civil Engineering</a></li>
-                        <li><a href="/adordc/11">Computer Science & Engineering</a></li>
-                        <li><a href="/adordc/12">Department of Biotechnology</a></li>
-                        <li><a href="/adordc/13">Distance Education (DDE)</a></li>
-                        <li><a href="/adordc/14">Electrical & Instrumentation Engineering</a></li>
-                        <li><a href="/adordc/15">Electronics & Communication Engineering</a></li>
-                        <li><a href="/adordc/16">Mechanical Engineering Department</a></li>
-                      </ul>                      
-                </details>
             </div>
             </div>
         </header>
 
-        {% for Ticket in Tickets %}
-        <article class=" article">
-            <header>
-                <kbd>{{ Ticket['Project_ID'] }}</kbd> <b>{{ Ticket['Project_Title'] }} </b>
-            </header>
-            <!-- student_name, Roll_No, Date_Of_IRB, Date_Of_Progress_Presentation, File Link Button -->
-            <div class="grid">
-                <div>
-                    <p><b>Student Name:</b> {{ Ticket['Student_Name'] }}</p>
-                    <p><b>Date Of Progress Presentation</b> {{ Ticket['Date_Of_Progress_Presentation'] }}</p>
-                    <p><b>Presentation: </b><a href="/file/{{ Ticket['Project_ID'] }}">View Presentation</a></p>
-                </div>
-                <div>
-                    <p><b>Roll No:</b> {{ Ticket['Roll_No'] }}</p>
-                    <p><b>Date Of IRB</b> {{ Ticket['Date_Of_IRB'] }}</p>
-                </div>
-            </div>
-            <footer>
-                <div class="grid">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <a class="secondary" href="/ticket_created/{{ Ticket['Project_ID'] }}" role="button" target="_blank"
-                        class="outline">View Ticket</a>
-                    <!-- if Au_Approval is true  -->
-                    {% if Ticket['Adordc_Approval'] != 1 %}
-                    <a class="primary" href="/adordc/{{ Ticket['Project_ID'] }}/approve" role="button"
-                        class="contrast">Approve</a>
-                    {% endif %}
-                </div>
-            </footer>
-        </article>
-        {% endfor %}
+        
+        <table class="table" role="grid" >
+            <thead>
+              <tr>
+                <th scope="col">Academic Units</th>
+                <th scope="col">Total number of Thesis submitted</th>
+                <th scope="col">Total number of Approved Thesis</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+              <tr>
+                
+                <td>{{ Au[i] }}</td>
+                <td>{{ TTS[i] }}</td>
+                <td>{{ TAS[i] }}</td>
+             
+              </tr>\
+              {% endfor %}
+            </tbody>
+            
+          </table>
+    
     </article>
     {% if success != '' %}
     <dialog class="container" id="modal-example" open>
