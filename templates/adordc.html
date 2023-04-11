@@ -224,7 +224,7 @@
                     <h1>Dashboard</h1>
                     <h3>You can track the status of all the Academic Units here.</h3>
                 </hgroup>
-                <a href="#" data-tooltip=" CSV file will be sent to DR_A AU-wise via email " class="primary" role="button">Send CSV file</a>
+                <a href="/dr_a" data-tooltip=" A link to the CSV files will be emailed to the DR_A via email " class="primary" role="button">Send CSV file</a>
                <a data-tooltip="CSV file will be downloaded of all AU separately "  href="/xl" style="margin-left:25px ;" class="secondary" role="button">Generate CSV file</a>
             </div>
             </div>
@@ -237,17 +237,25 @@
                 <th scope="col">Academic Units</th>
                 <th scope="col">Total number of Thesis submitted</th>
                 <th scope="col">Total number of Approved Thesis</th>
+                <th scope="col">Total number of Unapproved Thesis</th>
+                <th scope="col">Percentage Approved</th>
               </tr>
             </thead>
             <tbody>
-                {% for row in data %}
+                {% for i in range(16) %}
               <tr>
                 
                 <td>{{ Au[i] }}</td>
-                <td>{{ TTS[i] }}</td>
-                <td>{{ TAS[i] }}</td>
+                <td>{{ Tts[i] }}</td>
+                <td>{{ Tas[i] }}</td>
+                <td>{{ Tps[i] }}</td>
+                {% if Tas[i] == 0 %}
+                <td>--</td>
+                {% else %}
+                <td>{{ (Tas[i]/Tts[i])*100 }}%</td>
+                {% endif %}
              
-              </tr>\
+              </tr>
               {% endfor %}
             </tbody>
             

@@ -1,2 +1,1 @@
-RollNo,Name,Email,DateOfRegistration,Title,DateofIRB,DateofProgressPresentation,Supervisor1,Supervisor1_Approval,Supervisor1_Marks,Supervisor2,Supervisor2_Approval,Supervisor2_Marks,Supervisor3,Supervisor3_Approval,Supervisor3_Marks,Last Date
-102119030,Umar Shaikh,ushaikh_be21@gmail.com,2023-04-01 16:30:03.448695,PHDmon,2023-04-24 00:00:00,2023-04-11 00:00:00,Arnav,True,33,,,,,,,2023-04-02 00:00:00
+RollNo,Name,Email,DateOfRegistration,Title,DateofIRB,DateofProgressPresentation,Supervisors,Supervisors_Approval,Supervisors_Marks

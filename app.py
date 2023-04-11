@@ -367,7 +367,6 @@ def auhead():
         return redirect(url_for('login'))
     Au = session['Au']
     tickets = Ticket.query.filter_by(Au=Au).all()
-    add_approvals(tickets)
     tickets = [ticket.__dict__ for ticket in tickets]
     return render_template('auhead.html', Au=Au, success='', Tickets=tickets)
 
@@ -379,26 +378,16 @@ def auhead_filter():
         return redirect(url_for('login'))
     Au = session['Au']
     tickets = Ticket.query.filter_by(Au=Au).all()
-    add_approvals(tickets)
     tickets = [ticket.__dict__ for ticket in tickets]
     for ticket in tickets:
-        flag = True
-        if ticket['Supervisor1_Approval'] == False or ticket['Committee1_Approval'] == False or ticket['Committee2_Approval'] == False or ticket['Committee3_Approval'] == False:
-            flag = False
-        if ticket['Supervisor2_Email'] != '':
-            if ticket['Supervisor2_Approval'] == False:
-                flag = False
-        if ticket['Supervisor3_Email'] != '':
-            if ticket['Supervisor3_Approval'] == False:
-                flag = False
-        if ticket['Committee4_Email'] != '':
-            if ticket['Committee4_Approval'] == False:
-                flag = False
-        if ticket['Committee5_Email'] != '':
-            if ticket['Committee5_Approval'] == False:
-                flag = False
-        if flag == False:
-            tickets.remove(ticket)
+        for i in ticket['Supervisor_Approval'].split(';'):
+            if i == '-1':
+                tickets.remove(ticket)
+                break
+        for i in ticket['Committee_Approval'].split(';'):
+            if i == '-1':
+                tickets.remove(ticket)
+                break
         return render_template('auhead.html', Au=Au, success='', Tickets=tickets)
     return render_template('auhead.html', Au=Au, success='', Tickets=tickets)
 
@@ -410,26 +399,16 @@ def auhead_filter2():
         return redirect(url_for('login'))
     Au = session['Au']
     tickets = Ticket.query.filter_by(Au=Au).all()
-    add_approvals(tickets)
     tickets = [ticket.__dict__ for ticket in tickets]
     for ticket in tickets:
-        flag = False
-        if ticket['Supervisor1_Approval'] == False or ticket['Committee1_Approval'] == False or ticket['Committee2_Approval'] == False or ticket['Committee3_Approval'] == False:
-            flag = True
-        if ticket['Supervisor2_Email'] != '':
-            if ticket['Supervisor2_Approval'] == False:
-                flag = True
-        if ticket['Supervisor3_Email'] != '':
-            if ticket['Supervisor3_Approval'] == False:
-                flag = True
-        if ticket['Committee4_Email'] != '':
-            if ticket['Committee4_Approval'] == False:
-                flag = True
-        if ticket['Committee5_Email'] != '':
-            if ticket['Committee5_Approval'] == False:
-                flag = True
-        if flag == False:
-            tickets.remove(ticket)
+        for i in ticket['Supervisor_Approval'].split(';'):
+            if i == '1':
+                tickets.remove(ticket)
+                break
+        for i in ticket['Committee_Approval'].split(';'):
+            if i == '-1':
+                tickets.remove(ticket)
+                break
     return render_template('auhead.html', Au=Au, success='', Tickets=tickets)
 
 @app.route('/auhead/<int:Project_ID>/approve', methods=['GET', 'POST'])
@@ -459,21 +438,18 @@ def auhead_approve_all():
         return redirect(url_for('login'))
     tickets = Ticket.query.filter_by(Au=session['Au']).all()
     for ticket in tickets:
-        flag = False
-        if ticket.Supervisor1_Approval == True and ticket.Committee1_Approval == True and ticket.Committee2_Approval == True and ticket.Committee3_Approval == True:
-            if ticket.Supervisor2_Email != '':
-                if ticket.Supervisor2_Approval == True:
-                    flag = True
-            if ticket.Supervisor3_Email != '':
-                if ticket.Supervisor3_Approval == True:
-                    flag = True
-            if ticket.Committee4_Email != '':
-                if ticket.Committee4_Approval == True:
-                    flag = True
-            if ticket.Committee5_Email != '':
-                if ticket.Committee5_Approval == True:
-                    flag = True
-            flag = True
+        for i in ticket.Supervisor_Approval.split(';'):
+            if i == '-1':
+                flag = False
+                break
+            else:
+                flag = True
+        for i in ticket.Committee_Approval.split(';'):
+            if i == '-1':
+                flag = False
+                break
+            else:
+                flag = True
         if flag == True:
             ticket.Au_Approval = True
             db.session.commit()
@@ -491,53 +467,20 @@ def adordc():
     if session['role'] != 'admin':
         return redirect(url_for('login'))
     
-    tickets = Ticket.query.filter_by(Au_Approval=True).all()
-    tickets = [ticket.__dict__ for ticket in tickets]
-    Au = session['Au']
-    return render_template('adordc.html', Tickets=tickets, success='', last_date=last_date)
+    tickets = Ticket.query.all()
+    Tts = []
+    for au in range(16):
+        Tts.append(len(Ticket.query.filter_by(Au=au).all()))
+    Tas = []
+    for au in range(16):
+        Tas.append(len(Ticket.query.filter_by(Au=au, Au_Approval=True).all()))
+    Tps = []
+    for au in range(16):
+        Tps.append(len(Ticket.query.filter_by(Au=au, Au_Approval=False).all()))
+    return render_template('adordc.html', Tickets=tickets, success='', last_date=last_date, Au=Au_list, Tts=Tts, Tas=Tas, Tps=Tps)
 
 
-@app.route('/adordc/<int:au>')
-def adordc_filter(au):
-    
-    if 'email' not in session:
-        return redirect(url_for('login'))
-    
-    if session['role'] != 'admin':
-        return redirect(url_for('login'))
-    
-    tickets = Ticket.query.filter_by(Au_Approval=True, Au=au).all()
-    tickets = [ticket.__dict__ for ticket in tickets]
-    Au = session['Au']
-    return render_template('adordc.html', Tickets=tickets, success='', last_date=last_date)
 
-
-@app.route('/adordc/<int:Project_ID>/approve', methods=['GET', 'POST'])
-def adordc_approve(Project_ID):
-    
-    if 'email' not in session:
-        return redirect(url_for('login'))
-    
-    if session['role'] != 'Adordc':
-        return redirect(url_for('login'))
-    ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
-    if request.method == 'POST':
-        ticket.Adordc_Approval = True
-        db.session.commit()
-        ticket = ticket.__dict__
-        return render_template('adordc.html', success='Project Approved.', last_date=last_date)
-    return render_template('adordc.html', Ticket=ticket, success='', last_date=last_date)
-
-
-@app.route('/adordc/approve_all', methods=['GET', 'POST'])
-def adordc_approve_all():
-    tickets = Ticket.query.filter_by(Au_Approval=True).all()
-    for ticket in tickets:
-        ticket.Adordc_Approval = True
-        db.session.commit()
-    tickets = Ticket.query.filter_by(Au_Approval=True).all()
-    tickets = [ticket.__dict__ for ticket in tickets]
-    return render_template('adordc.html', success='All projects approved.', last_date=last_date, Tickets=tickets)
 
 
 @app.route('/last_date', methods=['GET', 'POST'])
@@ -663,6 +606,12 @@ def db_maker():
     db.create_all()
     return 'Database Created'
 
+@app.route("/dr_a")
+def dr_a():
+    #send email to dr_a with link to /xl 
+    send_email('dr_a@thapar.edu', 'Thesis Submissions', 'email/dr_a', link= url_for('xl', _external=True))
+    return redirect(url_for('adordc'))
+
 def send_email(to, subject, template, **kwargs):
     # msg = Message(app.config['MAIL_SUBJECT_PREFIX'] + ' ' + subject, recipients=[to])
     # msg.html = render_template(template + '.html', **kwargs)
@@ -674,42 +623,6 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def add_approvals(tickets):
-    for ticket in tickets:
-        ticket = ticket.__dict__
-        print(ticket['Supervisor1_Approval'])
-        if ticket['Supervisor1_Approval'] == True:
-            ticket['Supervisor_Approval'] = True
-        else:
-            ticket['Supervisor_Approval'] = False
-        if ticket['Supervisor2_Email'] != '':
-            if ticket['Supervisor2_Approval'] == True:
-                ticket['Supervisor_Approval'] = ticket['Supervisor_Approval'] and True
-            else:
-                ticket['Supervisor_Approval'] = False
-        if ticket['Supervisor3_Email'] != '':
-            if ticket['Supervisor3_Approval'] == True:
-                ticket['Supervisor_Approval'] = ticket['Supervisor_Approval'] and True
-            else:
-                ticket['Supervisor_Approval'] = False
-        if ticket['Committee1_Approval'] == True:
-            if ticket['Committee2_Approval'] == True:
-                if ticket['Committee3_Approval'] == True:
-                    ticket['Committee_Approval'] = True
-                else:
-                    ticket['Committee_Approval'] = False
-            else:
-                ticket['Committee_Approval'] = False
-        else:
-            ticket['Committee_Approval'] = False
-        if ticket['Committee4_Email'] != '':
-            if ticket['Committee4_Approval'] == True:
-                ticket['Committee_Approval'] = ticket['Committee_Approval'] and True
-        if ticket['Committee5_Email'] != '':
-            if ticket['Committee5_Approval'] == True:
-                ticket['Committee_Approval'] = ticket['Committee_Approval'] and True
-        print(ticket['Supervisor_Approval'], ticket['Committee_Approval'])
-    return tickets
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port= Port)
