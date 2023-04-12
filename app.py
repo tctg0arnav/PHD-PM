@@ -412,7 +412,7 @@ def committee(Project_ID):
         supN = ticket.Supervisor_Name.split(';')
         comE.pop()
         comN.pop()
-        return redirect(url_for('committee', Project_ID=Project_ID, success='', comE=comE, comN=comN, supE=supE, supN=supN))
+        return render_template('committee.html', Project_ID=Project_ID, success='Your response has been Submitted Successfully', comE=comE, comN=comN, supE=supE, supN=supN,  Ticket=ticket)
     else:
         ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
         comE = ticket.Committee_Email.split(';')
@@ -426,7 +426,7 @@ def committee(Project_ID):
         else:
             supR = ['' for i in supE if i != '']
         ticket = ticket.__dict__
-        return render_template('committee.html', Ticket=ticket, success="", comE=comE, comN=comN, supE=supE, supN=supN, supR=supR)
+        return render_template('committee.html', Ticket=ticket, success="", comE=comE, comN=comN, supE=supE, supN=supN, supR=supR, Project_ID=Project_ID)
 
 @app.route('/auhead')
 def auhead():
