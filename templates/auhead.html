@@ -231,8 +231,10 @@
                         class="outline">View Ticket</a>
                     {% if Ticket['Supervisor_Approval'] == True %}
                     {% if Ticket['Committee_Approval'] == True %}
+                    {% if Ticket['Au_Approval'] == False %}
                     <a class="primary" href="/auhead/{{ Ticket['Project_ID'] }}/approve" role="button"
                         class="contrast">Approve</a> {% endif %}
+                    {% endif %}
                     {% endif %}
                 </div>
             </footer>

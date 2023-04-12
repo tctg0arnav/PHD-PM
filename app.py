@@ -439,29 +439,56 @@ def auhead():
                 status.append('Committee '+ str(i+1) + ': Unsatisfactory ❌')
             elif ticket.Committee_Approval.split(';')[i]=="0" and ticket.Committee_Name.split(';')[i] != '':
                     status.append('Committee '+ str(i+1) + ': Pending ❗')
+        # print(ticket.Supervisor_Approval, ticket.Committee_Approval)
+        # for i in ticket.Supervisor_Approval.split(';'):
+        #     if i == '-1':
+        #         ticket.Supervisor_Approval = False
+        #         print(i, 'exiting')
+        #         break
+        #     elif i == '0':
+        #         ticket.Supervisor_Approval = False
+        #         print(i, 'exiting')
+        #         break
+        #     else:
+        #         ticket.Supervisor_Approval = True
+        # for i in ticket.Committee_Approval.split(';'):
+        #     if i == '-1':
+        #         ticket.Committee_Approval = False
+        #         print(i, 'exiting')
+        #         break
+        #     elif i == '0':
+        #         ticket.Committee_Approval = False
+        #         print(i, 'exiting')
+        #         break
+        #     else:
+        #         ticket.Committee_Approval = True
+        for i in range(len(ticket.Supervisor_Name.split(';'))):
+            if ticket.Supervisor_Approval.split(';')[i] == "1" and ticket.Supervisor_Name.split(';')[i] != '':
+                flag = True
+            elif ticket.Supervisor_Approval.split(';')[i] == "-1" and ticket.Supervisor_Name.split(';')[i] != '':
+                flag = False
+                break
+            elif ticket.Supervisor_Approval.split(';')[i]=="0" and ticket.Supervisor_Name.split(';')[i] != '':
+                flag = False
+                break
+        if flag:
+            ticket.Supervisor_Approval = True
+        else:
+            ticket.Supervisor_Approval = False
+        for i in range(len(ticket.Committee_Name.split(';'))):
+            if ticket.Committee_Approval.split(';')[i] == "1" and ticket.Committee_Name.split(';')[i] != '':
+                flag = True
+            elif ticket.Committee_Approval.split(';')[i] == "-1" and ticket.Committee_Name.split(';')[i] != '':
+                flag = False
+                break
+            elif ticket.Committee_Approval.split(';')[i]=="0" and ticket.Committee_Name.split(';')[i] != '':
+                flag = False
+                break
+        if flag:
+            ticket.Committee_Approval = True
+        else:
+            ticket.Committee_Approval = False
         print(ticket.Supervisor_Approval, ticket.Committee_Approval)
-        for i in ticket.Supervisor_Approval.split(';'):
-            if i == '-1':
-                ticket.Supervisor_Approval = False
-                print(i, 'exiting')
-                break
-            elif i == '0':
-                ticket.Supervisor_Approval = False
-                print(i, 'exiting')
-                break
-            else:
-                ticket.Supervisor_Approval = True
-        for i in ticket.Committee_Approval.split(';'):
-            if i == '-1':
-                ticket.Committee_Approval = False
-                print(i, 'exiting')
-                break
-            elif i == '0':
-                ticket.Committee_Approval = False
-                print(i, 'exiting')
-                break
-            else:
-                ticket.Committee_Approval = True
         ticket=ticket.__dict__
         ticket["Status"] = status
         print(ticket["Status"])
