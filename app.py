@@ -166,9 +166,9 @@ def manage_users():
         print(users)
         
         users = [dict(email=user.email, password=user.password, role=user.role, name=user.name, Au=user.Au) for user in users]
-        
         for user in users:
             del user['password']
+            user["Au"] = Au_list[int(user["Au"])]
         return render_template('manage_users.html', users=users)
     return redirect(url_for('login'))
 
@@ -281,6 +281,8 @@ def create_ticket():
 def ticket_created(Project_ID):
     ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
     ticket = ticket.__dict__
+    ticket["Au"] = Au_list[int(ticket["Au"])]
+    print(ticket["Au"])
     return render_template('ticket_created.html', Ticket=ticket, success='')
 
 @app.route('/file/<Project_ID>')
