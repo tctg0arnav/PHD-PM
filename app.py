@@ -405,8 +405,9 @@ def auhead():
                 if ticket.Committee_Name.split(';')[i] != '':
                     status.append('Committee '+ str(i+1) + ': Pending')
         #convert status into a string. 
+        str_status = ''
         for i in status:
-            status = ''.join(status, ' |')
+            str_status += i + ' |'
     tickets = [ticket.__dict__ for ticket in tickets]
     return render_template('auhead.html', Au=Au, success='', Tickets=tickets, Status=status)
 
