@@ -241,13 +241,13 @@ def create_ticket():
                 #get the name of the supervisor
                 email = form_data[key]
                 supE += email + ";"
-            if key.startswith('committee_name'):
+            if key.startswith('committee_member_name'):
                 #get the index of the supervisor
                 index = key.split('_')[-1]
                 #get the name of the supervisor
                 name = form_data[key]
                 comN += name + ";"
-            if key.startswith('committee_email'):
+            if key.startswith('committee__member_email'):
                 #get the index of the supervisor
                 index = key.split('_')[-1]
                 #get the name of the supervisor
@@ -310,11 +310,11 @@ def supervisor(Project_ID):
         supR[index] = request.form['supervisor-remarks']
         ticket.Supervisor_Remarks = ''.join(supR, ';')
         #if submit value = Satisfactory, set Supervisor_Approval at that index in the string of all approvals separated by ';' to 1
-        if request.form['submit'] == 'Satisfactory':
+        if request.form['satisfaction'] == 'Satisfactory':
             supA = ticket.Supervisor_Approval.split(';')
             supA[index] = '1'
             ticket.Supervisor_Approval = ''.join(supA, ';')
-        elif request.form['submit'] == 'Unsatisfactory':
+        elif request.form['satisfaction'] == 'Unsatisfactory':
             supA = ticket.Supervisor_Approval.split(';')
             supA[index] = '-1'
             ticket.Supervisor_Approval = ''.join(supA, ';')
@@ -354,11 +354,11 @@ def committee(Project_ID):
         #find index of email in comE
         index = comE.index(Committee_Email)
         #if submit value = Satisfactory, set Committee_Approval at that index in the string of all approvals separated by ';' to 1
-        if request.form['submit'] == 'Satisfactory':
+        if request.form['satisfaction'] == 'Satisfactory':
             comA = ticket.Committee_Approval.split(';')
             comA[index] = '1'
             ticket.Committee_Approval = ''.join(comA, ';')
-        elif request.form['submit'] == 'Unsatisfactory':
+        elif request.form['satisfaction'] == 'Unsatisfactory':
             comA = ticket.Committee_Approval.split(';')
             comA[index] = '-1'
             ticket.Committee_Approval = ''.join(comA, ';')
