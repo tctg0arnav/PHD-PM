@@ -244,7 +244,7 @@ def create_ticket():
                 #get the name of the supervisor
                 name = form_data[key]
                 comN += name + ";"
-            if key.startswith('committee__member_email'):
+            if key.startswith('committee_member_email'):
                 #get the index of the supervisor
                 index = key.split('_')[-1]
                 #get the name of the supervisor
@@ -404,6 +404,8 @@ def auhead():
             else:
                 if ticket.Committee_Name.split(';')[i] != '':
                     status.append('Committee '+ str(i+1) + ': Pending')
+        #convert status into a string. 
+        status = ''.join(status)
     tickets = [ticket.__dict__ for ticket in tickets]
     return render_template('auhead.html', Au=Au, success='', Tickets=tickets, Status=status)
 
