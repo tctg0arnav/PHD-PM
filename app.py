@@ -470,25 +470,21 @@ def auhead():
         status = []
         for i in range(len(ticket.Supervisor_Name.split(';'))):
             if ticket.Supervisor_Approval.split(';')[i] == "1" and ticket.Supervisor_Name.split(';')[i] != '':
-                status.append('Supervisor '+ str(i+1) + ': Satisfactory')
+                status.append('Supervisor '+ str(i+1) + ': Satisfactory ✅')
             elif ticket.Supervisor_Approval.split(';')[i] == "-1" and ticket.Supervisor_Name.split(';')[i] != '':
-                status.append('Supervisor '+ str(i+1) + ': Unsatisfactory')
+                status.append('Supervisor '+ str(i+1) + ': Unsatisfactory ❌')
             elif ticket.Supervisor_Approval.split(';')[i]=="0" and ticket.Supervisor_Name.split(';')[i] != '':
-                    status.append('Supervisor '+ str(i+1) + ': Pending')
+                    status.append('Supervisor '+ str(i+1) + ': Pending ❗')
         for i in range(len(ticket.Committee_Name.split(';'))):
             if ticket.Committee_Approval.split(';')[i] == "1" and ticket.Committee_Name.split(';')[i] != '':
-                status.append('Committee '+ str(i+1) + ': Satisfactory')
+                status.append('Committee '+ str(i+1) + ': Satisfactory ✅')
             elif ticket.Committee_Approval.split(';')[i] == "-1" and ticket.Committee_Name.split(';')[i] != '':
-                status.append('Committee '+ str(i+1) + ': Unsatisfactory')
+                status.append('Committee '+ str(i+1) + ': Unsatisfactory ❌')
             elif ticket.Committee_Approval.split(';')[i]=="0" and ticket.Committee_Name.split(';')[i] != '':
-                    status.append('Committee '+ str(i+1) + ': Pending')
-        #convert status into a string. 
-        str_status = ''
-        for i in status:
-            str_status += i + ' |'
-        #add str_status to ticket
+                    status.append('Committee '+ str(i+1) + ': Pending ❗')
         ticket=ticket.__dict__
-        ticket["Status"] = str_status
+        ticket["Status"] = status
+        print(ticket["Status"])
     tickets = [ticket.__dict__ for ticket in tickets]
     return render_template('auhead.html', Au=Au, success='', Tickets=tickets)
 
@@ -500,31 +496,56 @@ def auhead_filter():
         return redirect(url_for('login'))
     Au = session['Au']
     tickets = Ticket.query.filter_by(Au=Au).all()
-    tickets = [ticket.__dict__ for ticket in tickets]
     for ticket in tickets:
-        for i in ticket['Supervisor_Approval'].split(';'):
+        for i in ticket.Supervisor_Approval.split(';'):
             if i == '-1':
                 tickets.remove(ticket)
                 break
-        for i in ticket['Committee_Approval'].split(';'):
+        for i in ticket.Committee_Approval.split(';'):
             if i == '-1':
                 tickets.remove(ticket)
                 break
         status = []
         for i in range(len(ticket.Supervisor_Name.split(';'))):
-                if ticket.Supervisor_Approval.split(';')[i] == "1" and ticket.Supervisor_Name.split(';')[i] != '':
-                    status.append('Supervisor '+ str(i+1) + ': Satisfactory')
-                elif ticket.Supervisor_Approval.split(';')[i] == "-1" and ticket.Supervisor_Name.split(';')[i] != '':
-                    status.append('Supervisor '+ str(i+1) + ': Unsatisfactory')
-                elif ticket.Supervisor_Approval.split(';')[i]=="0" and ticket.Supervisor_Name.split(';')[i] != '':
-                        status.append('Supervisor '+ str(i+1) + ': Pending')
+            if ticket.Supervisor_Approval.split(';')[i] == "1" and ticket.Supervisor_Name.split(';')[i] != '':
+                status.append('Supervisor '+ str(i+1) + ': Satisfactory ✅')
+            elif ticket.Supervisor_Approval.split(';')[i] == "-1" and ticket.Supervisor_Name.split(';')[i] != '':
+                status.append('Supervisor '+ str(i+1) + ': Unsatisfactory ❌')
+            elif ticket.Supervisor_Approval.split(';')[i]=="0" and ticket.Supervisor_Name.split(';')[i] != '':
+                    status.append('Supervisor '+ str(i+1) + ': Pending ❗')
         for i in range(len(ticket.Committee_Name.split(';'))):
             if ticket.Committee_Approval.split(';')[i] == "1" and ticket.Committee_Name.split(';')[i] != '':
-                status.append('Committee '+ str(i+1) + ': Satisfactory')
+                status.append('Committee '+ str(i+1) + ': Satisfactory ✅')
             elif ticket.Committee_Approval.split(';')[i] == "-1" and ticket.Committee_Name.split(';')[i] != '':
-                status.append('Committee '+ str(i+1) + ': Unsatisfactory')
+                status.append('Committee '+ str(i+1) + ': Unsatisfactory ❌')
             elif ticket.Committee_Approval.split(';')[i]=="0" and ticket.Committee_Name.split(';')[i] != '':
-                    status.append('Committee '+ str(i+1) + ': Pending')
+                    status.append('Committee '+ str(i+1) + ': Pending ❗')
+        print(ticket.Supervisor_Approval, ticket.Committee_Approval)
+        for i in ticket.Supervisor_Approval.split(';'):
+            if i == '-1':
+                ticket.Supervisor_Approval = False
+                print(i, 'exiting')
+                break
+            elif i == '0':
+                ticket.Supervisor_Approval = False
+                print(i, 'exiting')
+                break
+            else:
+                ticket.Supervisor_Approval = True
+        for i in ticket.Committee_Approval.split(';'):
+            if i == '-1':
+                ticket.Committee_Approval = False
+                print(i, 'exiting')
+                break
+            elif i == '0':
+                ticket.Committee_Approval = False
+                print(i, 'exiting')
+                break
+            else:
+                ticket.Committee_Approval = True
+        ticket=ticket.__dict__
+        ticket["Status"] = status
+        print(ticket["Supervisor_Approval"], ticket["Committee_Approval"])
     return render_template('auhead.html', Au=Au, success='', Tickets=tickets, Status=status)
 
 @app.route('/auhead/pending', methods=['GET', 'POST'])
@@ -535,13 +556,12 @@ def auhead_filter2():
         return redirect(url_for('login'))
     Au = session['Au']
     tickets = Ticket.query.filter_by(Au=Au).all()
-    tickets = [ticket.__dict__ for ticket in tickets]
     for ticket in tickets:
-        for i in ticket['Supervisor_Approval'].split(';'):
+        for i in ticket.Supervisor_Approval.split(';'):
             if i == '1':
                 tickets.remove(ticket)
                 break
-        for i in ticket['Committee_Approval'].split(';'):
+        for i in ticket.Committee_Approval.split(';'):
             if i == '-1':
                 tickets.remove(ticket)
                 break
@@ -561,14 +581,15 @@ def auhead_filter2():
                 status.append('Committee '+ str(i+1) + ': Unsatisfactory')
             elif ticket.Committee_Approval.split(';')[i]=="0" and ticket.Committee_Name.split(';')[i] != '':
                     status.append('Committee '+ str(i+1) + ': Pending')
-    return render_template('auhead.html', Au=Au, success='', Tickets=tickets, Status=status)
+        ticket=ticket.__dict__
+        ticket["Status"] = status
+        print(ticket["Status"])
+    return render_template('auhead.html', Au=Au, success='', Tickets=tickets)
 
 @app.route('/auhead/<int:Project_ID>/approve', methods=['GET', 'POST'])
 def auhead_approve(Project_ID):
-    
     if 'email' not in session:
         return redirect(url_for('login'))
-    
     if session['role'] != 'AU_Head':
         return redirect(url_for('login'))
     ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
@@ -580,10 +601,8 @@ def auhead_approve(Project_ID):
 
 @app.route('/auhead/approve_all', methods=['GET', 'POST'])
 def auhead_approve_all():
-    
     if 'email' not in session:
         return redirect(url_for('login'))
-    
     if session['role'] != 'AU_Head':
         return redirect(url_for('login'))
     tickets = Ticket.query.filter_by(Au=session['Au']).all()
