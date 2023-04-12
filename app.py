@@ -409,7 +409,7 @@ def auhead():
         for i in status:
             str_status += i + ' |'
     tickets = [ticket.__dict__ for ticket in tickets]
-    return render_template('auhead.html', Au=Au, success='', Tickets=tickets, Status=status)
+    return render_template('auhead.html', Au=Au, success='', Tickets=tickets, Status=str_status)
 
 @app.route('/auhead/approved', methods=['GET', 'POST'])
 def auhead_filter():
