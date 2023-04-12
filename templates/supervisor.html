@@ -1,7 +1,7 @@
 {% extends 'ticket_created.html' %}
 
 {% block form %}
-<article>
+<article class="article">
   <form action="/supervisor/Project_ID" method="post">
     <label for="supervisor-email">Supervisor Email:</label>
     <input type="email" id="supervisor-email" name="supervisor-email"><br>
@@ -35,7 +35,7 @@
     </script>
 
     <input type="submit" name="satisfaction" value="Satisfactory">
-    <input type="submit" name="satisfaction" value="Unsatisfactory">
+    <input type="submit"  name="satisfaction" value="Unsatisfactory">
   </form>
 </article>
 {% endblock %}
