@@ -294,7 +294,8 @@ def supervisor(Project_ID):
         ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
         #check index of supervisor email in ticket.Supervisor_Email which is a string of all emails separated by ';'
         #then insert total-percentage into ticket.Supervisor_Marks at that index in the string of all marks separated by ';'
-        supE = ticket.Supervisor_Email.split(';')
+        supE = ticket.Supervisor_Email
+        supE = supE.split(';')
         #find index of email in supE
         index = supE.index(Supervisor_Email)
         #insert total-percentage into ticket.Supervisor_Marks at that index in the string of all marks separated by ';'
