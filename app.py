@@ -386,47 +386,76 @@ def supervisor(Project_ID):
     print(supN, supE, comN, comE, "here")
     return render_template('supervisor.html', Project_ID=Project_ID, Ticket=ticket, success="", supE=supE, supN=supN, comE=comE, comN=comN)
 
+# @app.route('/committee/<Project_ID>', methods=['GET', 'POST'])
+# def committee(Project_ID):
+#     if request.method == "POST":
+#         Committee_Email = request.form['committee-email']
+#         ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
+#         #check index of committee email in ticket.Committee_Email which is a string of all emails separated by ';'
+#         #then insert total-percentage into ticket.Committee_Marks at that index in the string of all marks separated by ';'
+#         comE = ticket.Committee_Email.split(';')
+#         #find index of email in comE
+#         index = comE.index(Committee_Email)
+#         #if submit value = Satisfactory, set Committee_Approval at that index in the string of all approvals separated by ';' to 1
+#         if request.form['satisfaction'] == 'Satisfactory':
+#             comA = ticket.Committee_Approval.split(';')
+#             comA[index] = '1'
+#             ticket.Committee_Approval = ''.join(comA, ';')
+#         elif request.form['satisfaction'] == 'Unsatisfactory':
+#             comA = ticket.Committee_Approval.split(';')
+#             comA[index] = '-1'
+#             ticket.Committee_Approval = ''.join(comA, ';')
+#         db.session.commit()
+#         comN = ticket.Committee_Name.split(';')
+#         comE = ticket.Committee_Email.split(';')
+#         supE = ticket.Supervisor_Email.split(';')
+#         supN = ticket.Supervisor_Name.split(';')
+#         comE.pop()
+#         comN.pop()
+#         return render_template('committee.html', Project_ID=Project_ID, success='Your response has been Submitted Successfully', comE=comE, comN=comN, supE=supE, supN=supN,  Ticket=ticket)
+#     else:
+#         ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
+#         comE = ticket.Committee_Email.split(';')
+#         comN = ticket.Committee_Name.split(';')
+#         supE = ticket.Supervisor_Email.split(';')
+#         supN = ticket.Supervisor_Name.split(';')
+#         comE.pop()
+#         comN.pop()
+#         if ticket.Supervisor_Remarks:
+#             supR = ticket.Supervisor_Remarks.split(';')
+#         else:
+#             supR = ['' for i in supE if i != '']
+#         ticket = ticket.__dict__
+#         return render_template('committee.html', Ticket=ticket, success="", comE=comE, comN=comN, supE=supE, supN=supN, supR=supR, Project_ID=Project_ID)
 @app.route('/committee/<Project_ID>', methods=['GET', 'POST'])
 def committee(Project_ID):
+    ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
+    comE = ticket.Committee_Email.split(';')
+    comN = ticket.Committee_Name.split(';')
+    supE = ticket.Supervisor_Email.split(';')
+    supN = ticket.Supervisor_Name.split(';')
+    comE.pop()
+    comN.pop()
+    if ticket.Supervisor_Remarks:
+        supR = ticket.Supervisor_Remarks.split(';')
+    else:
+        supR = ['' for i in supE if i != '']
     if request.method == "POST":
         Committee_Email = request.form['committee-email']
-        ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
-        #check index of committee email in ticket.Committee_Email which is a string of all emails separated by ';'
-        #then insert total-percentage into ticket.Committee_Marks at that index in the string of all marks separated by ';'
-        comE = ticket.Committee_Email.split(';')
-        #find index of email in comE
+        # check index of committee email in ticket.Committee_Email which is a string of all emails separated by ';'
+        # then insert total-percentage into ticket.Committee_Marks at that index in the string of all marks separated by ';'
         index = comE.index(Committee_Email)
-        #if submit value = Satisfactory, set Committee_Approval at that index in the string of all approvals separated by ';' to 1
+        comA = ticket.Committee_Approval.split(';')
         if request.form['satisfaction'] == 'Satisfactory':
-            comA = ticket.Committee_Approval.split(';')
             comA[index] = '1'
-            ticket.Committee_Approval = ''.join(comA, ';')
         elif request.form['satisfaction'] == 'Unsatisfactory':
-            comA = ticket.Committee_Approval.split(';')
             comA[index] = '-1'
-            ticket.Committee_Approval = ''.join(comA, ';')
+        ticket.Committee_Approval = ';'.join(comA)
         db.session.commit()
-        comN = ticket.Committee_Name.split(';')
-        comE = ticket.Committee_Email.split(';')
-        supE = ticket.Supervisor_Email.split(';')
-        supN = ticket.Supervisor_Name.split(';')
-        comE.pop()
-        comN.pop()
-        return render_template('committee.html', Project_ID=Project_ID, success='Your response has been Submitted Successfully', comE=comE, comN=comN, supE=supE, supN=supN,  Ticket=ticket)
+        success = 'Your response has been Submitted Successfully'
     else:
-        ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
-        comE = ticket.Committee_Email.split(';')
-        comN = ticket.Committee_Name.split(';')
-        supE = ticket.Supervisor_Email.split(';')
-        supN = ticket.Supervisor_Name.split(';')
-        comE.pop()
-        comN.pop()
-        if ticket.Supervisor_Remarks:
-            supR = ticket.Supervisor_Remarks.split(';')
-        else:
-            supR = ['' for i in supE if i != '']
-        ticket = ticket.__dict__
-        return render_template('committee.html', Ticket=ticket, success="", comE=comE, comN=comN, supE=supE, supN=supN, supR=supR, Project_ID=Project_ID)
+        success = ""
+    return render_template('committee.html', Ticket=ticket, success=success, comE=comE, comN=comN, supE=supE, supN=supN, supR=supR, Project_ID=Project_ID)
 
 @app.route('/auhead')
 def auhead():
