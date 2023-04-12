@@ -439,29 +439,6 @@ def auhead():
                 status.append('Committee '+ str(i+1) + ': Unsatisfactory ❌')
             elif ticket.Committee_Approval.split(';')[i]=="0" and ticket.Committee_Name.split(';')[i] != '':
                     status.append('Committee '+ str(i+1) + ': Pending ❗')
-        # print(ticket.Supervisor_Approval, ticket.Committee_Approval)
-        # for i in ticket.Supervisor_Approval.split(';'):
-        #     if i == '-1':
-        #         ticket.Supervisor_Approval = False
-        #         print(i, 'exiting')
-        #         break
-        #     elif i == '0':
-        #         ticket.Supervisor_Approval = False
-        #         print(i, 'exiting')
-        #         break
-        #     else:
-        #         ticket.Supervisor_Approval = True
-        # for i in ticket.Committee_Approval.split(';'):
-        #     if i == '-1':
-        #         ticket.Committee_Approval = False
-        #         print(i, 'exiting')
-        #         break
-        #     elif i == '0':
-        #         ticket.Committee_Approval = False
-        #         print(i, 'exiting')
-        #         break
-        #     else:
-        #         ticket.Committee_Approval = True
         for i in range(len(ticket.Supervisor_Name.split(';'))):
             if ticket.Supervisor_Approval.split(';')[i] == "1" and ticket.Supervisor_Name.split(';')[i] != '':
                 flag = True
@@ -527,6 +504,33 @@ def auhead_filter():
                 status.append('Committee '+ str(i+1) + ': Unsatisfactory ❌')
             elif ticket.Committee_Approval.split(';')[i]=="0" and ticket.Committee_Name.split(';')[i] != '':
                     status.append('Committee '+ str(i+1) + ': Pending ❗')
+        for i in range(len(ticket.Supervisor_Name.split(';'))):
+            if ticket.Supervisor_Approval.split(';')[i] == "1" and ticket.Supervisor_Name.split(';')[i] != '':
+                flag = True
+            elif ticket.Supervisor_Approval.split(';')[i] == "-1" and ticket.Supervisor_Name.split(';')[i] != '':
+                flag = False
+                break
+            elif ticket.Supervisor_Approval.split(';')[i]=="0" and ticket.Supervisor_Name.split(';')[i] != '':
+                flag = False
+                break
+        if flag:
+            ticket.Supervisor_Approval = True
+        else:
+            ticket.Supervisor_Approval = False
+        for i in range(len(ticket.Committee_Name.split(';'))):
+            if ticket.Committee_Approval.split(';')[i] == "1" and ticket.Committee_Name.split(';')[i] != '':
+                flag = True
+            elif ticket.Committee_Approval.split(';')[i] == "-1" and ticket.Committee_Name.split(';')[i] != '':
+                flag = False
+                break
+            elif ticket.Committee_Approval.split(';')[i]=="0" and ticket.Committee_Name.split(';')[i] != '':
+                flag = False
+                break
+        if flag:
+            ticket.Committee_Approval = True
+        else:
+            ticket.Committee_Approval = False
+        print(ticket.Supervisor_Approval, ticket.Committee_Approval)
         ticket=ticket.__dict__
         ticket["Status"] = status
         print(ticket["Supervisor_Approval"], ticket["Committee_Approval"])
@@ -565,6 +569,33 @@ def auhead_filter2():
                 status.append('Committee '+ str(i+1) + ': Unsatisfactory')
             elif ticket.Committee_Approval.split(';')[i]=="0" and ticket.Committee_Name.split(';')[i] != '':
                     status.append('Committee '+ str(i+1) + ': Pending')
+        for i in range(len(ticket.Supervisor_Name.split(';'))):
+            if ticket.Supervisor_Approval.split(';')[i] == "1" and ticket.Supervisor_Name.split(';')[i] != '':
+                flag = True
+            elif ticket.Supervisor_Approval.split(';')[i] == "-1" and ticket.Supervisor_Name.split(';')[i] != '':
+                flag = False
+                break
+            elif ticket.Supervisor_Approval.split(';')[i]=="0" and ticket.Supervisor_Name.split(';')[i] != '':
+                flag = False
+                break
+        if flag:
+            ticket.Supervisor_Approval = True
+        else:
+            ticket.Supervisor_Approval = False
+        for i in range(len(ticket.Committee_Name.split(';'))):
+            if ticket.Committee_Approval.split(';')[i] == "1" and ticket.Committee_Name.split(';')[i] != '':
+                flag = True
+            elif ticket.Committee_Approval.split(';')[i] == "-1" and ticket.Committee_Name.split(';')[i] != '':
+                flag = False
+                break
+            elif ticket.Committee_Approval.split(';')[i]=="0" and ticket.Committee_Name.split(';')[i] != '':
+                flag = False
+                break
+        if flag:
+            ticket.Committee_Approval = True
+        else:
+            ticket.Committee_Approval = False
+        print(ticket.Supervisor_Approval, ticket.Committee_Approval)
         ticket=ticket.__dict__
         ticket["Status"] = status
         print(ticket["Status"])
@@ -715,7 +746,7 @@ def xl_au():
 @app.route('/xl/archived')
 def xl_archived():
     for Au in Au_list:
-        headers = ['RollNo', 'Name', 'Email', 'DateOfRegistration', 'Title', 'DateofIRB', 'DateofProgressPresentation', 'Supervisor1', 'Supervisor1_Approval', 'Supervisor1_Marks', 'Supervisor2', 'Supervisor2_Approval', 'Supervisor2_Marks', 'Supervisor3', 'Supervisor3_Approval', 'Supervisor3_Marks', 'Last Date']
+        headers = ['RollNo', 'Name', 'Email', 'DateOfRegistration', 'Title', 'DateofIRB', 'DateofProgressPresentation', 'Supervisors', 'Supervisors_Approval', 'Supervisors_Marks']
         Au_index = Au_list.index(Au)
         Au_index = Au_index + 1
         tickets = Archive_Ticket.query.filter_by(Au=Au_index).all()
@@ -724,7 +755,7 @@ def xl_archived():
             writer = csv.DictWriter(f, fieldnames=headers)
             writer.writeheader()
             for ticket in tickets:
-                data = [ticket['Roll_No'], ticket['Student_Name'], ticket['Student_Email'], ticket['Date_Of_Registration'], ticket['Project_Title'], ticket['Date_Of_IRB'], ticket['Date_Of_Progress_Presentation'],ticket['Supervisor1_Name'], ticket['Supervisor1_Approval'], ticket['Supervisor1_Marks'],ticket['Supervisor2_Name'], ticket['Supervisor2_Approval'], ticket['Supervisor2_Marks'],ticket['Supervisor3_Name'], ticket['Supervisor3_Approval'], ticket['Supervisor3_Marks'], ticket['LastDate']]
+                data = [ticket['Roll_No'], ticket['Student_Name'], ticket['Student_Email'], ticket['Date_Of_Registration'], ticket['Project_Title'], ticket['Date_Of_IRB'], ticket['Date_Of_Progress_Presentation'],ticket['Supervisor_Name'], ticket['Supervisor_Approval'], ticket['Supervisor_Marks']]
                 data = dict(zip(headers, data))
                 writer.writerow(data)
     with zipfile('all_au.zip', 'w') as zipObj:
