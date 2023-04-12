@@ -45,6 +45,7 @@ class Ticket(db.Model):
     Supervisor_Email = db.Column(db.String(500), nullable=False)
     Supervisor_Remarks = db.Column(db.String(500))
     Supervisor_Approval = db.Column(db.String(500))
+    Supervisor_Marks = db.Column(db.String(500))
     Committee_Name = db.Column(db.Integer, nullable=False)
     Committee_Email = db.Column(db.String(50), nullable=False)
     Committee_Remarks = db.Column(db.String(50))
@@ -70,6 +71,7 @@ class Archive_Ticket(db.Model):
     Supervisor_Email = db.Column(db.String(50), nullable=False)
     Supervisor_Remarks = db.Column(db.String(50))
     Supervisor_Approval = db.Column(db.Integer)
+    Supervisor_Marks = db.Column(db.String(500))
     Committee_Name = db.Column(db.Integer, nullable=False)
     Committee_Email = db.Column(db.String(50), nullable=False)
     Committee_Remarks = db.Column(db.String(50))
@@ -292,10 +294,9 @@ def supervisor(Project_ID):
     if request.method == 'POST':
         Supervisor_Email = request.form['supervisor-email']
         ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
-        #check index of supervisor email in ticket.Supervisor_Email which is a string of all emails separated by ';'
-        #then insert total-percentage into ticket.Supervisor_Marks at that index in the string of all marks separated by ';'
-        supE = ticket.Supervisor_Email
-        supE = supE.split(';')
+        print(ticket)
+        print(ticket.Supervisor_Email)
+        supE = ticket.Supervisor_Email.split(';')
         #find index of email in supE
         index = supE.index(Supervisor_Email)
         #insert total-percentage into ticket.Supervisor_Marks at that index in the string of all marks separated by ';'
@@ -331,7 +332,7 @@ def supervisor(Project_ID):
         
         comN = ticket.Committee_Name.split(';')
         comE = ticket.Committee_Email.split(';')
-        return redirect(url_for('supervisor', Project_ID=Project_ID, success='', supE=supE, supN=supN, comE=comE, comN=comN))
+        return render_template('supervisor.html', Project_ID=Project_ID, success='Remarks Submitted Successfully', supE=supE, supN=supN, comE=comE, comN=comN)
     ticket = Ticket.query.filter_by(Project_ID=Project_ID).first()
     supE = ticket.Supervisor_Email.split(';')
     supN = ticket.Supervisor_Name.split(';')
@@ -339,7 +340,7 @@ def supervisor(Project_ID):
     comN = ticket.Committee_Name.split(';')
     ticket = ticket.__dict__
     ticket['Au'] = Au_list[int(ticket['Au'])]
-    return render_template('supervisor.html', Ticket=ticket, success="", supE=supE, supN=supN, comE=comE, comN=comN)
+    return render_template('supervisor.html', Project_ID=Project_ID, Ticket=ticket, success="", supE=supE, supN=supN, comE=comE, comN=comN)
 
 @app.route('/committee/<Project_ID>', methods=['GET', 'POST'])
 def committee(Project_ID):
