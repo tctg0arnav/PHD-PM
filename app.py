@@ -41,7 +41,6 @@ class Ticket(db.Model):
     Date_Of_Progress_Presentation = db.Column(db.DateTime, nullable=False)
     File_Path = db.Column(db.String(50), unique=True, nullable=False)
     Publications = db.Column(db.String(50))
-    Conferences = db.Column(db.String(50))
     Supervisor_Name = db.Column(db.String(500), nullable=False)
     Supervisor_Email = db.Column(db.String(500), nullable=False)
     Supervisor_Remarks = db.Column(db.String(500))
@@ -67,7 +66,6 @@ class Archive_Ticket(db.Model):
     Date_Of_Progress_Presentation = db.Column(db.DateTime, nullable=False)
     File_Path = db.Column(db.String(50), nullable=False)
     Publications = db.Column(db.String(50))
-    Conferences = db.Column(db.String(50))
     Supervisor_Name = db.Column(db.String(50), nullable=False)
     Supervisor_Email = db.Column(db.String(50), nullable=False)
     Supervisor_Remarks = db.Column(db.String(50))
@@ -215,13 +213,12 @@ def create_ticket():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], Roll_No + '.pdf')
         file.save(file_path)
         Publications = request.form['Publications']
-        Conferences = request.form['Conferences']
         lastdate = LastDate.query.first().LastDate
         lastdate = lastdate.strftime('%Y-%m-%d')
         lastdate = dparser.parse(lastdate, fuzzy=True)
         Au_Approval = False
         Adordc_Approval = False
-        new_ticket = Ticket(Student_Name=student_name, Student_Email=student_email, Roll_No=Roll_No, Au=Au, Date_Of_Registration=Date_Of_Registration, Gate=Gate, Project_Title=Project_Title, Date_Of_Progress_Presentation=Date_Of_Progress_Presentation, Date_Of_IRB=Date_Of_IRB, Publications=Publications, Conferences=Conferences, Au_Approval=Au_Approval, Adordc_Approval=Adordc_Approval, File_Path=file_path, LastDate=lastdate)        
+        new_ticket = Ticket(Student_Name=student_name, Student_Email=student_email, Roll_No=Roll_No, Au=Au, Date_Of_Registration=Date_Of_Registration, Gate=Gate, Project_Title=Project_Title, Date_Of_Progress_Presentation=Date_Of_Progress_Presentation, Date_Of_IRB=Date_Of_IRB, Publications=Publications, Au_Approval=Au_Approval, Adordc_Approval=Adordc_Approval, File_Path=file_path, LastDate=lastdate)        
         form_data = request.form
         supN = ""
         supE = ""
