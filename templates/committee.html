@@ -1,7 +1,7 @@
     {% extends 'ticket_created.html' %}
 
     {% block form %}
-    <article>
+    <article class="article">
         <!-- <div class="grid">
             {% for i in range(supR|length) %}
             <div>
@@ -14,8 +14,8 @@
         <label for="committee-email"> Email:</label>
         <input type="email" id="committee-email" name="committee-email"><br>
 
-        <input type="submit" name="satisfaction" value="Satisfactory">
-        <input type="submit" name="satisfaction" value="Unsatisfactory">
+        <input type="submit" style="border-radius: 0; border: 1px solid #640000;" name="satisfaction" value="Satisfactory">
+        <input type="submit" style="background-color: white; color: #640000; border-radius: 0; border: 1px solid #640000;" name="satisfaction" value="Unsatisfactory">
     </form>
     </article>
     {% endblock %}

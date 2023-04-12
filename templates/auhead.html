@@ -215,10 +215,15 @@
                 <div>
                     <p><b>Roll No:</b> {{ Ticket['Roll_No'] }}</p>
                     <p><b>Date Of IRB</b> {{ Ticket['Date_Of_IRB'] }}</p>
-                    <p><b>Status:</b></p>
+                    <!-- <p><b>Status:</b></p> -->
+                    <details>
+                        <summary> Status</summary>
                     {% for i in Ticket['Status'] %}
-                    <p class="status-item">{{ i }}</p>
+                    
+                        <p class="status-item">{{ i }}</p>
+                      
                     {% endfor %}
+                </details>
                 </div>
             </div>
 
