@@ -41,7 +41,6 @@ class Ticket(db.Model):
     Date_Of_Progress_Presentation = db.Column(db.DateTime, nullable=False)
     File_Path = db.Column(db.String(50), unique=True, nullable=False)
     Publications = db.Column(db.String(50))
-    Conferences = db.Column(db.String(50))
     Supervisor_Name = db.Column(db.String(500), nullable=False)
     Supervisor_Email = db.Column(db.String(500), nullable=False)
     Supervisor_Remarks = db.Column(db.String(500))
@@ -67,7 +66,6 @@ class Archive_Ticket(db.Model):
     Date_Of_Progress_Presentation = db.Column(db.DateTime, nullable=False)
     File_Path = db.Column(db.String(50), nullable=False)
     Publications = db.Column(db.String(50))
-    Conferences = db.Column(db.String(50))
     Supervisor_Name = db.Column(db.String(50), nullable=False)
     Supervisor_Email = db.Column(db.String(50), nullable=False)
     Supervisor_Remarks = db.Column(db.String(50))
@@ -215,13 +213,12 @@ def create_ticket():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], Roll_No + '.pdf')
         file.save(file_path)
         Publications = request.form['Publications']
-        Conferences = request.form['Conferences']
         lastdate = LastDate.query.first().LastDate
         lastdate = lastdate.strftime('%Y-%m-%d')
         lastdate = dparser.parse(lastdate, fuzzy=True)
         Au_Approval = False
         Adordc_Approval = False
-        new_ticket = Ticket(Student_Name=student_name, Student_Email=student_email, Roll_No=Roll_No, Au=Au, Date_Of_Registration=Date_Of_Registration, Gate=Gate, Project_Title=Project_Title, Date_Of_Progress_Presentation=Date_Of_Progress_Presentation, Date_Of_IRB=Date_Of_IRB, Publications=Publications, Conferences=Conferences, Au_Approval=Au_Approval, Adordc_Approval=Adordc_Approval, File_Path=file_path, LastDate=lastdate)        
+        new_ticket = Ticket(Student_Name=student_name, Student_Email=student_email, Roll_No=Roll_No, Au=Au, Date_Of_Registration=Date_Of_Registration, Gate=Gate, Project_Title=Project_Title, Date_Of_Progress_Presentation=Date_Of_Progress_Presentation, Date_Of_IRB=Date_Of_IRB, Publications=Publications, Au_Approval=Au_Approval, Adordc_Approval=Adordc_Approval, File_Path=file_path, LastDate=lastdate)        
         form_data = request.form
         supN = ""
         supE = ""
@@ -241,13 +238,13 @@ def create_ticket():
                 #get the name of the supervisor
                 email = form_data[key]
                 supE += email + ";"
-            if key.startswith('committee_name'):
+            if key.startswith('committee_member_name'):
                 #get the index of the supervisor
                 index = key.split('_')[-1]
                 #get the name of the supervisor
                 name = form_data[key]
                 comN += name + ";"
-            if key.startswith('committee_email'):
+            if key.startswith('committee__member_email'):
                 #get the index of the supervisor
                 index = key.split('_')[-1]
                 #get the name of the supervisor
@@ -310,11 +307,11 @@ def supervisor(Project_ID):
         supR[index] = request.form['supervisor-remarks']
         ticket.Supervisor_Remarks = ''.join(supR, ';')
         #if submit value = Satisfactory, set Supervisor_Approval at that index in the string of all approvals separated by ';' to 1
-        if request.form['submit'] == 'Satisfactory':
+        if request.form['satisfaction'] == 'Satisfactory':
             supA = ticket.Supervisor_Approval.split(';')
             supA[index] = '1'
             ticket.Supervisor_Approval = ''.join(supA, ';')
-        elif request.form['submit'] == 'Unsatisfactory':
+        elif request.form['satisfaction'] == 'Unsatisfactory':
             supA = ticket.Supervisor_Approval.split(';')
             supA[index] = '-1'
             ticket.Supervisor_Approval = ''.join(supA, ';')
@@ -354,11 +351,11 @@ def committee(Project_ID):
         #find index of email in comE
         index = comE.index(Committee_Email)
         #if submit value = Satisfactory, set Committee_Approval at that index in the string of all approvals separated by ';' to 1
-        if request.form['submit'] == 'Satisfactory':
+        if request.form['satisfaction'] == 'Satisfactory':
             comA = ticket.Committee_Approval.split(';')
             comA[index] = '1'
             ticket.Committee_Approval = ''.join(comA, ';')
-        elif request.form['submit'] == 'Unsatisfactory':
+        elif request.form['satisfaction'] == 'Unsatisfactory':
             comA = ticket.Committee_Approval.split(';')
             comA[index] = '-1'
             ticket.Committee_Approval = ''.join(comA, ';')
