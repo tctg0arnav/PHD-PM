@@ -1,2 +1,4 @@
-RollNo,Name,Email,DateOfRegistration,Title,DateofIRB,DateofProgressPresentation,Supervisor1,Supervisor1_Approval,Supervisor1_Marks,Supervisor2,Supervisor2_Approval,Supervisor2_Marks,Supervisor3,Supervisor3_Approval,Supervisor3_Marks
-102119022,Arnav Shukla,me@arnavshukla.co,2023-04-07 11:13:01.143339,Test project,2023-04-12 00:00:00,2023-04-19 00:00:00,Umar Shaikh,True,33,,,,,,
+RollNo,Name,Email,DateOfRegistration,Title,DateofIRB,DateofProgressPresentation,Supervisors,Supervisors_Approval,Supervisors_Marks
+1234567890,Rakesh Yadav,mailonlyforbusinesses@gmail.com,2023-04-12 22:30:21.426797,Database Management System,2023-04-20 00:00:00,2023-04-13 00:00:00,sup1;sup2;,1;1;0;0;0;0;0;0;0;0;;;,0;0;0;;;
+12345678,suresh Yadav23,mailonlyforbusinesses24@gmail.com,2023-04-14 14:46:46.506116,Database Management System 2,2023-04-26 00:00:00,2023-04-19 00:00:00,xyz;,0;0;0;0;,
+1237890,Umar shaikh,mailonlyforbusinesses21@gmail.com,2023-04-14 15:33:05.012744,Database Management System 3,2023-04-22 00:00:00,2023-04-22 00:00:00,sup1;sup2;sup3;sup4;,0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;,
