@@ -324,10 +324,13 @@ def supervisor(Project_ID):
                 supM += "0;"
             ticket.Supervisor_Marks = supM
         supM = ticket.Supervisor_Marks.split(';')
-        # supM[index] = request.form['total-percentage']
+        supM[index] = request.form['total-percentage']
         str_supM = ''
         for i in supM:
-            str_supM += i + ';'
+            if i != '':
+                str_supM += i + ';'
+        #convert to list, pop, convert to string
+        str_supM = str_supM[:-2]
         ticket.Supervisor_Marks = str_supM
         #insert supervisor-remarks into ticket.Supervisor_Remarks at that index in the string of all remarks separated by ';'
         supR = ticket.Supervisor_Remarks.split(';')
@@ -728,44 +731,47 @@ def xl():
             zipObj.write(f'Project Submissions for {Au}.csv')
     return send_file('all_au.zip', as_attachment=True)
 
-@app.route('/xl/au')
-def xl_au():
-    Au = session['Au']
-    headers = ['RollNo', 'Name', 'Email', 'DateOfRegistration', 'Title', 'DateofIRB', 'DateofProgressPresentation', 'Supervisors', 'Supervisors_Approval', 'Supervisors_Marks']
-    tickets = Ticket.query.filter_by(Au=Au).all()
-    tickets = [ticket.__dict__ for ticket in tickets]
-    with open(f'au{Au}.csv', 'w') as f:
-        writer = csv.DictWriter(f, fieldnames=headers)
-        writer.writeheader()
-        for ticket in tickets:
-            data = [ticket['Roll_No'], ticket['Student_Name'], ticket['Student_Email'], ticket['Date_Of_Registration'], ticket['Project_Title'], ticket['Date_Of_IRB'], ticket['Date_Of_Progress_Presentation'],ticket['Supervisor_Name'], ticket['Supervisor_Approval'], ticket['Supervisor_Marks']]
-            data = dict(zip(headers, data))
-            writer.writerow(data)
-    return send_file(f'au{Au}.csv', as_attachment=True)
 # @app.route('/xl/au')
 # def xl_au():
 #     Au = session['Au']
-#     headers = ['RollNo', 'Name', 'Email', 'DateOfRegistration', 'Title', 'DateofIRB', 'DateofProgressPresentation']
+#     headers = ['RollNo', 'Name', 'Email', 'DateOfRegistration', 'Title', 'DateofIRB', 'DateofProgressPresentation', 'Supervisors', 'Supervisors_Approval', 'Supervisors_Marks']
 #     tickets = Ticket.query.filter_by(Au=Au).all()
 #     tickets = [ticket.__dict__ for ticket in tickets]
-#     max_sups = max([len([sup for sup in ticket['Supervisor_Name'].split(';') if sup]) for ticket in tickets])
-#     for i in range(max_sups):
-#         headers += [f'Supervisor_{i+1}', f'Supervisor {i+1} Status']
 #     with open(f'au{Au}.csv', 'w') as f:
 #         writer = csv.DictWriter(f, fieldnames=headers)
 #         writer.writeheader()
 #         for ticket in tickets:
-#             data = {'RollNo': ticket['Roll_No'], 'Name': ticket['Student_Name'], 'Email': ticket['Student_Email'], 'DateOfRegistration': ticket['Date_Of_Registration'], 'Title': ticket['Project_Title'], 'DateofIRB': ticket['Date_Of_IRB'], 'DateofProgressPresentation': ticket['Date_Of_Progress_Presentation']}
-#             supervisors = [sup for sup in ticket['Supervisor_Name'].split(';') if sup]
-#             approvals = [appr for appr in ticket['Supervisor_Approval'].split(';') if appr]
-#             for i, (sup, appr) in enumerate(zip(supervisors, approvals)):
-#                 data[f'Supervisor_{i+1}'] = sup
-#                 if appr == '1':
-#                     data[f'Supervisor {i+1} Status'] = 'Satisfactory'
-#                 else:
-#                     data[f'Supervisor {i+1} Status'] = 'Not Satisfactory'
+#             data = [ticket['Roll_No'], ticket['Student_Name'], ticket['Student_Email'], ticket['Date_Of_Registration'], ticket['Project_Title'], ticket['Date_Of_IRB'], ticket['Date_Of_Progress_Presentation'],ticket['Supervisor_Name'], ticket['Supervisor_Approval'], ticket['Supervisor_Marks']]
+#             data = dict(zip(headers, data))
 #             writer.writerow(data)
 #     return send_file(f'au{Au}.csv', as_attachment=True)
+
+@app.route('/xl/au')
+def xl_au():
+    Au = session['Au']
+    headers = ['RollNo', 'Name', 'Email', 'DateOfRegistration', 'Title', 'DateofIRB', 'DateofProgressPresentation']
+    tickets = Ticket.query.filter_by(Au=Au).all()
+    tickets = [ticket.__dict__ for ticket in tickets]
+    max_sups = max([len([sup for sup in ticket['Supervisor_Name'].split(';') if sup]) for ticket in tickets])
+    for i in range(max_sups):
+        headers += [f'Supervisor_{i+1}', f'Supervisor {i+1} Status', f'Supervisor {i+1} Marks']
+    with open(f'au{Au}.csv', 'w') as f:
+        writer = csv.DictWriter(f, fieldnames=headers)
+        writer.writeheader()
+        for ticket in tickets:
+            data = {'RollNo': ticket['Roll_No'], 'Name': ticket['Student_Name'], 'Email': ticket['Student_Email'], 'DateOfRegistration': ticket['Date_Of_Registration'], 'Title': ticket['Project_Title'], 'DateofIRB': ticket['Date_Of_IRB'], 'DateofProgressPresentation': ticket['Date_Of_Progress_Presentation']}
+            supervisors = [sup for sup in ticket['Supervisor_Name'].split(';') if sup]
+            approvals = [appr for appr in ticket['Supervisor_Approval'].split(';') if appr]
+            marks = [mark for mark in ticket['Supervisor_Marks'].split(';') if mark]
+            for i, (sup, appr, mark) in enumerate(zip(supervisors, approvals, marks)):
+                data[f'Supervisor_{i+1}'] = sup
+                if appr == '1':
+                    data[f'Supervisor {i+1} Status'] = 'Satisfactory'
+                else:
+                    data[f'Supervisor {i+1} Status'] = 'Not Satisfactory'
+                data[f'Supervisor {i+1} Marks'] = mark
+            writer.writerow(data)
+    return send_file(f'au{Au}.csv', as_attachment=True)
 
 
 @app.route('/xl/archived')
